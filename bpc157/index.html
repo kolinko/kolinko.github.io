@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BPC-157 — Wizualizacja peptydu i projekt linii produkcyjnej</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 40%, #2d6a9f 100%);
+    color: white;
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(100,200,255,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(0,150,255,0.06) 0%, transparent 50%);
+    animation: shimmer 15s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-5%) translateY(-2%); }
+    100% { transform: translateX(5%) translateY(2%); }
+  }
+  .hero h1 {
+    font-size: 3em;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 strong { font-weight: 700; }
+  .hero .subtitle {
+    font-size: 1.2em;
+    opacity: 0.8;
+    margin-top: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero .formula {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    background: rgba(255,255,255,0.1);
+    display: inline-block;
+    padding: 8px 24px;
+    border-radius: 30px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  .toc {
+    background: white;
+    border-radius: 16px;
+    padding: 32px 40px;
+    margin: -30px auto 40px;
+    max-width: 800px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .toc h2 { font-size: 1.1em; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 16px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin: 8px 0; }
+  .toc a { color: #2d6a9f; text-decoration: none; font-weight: 500; }
+  .toc a:hover { text-decoration: underline; }
+
+  section {
+    background: white;
+    border-radius: 16px;
+    padding: 48px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  section h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #0a1628;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid #2d6a9f;
+  }
+  section h3 {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #1a3a5c;
+    margin: 28px 0 12px;
+  }
+  section h4 {
+    font-size: 1.05em;
+    font-weight: 600;
+    color: #444;
+    margin: 20px 0 8px;
+  }
+  section p { margin: 12px 0; color: #333; }
+
+  .amino-chain {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 24px 0;
+    justify-content: center;
+  }
+  .amino {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 8px;
+    border-radius: 10px;
+    min-width: 52px;
+    font-size: 0.85em;
+    transition: transform 0.2s;
+    cursor: default;
+    position: relative;
+  }
+  .amino:hover { transform: scale(1.15); z-index: 2; }
+  .amino .code { font-weight: 700; font-size: 1.1em; }
+  .amino .name { font-size: 0.7em; opacity: 0.8; margin-top: 2px; }
+  .amino .pos { font-size: 0.65em; opacity: 0.5; margin-top: 1px; }
+  .amino.nonpolar { background: #e8f5e9; color: #2e7d32; }
+  .amino.polar { background: #e3f2fd; color: #1565c0; }
+  .amino.acidic { background: #fce4ec; color: #c62828; }
+  .amino.basic { background: #f3e5f5; color: #6a1b9a; }
+  .amino.special { background: #fff3e0; color: #e65100; }
+  .amino-arrow {
+    display: flex;
+    align-items: center;
+    color: #bbb;
+    font-size: 1.2em;
+    padding: 0 2px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 16px 0;
+    font-size: 0.85em;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+  }
+
+  .img-container {
+    margin: 24px 0;
+    text-align: center;
+  }
+  .img-container img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  .img-caption {
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  .img-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 24px 0;
+  }
+  @media (max-width: 768px) {
+    .img-grid { grid-template-columns: 1fr; }
+    section { padding: 24px; }
+    .hero h1 { font-size: 2em; }
+  }
+
+  table.specs {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.95em;
+  }
+  table.specs th, table.specs td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  table.specs th {
+    background: #f0f4f8;
+    font-weight: 600;
+    color: #1a3a5c;
+    width: 35%;
+  }
+  table.specs tr:hover { background: #f8fbff; }
+
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 32px 0;
+  }
+  .pipeline-step {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    position: relative;
+  }
+  .pipeline-num {
+    width: 56px;
+    min-width: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .pipeline-num .circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #2d6a9f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1em;
+    flex-shrink: 0;
+  }
+  .pipeline-num .line {
+    flex: 1;
+    width: 3px;
+    background: linear-gradient(to bottom, #2d6a9f, #b0d0ef);
+    margin: 4px 0;
+  }
+  .pipeline-content {
+    flex: 1;
+    background: #f8fbff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    border-left: 4px solid #2d6a9f;
+  }
+  .pipeline-content h4 {
+    margin: 0 0 8px;
+    color: #1a3a5c;
+    font-size: 1.1em;
+  }
+  .pipeline-content p { margin: 4px 0; font-size: 0.93em; color: #444; }
+  .pipeline-content .details {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: rgba(45,106,159,0.06);
+    border-radius: 8px;
+    font-size: 0.88em;
+  }
+  .pipeline-content .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.78em;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-top: 6px;
+  }
+  .tag-time { background: #e3f2fd; color: #1565c0; }
+  .tag-temp { background: #fce4ec; color: #c62828; }
+  .tag-equip { background: #e8f5e9; color: #2e7d32; }
+  .tag-qc { background: #f3e5f5; color: #6a1b9a; }
+
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  .cost-table th, .cost-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+  .cost-table th { background: #f0f4f8; font-weight: 600; color: #1a3a5c; }
+  .cost-table .total { font-weight: 700; background: #e8f0f8; }
+  .cost-table .num { text-align: right; font-family: 'Courier New', monospace; }
+
+  .vrml-container {
+    background: #0a1628;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .vrml-container canvas {
+    width: 100%;
+    height: 400px;
+    display: block;
+    border-radius: 8px;
+  }
+  .vrml-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8em;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .vrml-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  .vrml-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: background 0.2s;
+  }
+  .vrml-btn:hover { background: rgba(255,255,255,0.2); }
+  .vrml-btn.active { background: #2d6a9f; border-color: #2d6a9f; }
+
+  .flow-diagram {
+    background: #f8fbff;
+    border-radius: 12px;
+    padding: 32px;
+    margin: 24px 0;
+    overflow-x: auto;
+  }
+  .flow-diagram svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+  footer {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 0.85em;
+  }
+  footer a { color: #2d6a9f; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+  @media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-card {
+    background: linear-gradient(135deg, #f0f7ff, #e8f0f8);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-card .value {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #1a3a5c;
+  }
+  .stat-card .label {
+    font-size: 0.82em;
+    color: #666;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <h1><strong>BPC-157</strong> — Body Protection Compound</h1>
+  <div class="subtitle">Wizualizacja molekularna · Projekt linii produkcyjnej · Raport techniczny</div>
+  <div class="formula">C₆₂H₉₈N₁₆O₂₂ · MW 1419.53 Da</div>
+</div>
+
+<!-- TOC -->
+<div class="container">
+  <div class="toc">
+    <h2>Spis treści</h2>
+    <ol>
+      <li><a href="#overview">Przegląd i charakterystyka peptydu</a></li>
+      <li><a href="#sequence">Sekwencja aminokwasowa — wizualizacja interaktywna</a></li>
+      <li><a href="#3d">Model 3D — wizualizacja molekularna</a></li>
+      <li><a href="#production">Projekt linii produkcyjnej</a></li>
+      <li><a href="#spps">Proces syntezy SPPS — krok po kroku</a></li>
+      <li><a href="#qc">Kontrola jakości i analityka</a></li>
+      <li><a href="#costs">Szacunkowe koszty i wydajność</a></li>
+      <li><a href="#layout">Layout zakładu — plan pomieszczeń</a></li>
+    </ol>
+  </div>
+</div>
+
+<!-- 1. Overview -->
+<div class="container">
+<section id="overview">
+  <h2>1. Przegląd i charakterystyka peptydu</h2>
+  <p>BPC-157 (Body Protection Compound-157) to syntetyczny pentadekapeptyd (15 aminokwasów) pochodzący z fragmentu ludzkiego białka ochronnego żołądka (BPC). Peptyd wykazuje niezwykłą stabilność w soku żołądkowym — pozostaje nienaruszony przez ponad 24 godziny.</p>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="value">15</div>
+      <div class="label">Aminokwasów</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">1419.53</div>
+      <div class="label">Masa mol. (Da)</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">C₆₂H₉₈N₁₆O₂₂</div>
+      <div class="label">Wzór sumaryczny</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">≥95%</div>
+      <div class="label">Wymagana czystość</div>
+    </div>
+  </div>
+
+  <table class="specs">
+    <tr><th>Nazwa systematyczna</th><td>BPC-157 (Body Protection Compound-157)</td></tr>
+    <tr><th>PubChem CID</th><td>9941957</td></tr>
+    <tr><th>Sekwencja</th><td>Gly-Glu-Pro-Pro-Pro-Gly-Lys-Pro-Ala-Asp-Asp-Ala-Gly-Leu-Val</td></tr>
+    <tr><th>Jednoliterowa</th><td>GEPPPGKPADDAGLV</td></tr>
+    <tr><th>Wzór sumaryczny</th><td>C₆₂H₉₈N₁₆O₂₂</td></tr>
+    <tr><th>Masa molekularna</th><td>1419.53 Da</td></tr>
+    <tr><th>Punkt izoelektryczny (pI)</th><td>~4.2</td></tr>
+    <tr><th>Rozpuszczalność</th><td>Rozpuszczalny w wodzie i DMSO</td></tr>
+    <tr><th>Stabilność</th><td>&gt;24h w soku żołądkowym (pH 1-2)</td></tr>
+    <tr><th>Pochodzenie</th><td>Fragment ludzkiego białka ochronnego żołądka</td></tr>
+    <tr><th>Status regulacyjny</th><td>Niezatwierdzony — wyłącznie do badań</td></tr>
+  </table>
+</section>
+
+<!-- 2. Amino Acid Sequence -->
+<section id="sequence">
+  <h2>2. Sekwencja aminokwasowa — wizualizacja</h2>
+  <p>Poniżej interaktywna wizualizacja sekwencji BPC-157. Kolory oznaczają typ aminokwasu. Najedź myszką na aminokwas, aby zobaczyć szczegóły.</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#e8f5e9"></div> Niepolarne (hydrofobowe)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e3f2fd"></div> Polarne (hydrofilowe)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fce4ec"></div> Kwasowe (ujemne)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f3e5f5"></div> Zasadowe (dodatnie)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fff3e0"></div> Specjalne (Pro, Gly)</div>
+  </div>
+
+  <div class="amino-chain" id="aminoChain"></div>
+
+  <h3>Właściwości sekwencji</h3>
+  <p>BPC-157 ma nietypową kompozycję — aż 3 reszty prolinowe (pozycje 3-5) tworzą sztywny segment poliproliny, co nadaje peptydowi charakterystyczną strukturę przestrzenną. Dwie reszty kwasu asparaginowego (Asp10-Asp11) tworzą region ujemnie naładowany, kluczowy dla aktywności biologicznej.</p>
+  <ul style="margin: 12px 0 12px 24px; color: #444;">
+    <li><strong>Region poliproliny (3-5):</strong> sztywna helisa poliproliny II (PPII), ogranicza konformacyjną elastyczność</li>
+    <li><strong>Glicyny (1, 6, 13):</strong> zapewniają elastyczność łańcucha w kluczowych pozycjach</li>
+    <li><strong>Lizyna (7):</strong> jedyny dodatnio naładowany aminokwas — potencjalne miejsce wiązania</li>
+    <li><strong>Asp-Asp (10-11):</strong> motyw dwukwasowy — chelatowanie jonów metali</li>
+    <li><strong>Leu-Val (14-15):</strong> hydrofobowy C-koniec — stabilizacja struktury</li>
+  </ul>
+</section>
+
+<!-- 3. 3D Model -->
+<section id="3d">
+  <h2>3. Model 3D — wizualizacja molekularna</h2>
+
+  <div class="img-container">
+    <img src="images/bpc157_molecular.png" alt="Model molekularny BPC-157">
+    <div class="img-caption">Ryc. 1. Model molekularny BPC-157 — wizualizacja wstążkowa z atomami (C — szary, N — niebieski, O — czerwony, H — biały)</div>
+  </div>
+
+  <!-- Interactive 3D Canvas -->
+  <div class="vrml-container">
+    <canvas id="molCanvas"></canvas>
+    <div class="vrml-controls">
+      <button class="vrml-btn active" onclick="setView('backbone')">Szkielet</button>
+      <button class="vrml-btn" onclick="setView('spacefill')">Przestrzenny</button>
+      <button class="vrml-btn" onclick="setView('sticks')">Pałeczkowy</button>
+      <button class="vrml-btn" onclick="toggleSpin()">⟳ Obrót</button>
+    </div>
+    <div class="vrml-label">Interaktywny model 3D BPC-157 — przeciągnij myszką aby obracać, scroll aby przybliżać</div>
+  </div>
+</section>
+
+<!-- 4. Production Line -->
+<section id="production">
+  <h2>4. Projekt linii produkcyjnej</h2>
+  <p>Poniżej zaprojektowana linia produkcyjna dla syntezy BPC-157 w skali GMP (Good Manufacturing Practice). Linia oparta na technologii Solid-Phase Peptide Synthesis (SPPS) z wykorzystaniem chemii Fmoc.</p>
+
+  <div class="img-container">
+    <img src="images/bpc157_production_line.png" alt="Linia produkcyjna BPC-157">
+    <div class="img-caption">Ryc. 2. Widok izometryczny linii produkcyjnej BPC-157 — od syntezy SPPS do pakowania końcowego</div>
+  </div>
+
+  <!-- Flow Diagram SVG -->
+  <div class="flow-diagram">
+    <h3 style="text-align:center; margin-bottom: 20px;">Schemat przepływu procesu produkcyjnego</h3>
+    <svg viewBox="0 0 1100 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Boxes -->
+      <g font-family="Segoe UI, sans-serif" font-size="11" text-anchor="middle">
+        <!-- Step 1 -->
+        <rect x="10" y="40" width="120" height="70" rx="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+        <text x="70" y="68" fill="#1565c0" font-weight="bold" font-size="12">Surowce</text>
+        <text x="70" y="84" fill="#333">Aminokwasy Fmoc</text>
+        <text x="70" y="98" fill="#333">Żywica, reagenty</text>
+
+        <!-- Arrow -->
+        <path d="M130 75 L155 75" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- Step 2 -->
+        <rect x="155" y="40" width="120" height="70" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+        <text x="215" y="68" fill="#2e7d32" font-weight="bold" font-size="12">Synteza SPPS</text>
+        <text x="215" y="84" fill="#333">15 cykli sprzęgania</text>
+        <text x="215" y="98" fill="#333">~18h automatycznie</text>
+
+        <path d="M275 75 L300 75" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- Step 3 -->
+        <rect x="300" y="40" width="120" height="70" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+        <text x="360" y="68" fill="#e65100" font-weight="bold" font-size="12">Odcinanie</text>
+        <text x="360" y="84" fill="#333">TFA/scavengery</text>
+        <text x="360" y="98" fill="#333">~3h</text>
+
+        <path d="M420 75 L445 75" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- Step 4 -->
+        <rect x="445" y="40" width="120" height="70" rx="10" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+        <text x="505" y="68" fill="#6a1b9a" font-weight="bold" font-size="12">Oczyszczanie</text>
+        <text x="505" y="84" fill="#333">Prep-HPLC</text>
+        <text x="505" y="98" fill="#333">~8-12h</text>
+
+        <path d="M565 75 L590 75" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- Step 5 -->
+        <rect x="590" y="40" width="120" height="70" rx="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+        <text x="650" y="68" fill="#1565c0" font-weight="bold" font-size="12">Liofilizacja</text>
+        <text x="650" y="84" fill="#333">Freeze-drying</text>
+        <text x="650" y="98" fill="#333">24-48h</text>
+
+        <path d="M710 75 L735 75" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- Step 6 -->
+        <rect x="735" y="40" width="120" height="70" rx="10" fill="#fce4ec" stroke="#c62828" stroke-width="2"/>
+        <text x="795" y="68" fill="#c62828" font-weight="bold" font-size="12">Kontrola QC</text>
+        <text x="795" y="84" fill="#333">HPLC, MS, endotox.</text>
+        <text x="795" y="98" fill="#333">~24h</text>
+
+        <path d="M855 75 L880 75" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- Step 7 -->
+        <rect x="880" y="40" width="120" height="70" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+        <text x="940" y="68" fill="#2e7d32" font-weight="bold" font-size="12">Pakowanie</text>
+        <text x="940" y="84" fill="#333">Fiolki, etykiety</text>
+        <text x="940" y="98" fill="#333">Sterylne napełnianie</text>
+
+        <!-- QC feedback -->
+        <path d="M795 110 L795 160 L505 160 L505 110" stroke="#c62828" stroke-width="1.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arrowRed)"/>
+        <text x="650" y="175" fill="#c62828" font-size="10" text-anchor="middle">Odrzut → ponowne oczyszczanie</text>
+
+        <!-- Timeline -->
+        <text x="550" y="25" fill="#999" font-size="10" text-anchor="middle">Całkowity czas cyklu: ~4-5 dni</text>
+      </g>
+
+      <!-- Arrow markers -->
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6" fill="#2d6a9f"/>
+        </marker>
+        <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6" fill="#c62828"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</section>
+
+<!-- 5. SPPS Process -->
+<section id="spps">
+  <h2>5. Proces syntezy SPPS — krok po kroku</h2>
+
+  <div class="img-container">
+    <img src="images/bpc157_spps_process.png" alt="Proces SPPS">
+    <div class="img-caption">Ryc. 3. Schemat procesu syntezy peptydów na fazie stałej (SPPS) z chemią Fmoc</div>
+  </div>
+
+  <div class="pipeline">
+    <!-- Step 1 -->
+    <div class="pipeline-step">
+      <div class="pipeline-num">
+        <div class="circle">1</div>
+        <div class="line"></div>
+      </div>
+      <div class="pipeline-content">
+        <h4>Przygotowanie żywicy i załadunek pierwszego aminokwasu</h4>
+        <p>Żywica Wang lub Rink Amide (0.3-0.7 mmol/g) jest kondycjonowana w DMF. Pierwszy aminokwas (Fmoc-Val-OH) jest sprzęgany z żywicą przy użyciu HATU/DIPEA.</p>
+        <div class="details">
+          <strong>Warunki:</strong> Val (C-koniec) → żywica Wang, sprzęganie 2h w RT<br>
+          <strong>Sprawdzenie:</strong> Test Kaiser (ninhydrynowy) — negatywny = sukces
+        </div>
+        <span class="tag tag-time">⏱ 2-3h</span>
+        <span class="tag tag-temp">🌡 20-25°C</span>
+        <span class="tag tag-equip">⚙ Reaktor SPPS</span>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="pipeline-step">
+      <div class="pipeline-num">
+        <div class="circle">2</div>
+        <div class="line"></div>
+      </div>
+      <div class="pipeline-content">
+        <h4>Cykl deprotekcji Fmoc</h4>
+        <p>Usunięcie grupy ochronnej Fmoc z końca N aminokwasu na żywicy przy użyciu 20% piperydyny w DMF (2 × 5 min).</p>
+        <div class="details">
+          <strong>Reagent:</strong> 20% piperydyna/DMF<br>
+          <strong>Monitoring:</strong> UV 301nm — absorpcja dibenzofulwenu potwierdza deprotekcję
+        </div>
+        <span class="tag tag-time">⏱ 10-15 min</span>
+        <span class="tag tag-qc">🔬 UV monitoring</span>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="pipeline-step">
+      <div class="pipeline-num">
+        <div class="circle">3</div>
+        <div class="line"></div>
+      </div>
+      <div class="pipeline-content">
+        <h4>Sprzęganie kolejnego aminokwasu</h4>
+        <p>Aktywacja Fmoc-aminokwasu (3-5 ekw.) z HATU/HOBt i DIPEA, następnie sprzęganie z wolną grupą aminową na żywicy.</p>
+        <div class="details">
+          <strong>Kolejność (C→N):</strong> Val → Leu → Gly → Ala → Asp → Asp → Ala → Pro → Lys → Gly → Pro → Pro → Pro → Glu → Gly<br>
+          <strong>Podwójne sprzęganie:</strong> dla trudnych sekwencji (Pro-Pro-Pro)
+        </div>
+        <span class="tag tag-time">⏱ 45-90 min / aminokwas</span>
+        <span class="tag tag-equip">⚙ Automatyczny syntezator</span>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="pipeline-step">
+      <div class="pipeline-num">
+        <div class="circle">4</div>
+        <div class="line"></div>
+      </div>
+      <div class="pipeline-content">
+        <h4>Powtórzenie cyklu ×14</h4>
+        <p>Cykle deprotekcji i sprzęgania powtarzane 14 razy (15 aminokwasów - 1). Automatyczny syntezator peptydów kontroluje cały proces.</p>
+        <div class="details">
+          <strong>Kluczowe momenty:</strong><br>
+          • Pozycje 3-5 (Pro-Pro-Pro): podwójne sprzęganie, wydłużony czas reakcji<br>
+          • Pozycja 7 (Lys): ochrona łańcucha bocznego grupą Boc<br>
+          • Pozycje 10-11 (Asp-Asp): ochrona OtBu na grupach karboksylowych
+        </div>
+        <span class="tag tag-time">⏱ ~18h łącznie</span>
+        <span class="tag tag-temp">🌡 RT (20-25°C)</span>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="pipeline-step">
+      <div class="pipeline-num">
+        <div class="circle">5</div>
+        <div class="line"></div>
+      </div>
+      <div class="pipeline-content">
+        <h4>Odcinanie od żywicy i deprotekcja globalna</h4>
+        <p>Koktajl TFA/TIS/H₂O (95:2.5:2.5) jednocześnie odcina peptyd od żywicy i usuwa wszystkie grupy ochronne łańcuchów bocznych.</p>
+        <div class="details">
+          <strong>Koktajl:</strong> TFA 95% + triizopropylsilan 2.5% + H₂O 2.5% (scavengery)<br>
+          <strong>Wytrącanie:</strong> Surowy peptyd wytrącany w zimnym eterze dietylowym (-20°C)
+        </div>
+        <span class="tag tag-time">⏱ 2-3h</span>
+        <span class="tag tag-temp">🌡 0-5°C (eter)</span>
+        <span class="tag tag-qc">🔬 LC-MS surowego</span>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="pipeline-step">
+      <div class="pipeline-num">
+        <div class="circle">6</div>
+        <div class="line"></div>
+      </div>
+      <div class="pipeline-content">
+        <h4>Oczyszczanie preparatywne HPLC</h4>
+        <p>Surowy peptyd rozpuszczony w wodzie/acetonitryle i oczyszczany na kolumnie C18 preparatywnej HPLC z gradientem ACN/H₂O + 0.1% TFA.</p>
+        <div class="details">
+          <strong>Kolumna:</strong> C18, 250×50mm, 10μm<br>
+          <strong>Faza ruchoma:</strong> A: 0.1% TFA/H₂O, B: 0.1% TFA/ACN<br>
+          <strong>Gradient:</strong> 10-40% B w 60 min<br>
+          <strong>Detekcja:</strong> UV 220nm<br>
+          <strong>Wydajność:</strong> frakcje o czystości ≥95% łączone
+        </div>
+        <span class="tag tag-time">⏱ 8-12h</span>
+        <span class="tag tag-equip">⚙ Prep-HPLC</span>
+        <span class="tag tag-qc">🔬 Analityczny HPLC każdej frakcji</span>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="pipeline-step">
+      <div class="pipeline-num">
+        <div class="circle">7</div>
+        <div class="line"></div>
+      </div>
+      <div class="pipeline-content">
+        <h4>Liofilizacja (suszenie sublimacyjne)</h4>
+        <p>Oczyszczony peptyd w roztworze zamrażany i suszony pod próżnią. Rezultat: biały, puszysty proszek o długiej stabilności.</p>
+        <div class="details">
+          <strong>Zamrażanie:</strong> -40°C do -80°C (shell freezing)<br>
+          <strong>Suszenie pierwotne:</strong> -20°C, 100-200 mTorr, ~24h<br>
+          <strong>Suszenie wtórne:</strong> +25°C, <100 mTorr, ~12h<br>
+          <strong>Wilgotność resztkowa:</strong> <1%
+        </div>
+        <span class="tag tag-time">⏱ 24-48h</span>
+        <span class="tag tag-temp">🌡 -80°C → +25°C</span>
+        <span class="tag tag-equip">⚙ Liofilizator</span>
+      </div>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="pipeline-step">
+      <div class="pipeline-num">
+        <div class="circle">8</div>
+        <div class="line"></div>
+      </div>
+      <div class="pipeline-content">
+        <h4>Kontrola jakości końcowa i zwolnienie serii</h4>
+        <p>Kompleksowa analityka zgodna z wymaganiami GMP przed zwolnieniem serii do pakowania.</p>
+        <div class="details">
+          <strong>Testy:</strong><br>
+          • HPLC analityczny → czystość ≥95%<br>
+          • MS (ESI-TOF) → masa 1419.53 ± 0.5 Da<br>
+          • Sekwencjonowanie (Edman / MS/MS) → potwierdzenie sekwencji<br>
+          • Zawartość peptydowa → oznaczenie AAA lub UV<br>
+          • Endotoksyny bakteryjne (LAL) → <0.25 EU/mg<br>
+          • Bioburden → <1 CFU/mg<br>
+          • Wilgotność resztkowa (Karl Fischer) → <2%<br>
+          • Wygląd, rozpuszczalność, pH roztworu
+        </div>
+        <span class="tag tag-time">⏱ 24-48h</span>
+        <span class="tag tag-qc">🔬 Pełny panel QC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. QC -->
+<section id="qc">
+  <h2>6. Kontrola jakości i analityka</h2>
+
+  <div class="img-grid">
+    <div class="img-container">
+      <img src="images/bpc157_qc_lab.png" alt="Laboratorium QC">
+      <div class="img-caption">Ryc. 4. Laboratorium kontroli jakości z systemem HPLC i spektrometrem mas</div>
+    </div>
+    <div class="img-container">
+      <img src="images/bpc157_lyophilizer.png" alt="Liofilizator">
+      <div class="img-caption">Ryc. 5. Przemysłowy liofilizator do suszenia sublimacyjnego peptydów</div>
+    </div>
+  </div>
+
+  <h3>Specyfikacja produktu końcowego</h3>
+  <table class="specs">
+    <tr><th>Parametr</th><td><strong>Specyfikacja</strong></td></tr>
+    <tr><th>Wygląd</th><td>Biały do białawego liofilizowany proszek</td></tr>
+    <tr><th>Tożsamość (MS)</th><td>MW = 1419.53 ± 1.0 Da</td></tr>
+    <tr><th>Czystość (HPLC)</th><td>≥ 95.0% (UV 220nm)</td></tr>
+    <tr><th>Zawartość peptydowa</th><td>≥ 80% (analiza aminokwasowa)</td></tr>
+    <tr><th>Zawartość wody</th><td>≤ 5.0% (Karl Fischer)</td></tr>
+    <tr><th>Zawartość octanu</th><td>≤ 15.0% (IC)</td></tr>
+    <tr><th>Endotoksyny</th><td>&lt; 0.25 EU/mg (LAL)</td></tr>
+    <tr><th>Bioburden</th><td>&lt; 1 CFU/mg</td></tr>
+    <tr><th>TFA resztkowe</th><td>&lt; 0.1% (IC / ¹⁹F NMR)</td></tr>
+    <tr><th>Metale ciężkie</th><td>&lt; 10 ppm (ICP-MS)</td></tr>
+    <tr><th>Rozpuszczalniki resztkowe</th><td>Zgodnie z ICH Q3C</td></tr>
+    <tr><th>Przechowywanie</th><td>-20°C, suchy, chroniony przed światłem</td></tr>
+    <tr><th>Stabilność</th><td>≥ 24 miesiące (-20°C, liofilizat)</td></tr>
+  </table>
+
+  <h3>Krytyczne parametry procesu (CPP)</h3>
+  <table class="specs">
+    <tr><th>Etap</th><td><strong>CPP</strong></td></tr>
+    <tr><th>Sprzęganie</th><td>Stosunek molowy aminokwasu (3-5 eq), czas reakcji, temperatura</td></tr>
+    <tr><th>Deprotekcja</th><td>Stężenie piperydyny, czas ekspozycji, kompletność (UV)</td></tr>
+    <tr><th>Odcinanie</th><td>Stężenie TFA, czas, temperatura, kompozycja scavengerów</td></tr>
+    <tr><th>HPLC</th><td>Profil gradientu, przepływ, temperatura kolumny, czystość frakcji</td></tr>
+    <tr><th>Liofilizacja</th><td>Temperatura zamrażania, ciśnienie komory, profile rampy cieplnej</td></tr>
+  </table>
+</section>
+
+<!-- 7. Costs -->
+<section id="costs">
+  <h2>7. Szacunkowe koszty i wydajność</h2>
+  <p>Kalkulacja dla serii produkcyjnej o skali 100g surowego peptydu (wydajność końcowa ~30-50g po oczyszczaniu).</p>
+
+  <h3>Koszty materiałowe (na serię 100g)</h3>
+  <table class="cost-table">
+    <tr><th>Pozycja</th><th class="num">Koszt (EUR)</th><th>Uwagi</th></tr>
+    <tr><td>Aminokwasy Fmoc (15 szt. × nadmiar)</td><td class="num">8 000 – 15 000</td><td>Zależy od dostawcy i skali</td></tr>
+    <tr><td>Żywica Wang/Rink Amide</td><td class="num">2 000 – 4 000</td><td>0.3-0.7 mmol/g loading</td></tr>
+    <tr><td>Reagenty sprzęgające (HATU, HOBt, DIPEA)</td><td class="num">3 000 – 5 000</td><td>Nadmiar 3-5x</td></tr>
+    <tr><td>Rozpuszczalniki (DMF, DCM, ACN, TFA)</td><td class="num">4 000 – 6 000</td><td>Duże zużycie na skalę 100g</td></tr>
+    <tr><td>Piperydyna (deprotekcja)</td><td class="num">500 – 1 000</td><td>20% roztwór w DMF</td></tr>
+    <tr><td>Kolumny HPLC + materiały</td><td class="num">2 000 – 3 000</td><td>Prep C18 + analityczne</td></tr>
+    <tr><td>Materiały opakowaniowe</td><td class="num">1 000 – 2 000</td><td>Fiolki, korki, etykiety</td></tr>
+    <tr class="total"><td><strong>Razem materiały</strong></td><td class="num"><strong>20 500 – 36 000</strong></td><td></td></tr>
+  </table>
+
+  <h3>Koszty sprzętowe (jednorazowa inwestycja)</h3>
+  <table class="cost-table">
+    <tr><th>Urządzenie</th><th class="num">Koszt (EUR)</th><th>Uwagi</th></tr>
+    <tr><td>Automatyczny syntezator peptydów (np. Liberty Blue)</td><td class="num">150 000 – 350 000</td><td>Mikrofalowy — szybsze sprzęganie</td></tr>
+    <tr><td>System preparatywnej HPLC</td><td class="num">100 000 – 250 000</td><td>Z kolektorem frakcji</td></tr>
+    <tr><td>System analityczny HPLC-MS</td><td class="num">200 000 – 400 000</td><td>ESI-TOF dla potwierdzenia MW</td></tr>
+    <tr><td>Liofilizator produkcyjny</td><td class="num">80 000 – 200 000</td><td>Powierzchnia półek ≥2 m²</td></tr>
+    <tr><td>Infrastruktura cleanroom (klasa D/C)</td><td class="num">200 000 – 500 000</td><td>HVAC, HEPA, monitoring</td></tr>
+    <tr><td>Pozostałe (wagi, pH-metry, Karl Fischer, LAL)</td><td class="num">50 000 – 100 000</td><td></td></tr>
+    <tr class="total"><td><strong>Razem inwestycja</strong></td><td class="num"><strong>780 000 – 1 800 000</strong></td><td></td></tr>
+  </table>
+
+  <h3>Wskaźniki wydajności</h3>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="value">60-75%</div>
+      <div class="label">Wydajność syntezy (surowy)</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">30-50%</div>
+      <div class="label">Wydajność po HPLC</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">4-5 dni</div>
+      <div class="label">Czas cyklu produkcyjnego</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">~6 serii/mies.</div>
+      <div class="label">Zdolność produkcyjna</div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. Layout -->
+<section id="layout">
+  <h2>8. Layout zakładu — plan pomieszczeń</h2>
+  <p>Proponowany układ przestrzenny zakładu produkcyjnego w standardzie GMP, z wydzielonymi strefami czystości i logicznym przepływem materiałów.</p>
+
+  <!-- SVG Floor Plan -->
+  <div class="flow-diagram" style="padding: 16px;">
+    <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+      <!-- Background grid -->
+      <defs>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e8e8e8" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="900" height="520" fill="url(#grid)"/>
+
+      <!-- Outer walls -->
+      <rect x="20" y="20" width="860" height="480" fill="none" stroke="#333" stroke-width="3" rx="4"/>
+
+      <!-- Zone labels -->
+      <text x="450" y="14" text-anchor="middle" font-size="11" fill="#999">Strefa kontrolowana GMP — Klasa D / C / Klasa A (LAF)</text>
+
+      <!-- Room 1: Warehouse -->
+      <rect x="25" y="25" width="180" height="150" fill="#f5f5f5" stroke="#999" stroke-width="1.5" rx="3"/>
+      <text x="115" y="55" text-anchor="middle" font-weight="bold" font-size="13" fill="#333">Magazyn</text>
+      <text x="115" y="72" text-anchor="middle" font-size="10" fill="#666">Surowce &amp; reagenty</text>
+      <text x="115" y="88" text-anchor="middle" font-size="9" fill="#999">T: 2-8°C / 15-25°C</text>
+      <text x="115" y="104" text-anchor="middle" font-size="9" fill="#999">Klasa: niesklasyfikowana</text>
+      <rect x="40" y="115" width="60" height="45" fill="#e8e8e8" rx="3" stroke="#bbb"/>
+      <text x="70" y="140" text-anchor="middle" font-size="8" fill="#666">Chłodnia</text>
+      <text x="70" y="150" text-anchor="middle" font-size="7" fill="#999">2-8°C</text>
+      <rect x="110" y="115" width="80" height="45" fill="#e8e8e8" rx="3" stroke="#bbb"/>
+      <text x="150" y="140" text-anchor="middle" font-size="8" fill="#666">Reg. pokojowe</text>
+      <text x="150" y="150" text-anchor="middle" font-size="7" fill="#999">15-25°C</text>
+
+      <!-- Arrow from warehouse -->
+      <path d="M205 100 L230 100" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow2)"/>
+
+      <!-- Room 2: Synthesis -->
+      <rect x="230" y="25" width="220" height="220" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="3"/>
+      <text x="340" y="55" text-anchor="middle" font-weight="bold" font-size="14" fill="#2e7d32">Synteza SPPS</text>
+      <text x="340" y="72" text-anchor="middle" font-size="10" fill="#666">Klasa D • T: 20±2°C • RH: 30-60%</text>
+      <!-- Synthesizer icon -->
+      <rect x="260" y="85" width="70" height="55" fill="#c8e6c9" rx="5" stroke="#4caf50"/>
+      <text x="295" y="108" text-anchor="middle" font-size="8" fill="#333">Syntezator</text>
+      <text x="295" y="120" text-anchor="middle" font-size="7" fill="#666">Liberty Blue</text>
+      <!-- Cleavage station -->
+      <rect x="350" y="85" width="80" height="55" fill="#c8e6c9" rx="5" stroke="#4caf50"/>
+      <text x="390" y="108" text-anchor="middle" font-size="8" fill="#333">Stacja odcinania</text>
+      <text x="390" y="120" text-anchor="middle" font-size="7" fill="#666">TFA / scavengery</text>
+      <!-- Solvent cabinet -->
+      <rect x="260" y="160" width="100" height="40" fill="#c8e6c9" rx="5" stroke="#4caf50"/>
+      <text x="310" y="183" text-anchor="middle" font-size="8" fill="#333">Szafa na rozpuszcz.</text>
+      <!-- Fume hood -->
+      <rect x="370" y="160" width="65" height="40" fill="#c8e6c9" rx="5" stroke="#4caf50"/>
+      <text x="402" y="183" text-anchor="middle" font-size="8" fill="#333">Dygestorium</text>
+      <!-- Waste -->
+      <rect x="260" y="210" width="170" height="25" fill="#ffcdd2" rx="3" stroke="#e57373"/>
+      <text x="345" y="226" text-anchor="middle" font-size="8" fill="#c62828">Odpady chemiczne → utylizacja</text>
+
+      <!-- Arrow synthesis → purification -->
+      <path d="M450 135 L480 135" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow2)"/>
+
+      <!-- Room 3: Purification -->
+      <rect x="480" y="25" width="200" height="220" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="3"/>
+      <text x="580" y="55" text-anchor="middle" font-weight="bold" font-size="14" fill="#1565c0">Oczyszczanie</text>
+      <text x="580" y="72" text-anchor="middle" font-size="10" fill="#666">Klasa D • T: 20±2°C</text>
+      <!-- Prep HPLC -->
+      <rect x="500" y="85" width="80" height="55" fill="#bbdefb" rx="5" stroke="#1976d2"/>
+      <text x="540" y="108" text-anchor="middle" font-size="8" fill="#333">Prep-HPLC</text>
+      <text x="540" y="120" text-anchor="middle" font-size="7" fill="#666">C18, 50mm ID</text>
+      <!-- Fraction collector -->
+      <rect x="590" y="85" width="75" height="55" fill="#bbdefb" rx="5" stroke="#1976d2"/>
+      <text x="627" y="108" text-anchor="middle" font-size="8" fill="#333">Kolektor</text>
+      <text x="627" y="120" text-anchor="middle" font-size="7" fill="#666">frakcji</text>
+      <!-- Rotary evaporator -->
+      <rect x="500" y="155" width="80" height="40" fill="#bbdefb" rx="5" stroke="#1976d2"/>
+      <text x="540" y="178" text-anchor="middle" font-size="8" fill="#333">Wyparki rotac.</text>
+      <!-- Buffer prep -->
+      <rect x="590" y="155" width="75" height="40" fill="#bbdefb" rx="5" stroke="#1976d2"/>
+      <text x="627" y="178" text-anchor="middle" font-size="8" fill="#333">Prep. buforów</text>
+      <!-- Waste -->
+      <rect x="500" y="210" width="165" height="25" fill="#ffcdd2" rx="3" stroke="#e57373"/>
+      <text x="582" y="226" text-anchor="middle" font-size="8" fill="#c62828">Odpady ACN → odzysk</text>
+
+      <!-- Arrow purification → lyophilization -->
+      <path d="M680 135 L710 135" stroke="#2d6a9f" stroke-width="2" marker-end="url(#arrow2)"/>
+
+      <!-- Room 4: Lyophilization -->
+      <rect x="710" y="25" width="165" height="220" fill="#fff3e0" stroke="#f57c00" stroke-width="2" rx="3"/>
+      <text x="792" y="55" text-anchor="middle" font-weight="bold" font-size="14" fill="#e65100">Liofilizacja</text>
+      <text x="792" y="72" text-anchor="middle" font-size="10" fill="#666">Klasa C • T: 18±2°C</text>
+      <!-- Lyophilizer -->
+      <rect x="730" y="85" width="125" height="70" fill="#ffe0b2" rx="5" stroke="#f57c00"/>
+      <text x="792" y="115" text-anchor="middle" font-size="9" fill="#333">Liofilizator</text>
+      <text x="792" y="128" text-anchor="middle" font-size="7" fill="#666">2 m² półek</text>
+      <text x="792" y="140" text-anchor="middle" font-size="7" fill="#666">-80°C / &lt;100 mTorr</text>
+      <!-- Fill station -->
+      <rect x="730" y="170" width="125" height="40" fill="#ffe0b2" rx="5" stroke="#f57c00"/>
+      <text x="792" y="193" text-anchor="middle" font-size="8" fill="#333">Stacja napełniania fiolek</text>
+
+      <!-- Room 5: QC Lab -->
+      <rect x="25" y="265" width="350" height="230" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="3"/>
+      <text x="200" y="295" text-anchor="middle" font-weight="bold" font-size="14" fill="#6a1b9a">Laboratorium QC</text>
+      <text x="200" y="312" text-anchor="middle" font-size="10" fill="#666">Klasa D • T: 20±2°C • Niezależne od produkcji</text>
+      <!-- HPLC -->
+      <rect x="45" y="325" width="90" height="50" fill="#e1bee7" rx="5" stroke="#7b1fa2"/>
+      <text x="90" y="348" text-anchor="middle" font-size="8" fill="#333">HPLC analityczny</text>
+      <text x="90" y="360" text-anchor="middle" font-size="7" fill="#666">czystość, tożsamość</text>
+      <!-- MS -->
+      <rect x="145" y="325" width="90" height="50" fill="#e1bee7" rx="5" stroke="#7b1fa2"/>
+      <text x="190" y="348" text-anchor="middle" font-size="8" fill="#333">MS (ESI-TOF)</text>
+      <text x="190" y="360" text-anchor="middle" font-size="7" fill="#666">masa molekularna</text>
+      <!-- Other instruments -->
+      <rect x="245" y="325" width="115" height="50" fill="#e1bee7" rx="5" stroke="#7b1fa2"/>
+      <text x="302" y="345" text-anchor="middle" font-size="8" fill="#333">Spektroskopia</text>
+      <text x="302" y="357" text-anchor="middle" font-size="7" fill="#666">UV-Vis, FT-IR, NMR</text>
+      <!-- Micro -->
+      <rect x="45" y="390" width="90" height="50" fill="#e1bee7" rx="5" stroke="#7b1fa2"/>
+      <text x="90" y="410" text-anchor="middle" font-size="8" fill="#333">Mikrobiologia</text>
+      <text x="90" y="422" text-anchor="middle" font-size="7" fill="#666">LAL, bioburden</text>
+      <!-- Karl Fischer -->
+      <rect x="145" y="390" width="90" height="50" fill="#e1bee7" rx="5" stroke="#7b1fa2"/>
+      <text x="190" y="410" text-anchor="middle" font-size="8" fill="#333">Karl Fischer</text>
+      <text x="190" y="422" text-anchor="middle" font-size="7" fill="#666">wilgotność</text>
+      <!-- AAA -->
+      <rect x="245" y="390" width="115" height="50" fill="#e1bee7" rx="5" stroke="#7b1fa2"/>
+      <text x="302" y="410" text-anchor="middle" font-size="8" fill="#333">AAA / ICP-MS</text>
+      <text x="302" y="422" text-anchor="middle" font-size="7" fill="#666">aminokwasy, metale</text>
+      <!-- Stability -->
+      <rect x="45" y="455" width="315" height="30" fill="#f8bbd0" rx="3" stroke="#c2185b"/>
+      <text x="200" y="474" text-anchor="middle" font-size="9" fill="#c2185b">Komory stabilności (ICH: 25°C/60%RH, 40°C/75%RH)</text>
+
+      <!-- Room 6: Packaging -->
+      <rect x="400" y="265" width="220" height="230" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" rx="3"/>
+      <text x="510" y="295" text-anchor="middle" font-weight="bold" font-size="14" fill="#2e7d32">Pakowanie &amp; magazyn</text>
+      <text x="510" y="312" text-anchor="middle" font-size="10" fill="#666">Klasa C (napełnianie: LAF klasa A)</text>
+      <!-- Fill -->
+      <rect x="420" y="325" width="85" height="55" fill="#c8e6c9" rx="5" stroke="#388e3c"/>
+      <text x="462" y="348" text-anchor="middle" font-size="8" fill="#333">Napełnianie</text>
+      <text x="462" y="360" text-anchor="middle" font-size="7" fill="#666">fiolek (LAF)</text>
+      <text x="462" y="370" text-anchor="middle" font-size="7" fill="#999">5mg / fiolkę</text>
+      <!-- Crimp -->
+      <rect x="515" y="325" width="85" height="55" fill="#c8e6c9" rx="5" stroke="#388e3c"/>
+      <text x="557" y="348" text-anchor="middle" font-size="8" fill="#333">Zamykanie</text>
+      <text x="557" y="360" text-anchor="middle" font-size="7" fill="#666">crimp caps</text>
+      <!-- Label -->
+      <rect x="420" y="395" width="85" height="45" fill="#c8e6c9" rx="5" stroke="#388e3c"/>
+      <text x="462" y="421" text-anchor="middle" font-size="8" fill="#333">Etykietowanie</text>
+      <!-- Box -->
+      <rect x="515" y="395" width="85" height="45" fill="#c8e6c9" rx="5" stroke="#388e3c"/>
+      <text x="557" y="421" text-anchor="middle" font-size="8" fill="#333">Kartonowanie</text>
+      <!-- Cold storage -->
+      <rect x="420" y="455" width="180" height="30" fill="#bbdefb" rx="3" stroke="#1976d2"/>
+      <text x="510" y="474" text-anchor="middle" font-size="9" fill="#1565c0">Magazyn gotowy: -20°C</text>
+
+      <!-- Room 7: Offices -->
+      <rect x="650" y="265" width="225" height="230" fill="#fafafa" stroke="#999" stroke-width="1.5" rx="3"/>
+      <text x="762" y="295" text-anchor="middle" font-weight="bold" font-size="13" fill="#333">Strefa administracyjna</text>
+      <rect x="670" y="310" width="90" height="40" fill="#f5f5f5" rx="3" stroke="#ccc"/>
+      <text x="715" y="334" text-anchor="middle" font-size="8" fill="#666">Szatnia / śluzy</text>
+      <rect x="770" y="310" width="90" height="40" fill="#f5f5f5" rx="3" stroke="#ccc"/>
+      <text x="815" y="334" text-anchor="middle" font-size="8" fill="#666">Biuro QA/QP</text>
+      <rect x="670" y="360" width="90" height="40" fill="#f5f5f5" rx="3" stroke="#ccc"/>
+      <text x="715" y="384" text-anchor="middle" font-size="8" fill="#666">Dokumentacja</text>
+      <rect x="770" y="360" width="90" height="40" fill="#f5f5f5" rx="3" stroke="#ccc"/>
+      <text x="815" y="384" text-anchor="middle" font-size="8" fill="#666">Serwerownia</text>
+      <rect x="670" y="410" width="190" height="40" fill="#f5f5f5" rx="3" stroke="#ccc"/>
+      <text x="765" y="434" text-anchor="middle" font-size="8" fill="#666">SCADA / monitoring środowiskowy</text>
+      <rect x="670" y="460" width="190" height="25" fill="#e3f2fd" rx="3" stroke="#90caf9"/>
+      <text x="765" y="476" text-anchor="middle" font-size="8" fill="#1565c0">Systemy: HVAC, WFI, sprężone powietrze, azot</text>
+
+      <!-- Arrows between rooms -->
+      <defs>
+        <marker id="arrow2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6" fill="#2d6a9f"/>
+        </marker>
+      </defs>
+
+      <!-- Flow arrows lower -->
+      <path d="M792 245 L792 265" stroke="#f57c00" stroke-width="2" marker-end="url(#arrow2)" stroke-dasharray="4,2"/>
+      <path d="M620 300 L620 265" stroke="#388e3c" stroke-width="1.5" stroke-dasharray="4,2"/>
+    </svg>
+  </div>
+
+  <p><em>Powierzchnia łączna zakładu: ~600-800 m². Przepływ materiałów jednokierunkowy (magazyn → synteza → oczyszczanie → liofilizacja → pakowanie). Laboratorium QC oddzielone od produkcji z niezależnym wejściem.</em></p>
+</section>
+
+</div>
+
+<footer>
+  <p>Raport wygenerowany automatycznie · Kwiecień 2026<br>
+  Wizualizacje: <a href=".">Nano Banana (Gemini)</a> · Dane: PubChem, Bachem, PolyPeptide Group<br>
+  <em>BPC-157 nie jest zatwierdzony do użytku klinicznego — wyłącznie do celów badawczych</em></p>
+</footer>
+
+<script>
+// === Amino Acid Sequence Visualization ===
+const aminoAcids = [
+  { code: 'G', name: 'Gly', full: 'Glicyna', type: 'special', mw: 57.05 },
+  { code: 'E', name: 'Glu', full: 'Kwas glutaminowy', type: 'acidic', mw: 129.12 },
+  { code: 'P', name: 'Pro', full: 'Prolina', type: 'special', mw: 97.12 },
+  { code: 'P', name: 'Pro', full: 'Prolina', type: 'special', mw: 97.12 },
+  { code: 'P', name: 'Pro', full: 'Prolina', type: 'special', mw: 97.12 },
+  { code: 'G', name: 'Gly', full: 'Glicyna', type: 'special', mw: 57.05 },
+  { code: 'K', name: 'Lys', full: 'Lizyna', type: 'basic', mw: 128.17 },
+  { code: 'P', name: 'Pro', full: 'Prolina', type: 'special', mw: 97.12 },
+  { code: 'A', name: 'Ala', full: 'Alanina', type: 'nonpolar', mw: 71.08 },
+  { code: 'D', name: 'Asp', full: 'Kwas asparaginowy', type: 'acidic', mw: 115.09 },
+  { code: 'D', name: 'Asp', full: 'Kwas asparaginowy', type: 'acidic', mw: 115.09 },
+  { code: 'A', name: 'Ala', full: 'Alanina', type: 'nonpolar', mw: 71.08 },
+  { code: 'G', name: 'Gly', full: 'Glicyna', type: 'special', mw: 57.05 },
+  { code: 'L', name: 'Leu', full: 'Leucyna', type: 'nonpolar', mw: 113.16 },
+  { code: 'V', name: 'Val', full: 'Walina', type: 'nonpolar', mw: 99.13 },
+];
+
+const chain = document.getElementById('aminoChain');
+aminoAcids.forEach((aa, i) => {
+  if (i > 0) {
+    const arrow = document.createElement('div');
+    arrow.className = 'amino-arrow';
+    arrow.textContent = '→';
+    chain.appendChild(arrow);
+  }
+  const el = document.createElement('div');
+  el.className = `amino ${aa.type}`;
+  el.innerHTML = `<span class="code">${aa.code}</span><span class="name">${aa.name}</span><span class="pos">${i+1}</span>`;
+  el.title = `${aa.full} (${aa.name})\nPozycja: ${i+1}\nMasa: ${aa.mw} Da\nTyp: ${aa.type}`;
+  chain.appendChild(el);
+});
+
+// === Interactive 3D Peptide Visualization ===
+const canvas = document.getElementById('molCanvas');
+const ctx = canvas.getContext('2d');
+let viewMode = 'backbone';
+let spinning = true;
+let angle = 0;
+let dragStart = null;
+let dragAngleX = 0, dragAngleY = 0;
+let baseAngleX = 0, baseAngleY = 0;
+
+// Generate 3D coordinates for 15 amino acids
+function generateCoords() {
+  const coords = [];
+  // BPC-157 has a polyproline II helix region and turns
+  for (let i = 0; i < 15; i++) {
+    let x, y, z;
+    if (i < 2) {
+      // N-terminal flexible
+      x = -6 + i * 2.5;
+      y = Math.sin(i * 0.8) * 2;
+      z = Math.cos(i * 1.2) * 1.5;
+    } else if (i < 5) {
+      // Polyproline II helix (Pro-Pro-Pro)
+      const t = (i - 2) * 2.1;
+      x = -1 + (i - 2) * 2.8;
+      y = Math.cos(t) * 2.5;
+      z = Math.sin(t) * 2.5;
+    } else if (i < 8) {
+      // Turn region
+      const t = (i - 5) * 1.5;
+      x = 7 + Math.cos(t + 1) * 2;
+      y = -1 + (i - 5) * 1.8;
+      z = Math.sin(t) * 2;
+    } else {
+      // C-terminal extended
+      x = 6 - (i - 8) * 1.8;
+      y = 4 + Math.sin((i - 8) * 0.7) * 1.5;
+      z = (i - 8) * 0.8 - 2;
+    }
+    coords.push({ x, y, z, aa: aminoAcids[i] });
+  }
+  return coords;
+}
+
+const atoms = generateCoords();
+const typeColors = {
+  nonpolar: '#4caf50',
+  polar: '#2196f3',
+  acidic: '#e91e63',
+  basic: '#9c27b0',
+  special: '#ff9800'
+};
+
+function project(x, y, z, ax, ay) {
+  // Rotate around Y
+  let x1 = x * Math.cos(ay) - z * Math.sin(ay);
+  let z1 = x * Math.sin(ay) + z * Math.cos(ay);
+  // Rotate around X
+  let y1 = y * Math.cos(ax) - z1 * Math.sin(ax);
+  let z2 = y * Math.sin(ax) + z1 * Math.cos(ax);
+
+  const scale = 300 / (15 + z2);
+  return {
+    sx: canvas.width/2 + x1 * scale,
+    sy: canvas.height/2 + y1 * scale,
+    scale: scale,
+    z: z2
+  };
+}
+
+function render() {
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  canvas.width = w * 2;
+  canvas.height = h * 2;
+  ctx.scale(2, 2);
+
+  const ax = baseAngleX + dragAngleX;
+  const ay = angle + baseAngleY + dragAngleY;
+
+  // Background
+  const bg = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w*0.7);
+  bg.addColorStop(0, '#0f2035');
+  bg.addColorStop(1, '#0a1628');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  // Project all atoms
+  const projected = atoms.map((a, i) => ({
+    ...project(a.x, a.y, a.z, ax, ay),
+    idx: i,
+    aa: a.aa
+  }));
+
+  // Sort by Z for proper depth rendering
+  const sorted = [...projected].sort((a, b) => a.z - b.z);
+
+  // Draw bonds first
+  ctx.lineWidth = 2;
+  for (let i = 0; i < projected.length - 1; i++) {
+    const a = projected[i];
+    const b = projected[i + 1];
+    const gradient = ctx.createLinearGradient(a.sx, a.sy, b.sx, b.sy);
+    gradient.addColorStop(0, typeColors[atoms[i].aa.type] + '80');
+    gradient.addColorStop(1, typeColors[atoms[i+1].aa.type] + '80');
+    ctx.strokeStyle = gradient;
+
+    if (viewMode === 'backbone') {
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      if (i === 0) {
+        ctx.moveTo(a.sx, a.sy);
+      }
+      // Smooth curve
+      const cx = (a.sx + b.sx) / 2;
+      const cy = (a.sy + b.sy) / 2;
+      ctx.moveTo(a.sx, a.sy);
+      ctx.lineTo(b.sx, b.sy);
+      ctx.stroke();
+    } else {
+      ctx.lineWidth = viewMode === 'sticks' ? 6 : 2;
+      ctx.beginPath();
+      ctx.moveTo(a.sx, a.sy);
+      ctx.lineTo(b.sx, b.sy);
+      ctx.stroke();
+    }
+  }
+
+  // Draw atoms
+  sorted.forEach(p => {
+    const color = typeColors[p.aa.type];
+    let radius;
+    if (viewMode === 'spacefill') {
+      radius = p.scale * 1.2;
+    } else if (viewMode === 'sticks') {
+      radius = p.scale * 0.4;
+    } else {
+      radius = p.scale * 0.6;
+    }
+
+    // Glow
+    const glow = ctx.createRadialGradient(p.sx - radius*0.2, p.sy - radius*0.2, 0, p.sx, p.sy, radius * 1.5);
+    glow.addColorStop(0, color + 'ff');
+    glow.addColorStop(0.5, color + '88');
+    glow.addColorStop(1, color + '00');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(p.sx, p.sy, radius * 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Main sphere
+    const grad = ctx.createRadialGradient(p.sx - radius*0.3, p.sy - radius*0.3, radius*0.1, p.sx, p.sy, radius);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.3, color);
+    grad.addColorStop(1, color + '44');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(p.sx, p.sy, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Label
+    if (viewMode !== 'spacefill' || radius > 15) {
+      ctx.fillStyle = '#fff';
+      ctx.font = `bold ${Math.max(9, radius * 0.7)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.aa.name, p.sx, p.sy);
+      ctx.font = `${Math.max(7, radius * 0.4)}px sans-serif`;
+      ctx.fillStyle = '#aaa';
+      ctx.fillText(p.idx + 1, p.sx, p.sy + radius + 8);
+    }
+  });
+
+  // Legend
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'left';
+  let ly = 20;
+  Object.entries(typeColors).forEach(([type, color]) => {
+    const labels = { nonpolar: 'Niepolarne', polar: 'Polarne', acidic: 'Kwasowe', basic: 'Zasadowe', special: 'Specjalne (Gly/Pro)' };
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(20, ly, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#888';
+    ctx.fillText(labels[type], 30, ly + 4);
+    ly += 18;
+  });
+}
+
+function animate() {
+  if (spinning && !dragStart) {
+    angle += 0.008;
+  }
+  render();
+  requestAnimationFrame(animate);
+}
+
+// Mouse interaction
+canvas.addEventListener('mousedown', e => {
+  dragStart = { x: e.clientX, y: e.clientY };
+  spinning = false;
+});
+canvas.addEventListener('mousemove', e => {
+  if (dragStart) {
+    dragAngleY = (e.clientX - dragStart.x) * 0.01;
+    dragAngleX = (e.clientY - dragStart.y) * 0.01;
+    render();
+  }
+});
+canvas.addEventListener('mouseup', () => {
+  if (dragStart) {
+    baseAngleX += dragAngleX;
+    baseAngleY += dragAngleY;
+    dragAngleX = 0;
+    dragAngleY = 0;
+    dragStart = null;
+  }
+});
+canvas.addEventListener('mouseleave', () => {
+  if (dragStart) {
+    baseAngleX += dragAngleX;
+    baseAngleY += dragAngleY;
+    dragAngleX = 0;
+    dragAngleY = 0;
+    dragStart = null;
+  }
+});
+
+// Touch support
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  dragStart = { x: t.clientX, y: t.clientY };
+  spinning = false;
+});
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (dragStart) {
+    const t = e.touches[0];
+    dragAngleY = (t.clientX - dragStart.x) * 0.01;
+    dragAngleX = (t.clientY - dragStart.y) * 0.01;
+  }
+});
+canvas.addEventListener('touchend', () => {
+  if (dragStart) {
+    baseAngleX += dragAngleX;
+    baseAngleY += dragAngleY;
+    dragAngleX = 0;
+    dragAngleY = 0;
+    dragStart = null;
+  }
+});
+
+function setView(mode) {
+  viewMode = mode;
+  document.querySelectorAll('.vrml-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function toggleSpin() {
+  spinning = !spinning;
+  event.target.classList.toggle('active');
+}
+
+animate();
+</script>
+
+</body>
+</html>
