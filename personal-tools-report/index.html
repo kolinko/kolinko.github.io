@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Software Built with AI — v4 (April 2026)</title>
+<style>
+:root{--a:#1a5276;--bg:#fafaf8;--c:#fff;--bd:#e0e0e0;--m:#888;--t:#2a2a2a;--accent:#e8c547}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:var(--bg);color:var(--t);line-height:1.7}
+.hero{background:linear-gradient(135deg,#1a1a2e,#16213e 50%,#0f3460);color:#fff;padding:4rem 2rem 3rem;text-align:center}
+.hero h1{font-size:2.6rem;margin-bottom:.5rem;line-height:1.15;max-width:800px;margin:0 auto}
+.hero .sub{font-size:1.05rem;color:#b0c4de;max-width:720px;margin:.5rem auto 1.5rem;font-style:italic;line-height:1.6}
+.hero .met{font-size:.85rem;color:#7a8ea8}.hero .met a{color:#b0c4de}
+.hero .sts{display:flex;justify-content:center;gap:2rem;margin-top:2rem;flex-wrap:wrap}
+.hero .s{text-align:center}.hero .s b{font-size:2rem;color:var(--accent);display:block}.hero .s span{font-size:.8rem;color:#b0c4de}
+.w{max-width:1060px;margin:0 auto;padding:2rem 1.5rem}
+.intro{font-size:1.02rem;line-height:1.8;margin-bottom:2rem;color:#444}
+.intro strong{color:var(--a)}
+.toc{background:var(--c);border:1px solid var(--bd);border-radius:8px;padding:1.5rem 2rem;margin-bottom:2.5rem;columns:2;column-gap:2rem}
+.toc h2{font-size:1.1rem;margin-bottom:.6rem;column-span:all;color:var(--a)}
+.toc a{text-decoration:none;color:var(--t);font-size:.92rem;display:block;padding:.12rem 0}.toc a:hover{color:var(--a)}
+h2.sec{font-size:1.6rem;margin-top:3rem;margin-bottom:.2rem;color:var(--a);border-bottom:2px solid #e0e0e0;padding-bottom:.3rem}
+.ss{font-size:.95rem;color:var(--m);margin-bottom:1.2rem;font-style:italic}
+h3.sub{font-size:1.05rem;color:#555;margin:1.5rem 0 .6rem;font-style:italic;font-weight:normal}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.2rem;margin:1rem 0 1.5rem}
+.p{background:var(--c);border:1px solid var(--bd);border-radius:8px;overflow:hidden;transition:box-shadow .2s}
+.p:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.p img{display:block;width:100%;height:160px;object-fit:cover;object-position:top;border-bottom:1px solid var(--bd)}
+.p .bd{padding:.9rem 1rem}
+.p h3{font-size:1.02rem;margin-bottom:.2rem;line-height:1.3}
+.p h3 a{color:var(--a);text-decoration:none}.p h3 a:hover{text-decoration:underline}
+.p .mt{font-size:.78rem;color:var(--m);margin-bottom:.4rem}.p .mt a{color:var(--m)}
+.p p{margin-bottom:.5rem;font-size:.9rem;line-height:1.55}
+.p .sk{font-size:.68rem;color:#555;background:#f0f0eb;padding:1px 6px;border-radius:3px;display:inline-block;margin-right:2px;margin-bottom:2px}
+blockquote{border-left:3px solid #bbb;padding:.3rem .8rem;margin:.5rem 0;background:#f5f5f0;font-style:italic;font-size:.88rem;color:#555}
+.va{background:#f0f7ff;border-left:3px solid #3a7bd5;padding:.4rem .7rem;margin:.5rem 0;font-size:.84rem;border-radius:0 4px 4px 0;color:#2c5282}
+.hl{background:#fffde7;padding:.8rem 1rem;border-radius:6px;margin:1rem 0;border-left:3px solid #f9a825;font-size:.92rem;line-height:1.6}
+.essay{background:var(--c);border:1px solid var(--bd);border-radius:8px;padding:1.5rem 2rem;margin:1.5rem 0;line-height:1.75;font-size:.95rem}
+.essay h3{color:var(--a);margin-bottom:.5rem;font-size:1.1rem}
+.essay p{margin-bottom:.8rem}
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0}
+.pi{background:var(--c);border:1px solid var(--bd);border-radius:6px;padding:.8rem}
+.pi strong{color:var(--a);display:block;margin-bottom:.2rem;font-size:.92rem}
+.pi .ev{font-size:.82rem;color:var(--m)}
+.ft{font-size:.78rem;color:#999;margin-top:2rem;text-align:center;padding-bottom:2rem}
+@media(max-width:700px){.g{grid-template-columns:1fr}.toc{columns:1}.hero h1{font-size:2rem}.pg{grid-template-columns:1fr}.essay{padding:1rem}}
+</style>
+</head>
+<body>
+
+
+<div class="hero">
+<h1>Personal Software Built with AI</h1>
+<p class="sub">The best projects from people who stopped subscribing to SaaS and started building their own tools with Claude Code, Cursor, and AI coding assistants (2025-2026). Curated with commentary.</p>
+<p class="met">v4 — April 2026 &bull; <a href="/static/personal-tools-ai-report-v3.html">v3</a></p>
+<div class="sts">
+<div class="s"><b>50</b><span>curated projects</span></div>
+<div class="s"><b>6</b><span>categories</span></div>
+<div class="s"><b>170+</b><span>total researched</span></div>
+</div>
+</div>
+
+<div class="w">
+
+<div class="intro">
+<p>In 2025-2026, something shifted. People stopped waiting for the perfect app and started building exactly what they needed. Not startups — personal tools. A thyroid patient who trained a model on 9 years of Apple Watch data. A dad who built a CRM to remember his kids' friends' birthdays. A CEO who replaced 90 minutes of inbox triage with a 5-minute AI briefing.</p>
+<p>This report curates the <strong>50 most interesting projects</strong> from 170+ we researched. For each, we explain what makes it stand out — and where relevant, how it compares to <strong>Varia</strong>, a personal infrastructure system built by Tomasz Kolinko that handles email triage, package tracking, smart home control, issue management, contacts across 5 platforms, and more, all on Redis + CherryPy + Claude Code.</p>
+<p>The organizing question isn't "what did they build?" but <strong>"what made them build it, and what did they learn?"</strong></p>
+</div>
+
+
+<div class="toc">
+<h2>Contents</h2>
+<a href="#crm">1. Personal CRMs &mdash; the relationship problem</a>
+<a href="#health">2. Health &amp; Medical &mdash; the killer use case</a>
+<a href="#productivity">3. Task Managers &amp; Productivity</a>
+<a href="#pa">4. Personal Assistants &amp; Life OS</a>
+<a href="#email">5. Email &mdash; the original AI battleground</a>
+<a href="#finance">6. Personal Finance</a>
+<a href="#philosophy">7. Why people build &mdash; the philosophy</a>
+<a href="#patterns">8. Patterns &amp; what's next</a>
+</div>
+
+
+<h2 class="sec" id="crm">1. Personal CRMs</h2>
+<p class="ss">The relationship problem: every CRM is built for sales pipelines, not for remembering your friend's dog's name</p>
+
+<h3 class="sub">Projects that solve real problems</h3>
+<div class="g">
+<div class="p">
+<img src="images/context-hero.jpg" alt="CRM-CLI">
+<div class="bd">
+<h3><a href="https://github.com/jdanielnd/crm-cli">CRM-CLI</a></h3>
+<p class="mt">jdanielnd &bull; 18 stars &bull; Go + SQLite</p>
+<p>A CRM that lives entirely in the terminal — no browser, no dashboard. The killer feature is its built-in MCP server: after meetings, tell Claude what happened and it logs interactions, updates deals, and creates follow-ups automatically. The "summary" field on each contact acts as a living dossier that Claude reads before meetings and updates after. 3K lines of Go, FTS5 search, Unix pipes.</p>
+<blockquote>I just wanted something fast that I could use without leaving the terminal.</blockquote>
+<div class="va"><strong>Varia parallel:</strong> Varia's contacts system indexes ~400K messages across 5 platforms (FB, IG, LinkedIn, SMS, WhatsApp) and has AI-powered search. CRM-CLI solves a simpler version of the same problem — "who did I talk to and what about?" — but the MCP approach is cleaner for post-meeting logging.</div>
+<span class="sk">Go</span>
+<span class="sk">SQLite FTS5</span>
+<span class="sk">MCP</span>
+<span class="sk">single binary</span>
+</div></div>
+<div class="p">
+<img src="images/pendo-dex.jpg" alt="crm.cli (headless, FUSE-mounted)">
+<div class="bd">
+<h3><a href="https://github.com/dzhng/crm.cli">crm.cli (headless, FUSE-mounted)</a></h3>
+<p class="mt">David Zheng / Duet &bull; 87 stars &bull; TypeScript + Rust</p>
+<p>The most architecturally interesting CRM here: no UI at all. It mounts your CRM data as a virtual filesystem via NFS (macOS) or FUSE (Linux). Any tool that reads files — Claude Code, grep, vim — gets instant CRM access. Built by Duet (cloud agent workspace), it proves that the best AI integration is sometimes no integration at all: just make data accessible as files.</p>
+<div class="va"><strong>Varia comparison:</strong> Varia takes the opposite approach — everything in Redis, accessible via HTTP API. The FUSE approach is elegant for developer tools but doesn't work for web UIs or mobile. Redis wins for multi-client access; FUSE wins for zero-config AI agent integration.</div>
+<span class="sk">TypeScript</span>
+<span class="sk">Rust NFS</span>
+<span class="sk">C FUSE</span>
+<span class="sk">SQLite</span>
+</div></div>
+<div class="p">
+<img src="images/shartsis-crm.jpg" alt="Alex Shartsis MCP CRM">
+<div class="bd">
+<h3><a href="https://www.growthunhinged.com/p/personal-ai-crm">Alex Shartsis MCP CRM</a></h3>
+<p class="mt">20 minutes to set up &bull; $20/month</p>
+<p>Instead of building an app, Shartsis (co-founder of Skyp) wired Claude Desktop to his existing Gmail, Calendar, and meeting notes via MCP. The system scans transcripts, figures out where relationships stand, generates follow-up tasks, and drafts personalized emails. No new UI — Claude IS the interface. This is the strongest argument for MCP over custom apps: you get 90% of CRM value with zero frontend work.</p>
+<blockquote>Built it in 20 minutes for only $20/month, and it&#x27;s already more powerful than a traditional CRM.</blockquote>
+<span class="sk">Claude Desktop</span>
+<span class="sk">MCP</span>
+<span class="sk">Gmail</span>
+<span class="sk">Google Calendar</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/fbuchner/meerkat-crm">Meerkat CRM</a></h3>
+<p class="mt">Frank Buchner &bull; 190 stars &bull; Go</p>
+<p>The anti-AI CRM. No AI features, no platform sync — deliberately minimal. Built by a parent who needed to track birthdays, dietary restrictions, and school events across family and friends. Optional CardDAV server for phone sync. The Monica replacement nobody asked for but many people need: just contacts, reminders, notes, and nothing else.</p>
+<blockquote>I wanted to manage both professional and personal relationships, especially with kids around.</blockquote>
+<span class="sk">Go</span>
+<span class="sk">self-hosted</span>
+<span class="sk">CardDAV</span>
+<span class="sk">no AI</span>
+</div></div>
+<div class="p">
+<img src="images/tilly-site.jpg" alt="Tilly">
+<div class="bd">
+<h3><a href="https://github.com/ccssmnn/tilly">Tilly</a></h3>
+<p class="mt">Carl Assmann &bull; 62 stars &bull; Show HN</p>
+<p>A relationship journal that treats connections like a garden needing regular watering. E2E encrypted via Jazz protocol, offline-first PWA with real-time sync. The AI remembers what friends mention so you follow up naturally. $6/mo hosted or self-host. The emotional design — "nurture your connections" — sets it apart from every CRM that thinks in "deals" and "pipeline stages."</p>
+<span class="sk">TypeScript</span>
+<span class="sk">Jazz protocol</span>
+<span class="sk">E2E encrypted</span>
+<span class="sk">PWA</span>
+</div></div>
+<div class="p">
+<img src="images/pingcrm-site.jpg" alt="PingCRM">
+<div class="bd">
+<h3><a href="https://github.com/sneg55/pingcrm">PingCRM</a></h3>
+<p class="mt">Nick Sawinyh &bull; 8 stars &bull; Show HN</p>
+<p>Syncs Gmail, Telegram, Twitter, LinkedIn — then AI detects life events and drafts follow-ups. Scores relationships and notices who's going cold (no interaction in 90+ days) or changing jobs. The creator also maintains awesome-open-source-crm, so they've studied every alternative. FastAPI + Next.js.</p>
+<span class="sk">Python</span>
+<span class="sk">FastAPI</span>
+<span class="sk">Next.js</span>
+<span class="sk">multi-platform sync</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://thoughts.jock.pl/p/wiz-personal-ai-agent-claude-code-2026">Wiz (Paweł Jozefiak)</a></h3>
+<p class="mt">Self-extending architecture &bull; macOS launchd</p>
+<p>An AI agent that includes a "People CRM" sub-agent tracking relationships via Obsidian, auto-updating from iMessage, flagging dormant contacts, and tracking commitments. What makes Wiz special: it's self-extending — the agent can modify its own code and add new capabilities. Runs hourly via launchd with a nightshift batch job. The architecture (agent modifies itself) is both thrilling and terrifying.</p>
+<div class="va"><strong>Varia parallel:</strong> Varia's issues system also runs background agents autonomously, but they can't modify their own code — the Overseer classifies results. Wiz's self-modification approach trades safety for velocity.</div>
+<span class="sk">Claude Code</span>
+<span class="sk">Obsidian</span>
+<span class="sk">macOS launchd</span>
+<span class="sk">self-extending</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://khemaridh.substack.com/p/i-coded-an-entire-crm-from-scratch">Pebblr CRM (Khe Hy)</a></h3>
+<p class="mt">RadReads newsletter (100K+ subscribers)</p>
+<p>The most honest account of vibe-coding a CRM. The initial MVP came fast, but Khe Hy's follow-up post "Vibe coding? More like whack-a-mole coding" is essential reading for anyone thinking of building with AI. Every fix broke something else. Security concerns appeared the moment real users entered personal data. Still functional, still useful — but the journey matters more than the destination.</p>
+<blockquote>Vibe coding? More like whack-a-mole coding.</blockquote>
+<span class="sk">Claude Code</span>
+<span class="sk">honest account</span>
+<span class="sk">non-developer</span>
+</div></div>
+</div>
+
+<h2 class="sec" id="health">2. Health &amp; Medical Trackers</h2>
+<p class="ss">The killer use case for personal software — deeply personal, high-stakes, no generic SaaS can serve you</p>
+
+<h3 class="sub">Wearable data liberation</h3>
+<div class="g">
+<div class="p">
+<img src="images/fitness-webapp.jpg" alt="Titan — AI Fitness System">
+<div class="bd">
+<h3><a href="https://www.rickmontero.com/blog/ai-fitness-tracker-claude-apple-health-notion">Titan — AI Fitness System</a></h3>
+<p class="mt">Rick Montero &bull; Claude + Apple Health + Notion</p>
+<p>Three-phase system: Phase 1 pulls Apple Health data (sleep, calories, HR, VO2 max, weight); Phase 2 generates weekly reviews cross-referencing health data with Notion workout logs; Phase 3 gives AI training recommendations based on recovery status. The insight: years of health data scattered across apps became actionable the moment Claude could read all of it at once.</p>
+<blockquote>Whatever your imagination can conceptualize, you can pretty much make.</blockquote>
+<span class="sk">Claude</span>
+<span class="sk">Apple Health</span>
+<span class="sk">Notion MCP</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://eddmann.com/posts/running-mcps-everywhere-chatting-with-my-workouts/">Edd Mann’s Strava + Garmin MCP</a></h3>
+<p class="mt">Edd Mann &bull; MCP servers for both platforms</p>
+<p>Two MCP servers that let you talk to your workout data. Ask Claude about your training load and it generates throwaway React UIs with pace charts on the fly. The Garmin server exposes incredibly rich physiological data — VO2 max, HRV, running power, recovery time — that Garmin Connect makes impossible to query. The key idea: MCP turns proprietary data silos into conversational interfaces.</p>
+<div class="va"><strong>Varia parallel:</strong> Varia's smarthome system does something similar — AirVisual sensors and Gree ACs become queryable via the dashboard/API. The pattern is the same: take device data trapped in a bad UI, make it accessible to AI.</div>
+<span class="sk">Python</span>
+<span class="sk">AWS Lambda</span>
+<span class="sk">MCP</span>
+<span class="sk">React generated UIs</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://felixrieseberg.github.io/claude-coach/">Claude Coach</a></h3>
+<p class="mt">Felix Rieseberg &bull; 77 stars &bull; Open source</p>
+<p>Endurance training plan generator that connects to Strava, analyzes your actual fitness level, and builds personalized marathon/triathlon/Ironman plans with proper periodization (base/build/peak/taper). Exports to .ics (calendar), .zwo (Zwift), .fit (Garmin), .mrc (TrainerRoad). The export variety is what makes this production-quality rather than a toy.</p>
+<span class="sk">TypeScript</span>
+<span class="sk">Strava API</span>
+<span class="sk">multi-format export</span>
+</div></div>
+</div>
+<h3 class="sub">Solving personal health problems</h3>
+<div class="g">
+<div class="p">
+<div class="bd">
+<h3><a href="https://invisible.ch/2026/01/135000-lines-of-ai-assisted-code-a-month-with-claude-code/">Fischer’s Healthcare Tool (KAI)</a></h3>
+<p class="mt">Jens-Christian Fischer &bull; 21K lines, 63 files</p>
+<p>Part of a 135,000-line personal infrastructure built in one month with Claude Code. The healthcare tool fills official Swiss insurance forms (AFP-Formulare) for his wife's psychotherapy practice, manages patient data, syncs with Google Calendar, and handles document OCR. It's not a weekend project — it's a real business tool replacing manual form-filling that was eating hours every week.</p>
+<div class="va"><strong>Varia parallel:</strong> The closest comparison to Varia in scope. Fischer built his entire personal infrastructure (email, calendar, thermostat, healthcare, meeting prep) in TypeScript. Varia does similar things in Python/Redis. Both are 100K+ line personal systems, proving that "personal software" can be enterprise-scale when it's YOUR enterprise.</div>
+<span class="sk">TypeScript</span>
+<span class="sk">Claude Code</span>
+<span class="sk">Swiss healthcare</span>
+<span class="sk">21K lines</span>
+</div></div>
+<div class="p">
+<img src="images/github-wellally.jpg" alt="WellAlly-Health">
+<div class="bd">
+<h3><a href="https://github.com/huifer/WellAlly-health">WellAlly-Health</a></h3>
+<p class="mt">827 stars &bull; No programming required</p>
+<p>A health information system that runs entirely through Claude Code slash commands — no programming needed. Tracks symptoms, medications, radiation exposure from medical imaging, and provides consultations through 13 AI specialist personas. The standout feature: drug interaction detection with 5-level severity warnings. All data stays local in JSON files.</p>
+<span class="sk">Claude Code CLI</span>
+<span class="sk">slash commands</span>
+<span class="sk">JSON</span>
+<span class="sk">local-only</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/OpenHealthForAll/open-health">OpenHealth</a></h3>
+<p class="mt">3,862 stars &bull; Show HN &bull; RAG over 38M medical papers</p>
+<p>The most ambitious project here: an AI health assistant grounded in 38 million medical papers. Integrates Apple Health, Google Fit, Oura, Whoop, Garmin. Can run fully local via Ollama. Unlike ChatGPT giving generic health advice, OpenHealth shows its citations. The evidence-based approach is what makes this trustworthy rather than scary.</p>
+<span class="sk">TypeScript</span>
+<span class="sk">Next.js</span>
+<span class="sk">RAG</span>
+<span class="sk">runs locally via Ollama</span>
+</div></div>
+<div class="p">
+<img src="images/fitness-watch.jpg" alt="Cooper’s Corner — Voice Workout Logger">
+<div class="bd">
+<h3><a href="https://www.lennysnewsletter.com/p/how-i-built-an-apple-watch-workout-app">Cooper’s Corner — Voice Workout Logger</a></h3>
+<p class="mt">Terry Lin &bull; Zero mobile experience</p>
+<p>"I did dumbbell shrugs, 35lb, 10 reps" — speak to your Apple Watch and data is automatically structured. Built by someone with zero mobile experience using Cursor + Xcode. Featured on Lenny's Newsletter. The voice-first approach solves the core problem of workout logging: you can't type while holding weights.</p>
+<span class="sk">Cursor</span>
+<span class="sk">Xcode</span>
+<span class="sk">SwiftUI</span>
+<span class="sk">Apple Watch</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://forum.cursor.com/t/built-an-aphasia-speech-therapy-app-with-cursor-solo-from-zero-to-app-store/153232">AANI — Aphasia Therapy App</a></h3>
+<p class="mt">Won 1st at Chiang Mai Cursor Hackathon (27 teams) &bull; Shipped to App Store</p>
+<p>An AAC app for aphasia patients, built by someone with zero coding experience. Won first place at a hackathon against 27 teams, then shipped to the App Store. This is the most compelling example of AI coding tools enabling people to solve problems they're uniquely positioned to understand but couldn't previously build solutions for.</p>
+<span class="sk">Cursor</span>
+<span class="sk">Xcode</span>
+<span class="sk">iOS App Store</span>
+<span class="sk">zero prior coding</span>
+</div></div>
+</div>
+
+<h2 class="sec" id="productivity">3. Task Managers &amp; Productivity</h2>
+<p class="ss">Everyone builds a todo app. What's interesting is when they build something only they could need.</p>
+
+<div class="g">
+<div class="p">
+<img src="images/mindwtr-inbox.jpg" alt="Mindwtr — Full GTD System">
+<div class="bd">
+<h3><a href="https://github.com/dongdongbh/Mindwtr">Mindwtr — Full GTD System</a></h3>
+<p class="mt">Dongda &bull; Tauri v2 + React Native</p>
+<p>A proper GTD implementation: Capture, Clarify, Organize, Reflect, Engage — all five phases. Desktop (Tauri v2) and mobile (React Native/Expo) apps. Optional AI (OpenAI/Gemini/Claude) for task clarification. What makes it stand out: it's not another todo list pretending to be GTD. It actually implements the full methodology with inbox processing, next-action contexts, and weekly reviews.</p>
+<span class="sk">Tauri v2</span>
+<span class="sk">React Native</span>
+<span class="sk">optional AI</span>
+<span class="sk">full GTD</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://sixcolors.com/link/2025/06/vibe-coding-a-personal-task-manager/">L’il Alex / TaskIntent</a></h3>
+<p class="mt">Mike Masnick (Techdirt) &bull; Built with Bolt + Lovable</p>
+<p>The Techdirt founder built his task manager because "you're renting someone else's vision of how work should happen." Combines Intend-style daily planning with future task management. No specs, no wireframes — just described what he wanted in plain English. Uses Supabase for cross-device sync. The article is a manifesto for why personal software matters: when you build it, the tool fits your brain instead of the other way around.</p>
+<blockquote>You&#x27;re renting someone else&#x27;s vision of how work should happen.</blockquote>
+<span class="sk">Bolt</span>
+<span class="sk">Lovable</span>
+<span class="sk">Supabase</span>
+<span class="sk">non-programmer</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://www.xda-developers.com/i-vibe-coded-my-entire-productivity-stack-in-a-weekend/">XDA 10-Tab Productivity Stack</a></h3>
+<p class="mt">One weekend &bull; Claude Code + Qwen3-Coder-Next</p>
+<p>Dashboard, Email, Calendar, Tasks, Assignments, Articles, Pitches, Pomodoro Writing, Habits — 10 tabs in one app, all vibe-coded in a weekend. Local SQLite, Google Calendar/Gmail APIs. This is what happens when someone asks "why do I have 10 browser tabs open?" and builds the answer.</p>
+<div class="va"><strong>Varia parallel:</strong> Varia does exactly this — email, packages, calendar, issues, contacts, smarthome, chat, all in one CherryPy app on Redis. Same instinct, same pattern: consolidate everything into one personal dashboard.</div>
+<span class="sk">Claude Code</span>
+<span class="sk">Qwen3</span>
+<span class="sk">SQLite</span>
+<span class="sk">Google APIs</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/NTCoding/claude-skillz/tree/main/lightweight-task-workflow">Nick Tune’s Minimalist Task Workflow</a></h3>
+<p class="mt">State machine approach &bull; 3 persistent files</p>
+<p>The anti-framework. Three markdown files (tasks.md, requirements.md, session.md) plus custom Claude Code commands. The key insight: Claude's built-in /todo doesn't persist across sessions — this does. Start a new conversation, type /continue-refactoring, and Claude picks up where it left off. Minimal, effective, no dependencies.</p>
+<blockquote>I really loved just hitting /continue-refactoring. This is the good stuff.</blockquote>
+<span class="sk">Claude Code skills</span>
+<span class="sk">markdown</span>
+<span class="sk">zero dependencies</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://amgad.io/posts/building-ai-assistant-productivity-claude-obsidian/">Mohamed Amgad’s ADHD System</a></h3>
+<p class="mt">Claude Code + Obsidian &bull; Designed for ADHD</p>
+<p>Auto-tracks work, prioritizes tasks based on context and energy, generates standup reports. Specifically designed for ADHD: the system compensates for working memory limitations by maintaining context that the user can't. The standup report generator is brilliant — it reads your Obsidian activity and writes what you did, even when you can't remember.</p>
+<span class="sk">Claude Code</span>
+<span class="sk">Obsidian</span>
+<span class="sk">ADHD-focused</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://zackproser.com/blog/claude-external-brain-adhd-autistic">Zachary Proser’s External Brain</a></h3>
+<p class="mt">Voice-first &bull; For ADHD/autism</p>
+<p>Six minutes of voice brain dump replaces an entire productivity system. Claude externalizes context and provides guardrails for someone with ADHD and autism. The 200+ HN comments confirm this resonated deeply. The core idea: instead of adapting your brain to a system, build a system that adapts to your brain.</p>
+<span class="sk">Claude Code</span>
+<span class="sk">voice-first</span>
+<span class="sk">ADHD/autism</span>
+</div></div>
+<div class="p">
+<img src="images/habi-site.jpg" alt="Habi">
+<div class="bd">
+<h3><a href="https://www.producthunt.com/products/habi-vibe-coded-habit-tracker">Habi</a></h3>
+<p class="mt">Show HN &bull; Built with wife + daughter &bull; iOS App Store</p>
+<p>Habit tracker tied to calendar events, built as a family project. Pomodoro, project tracking, countdowns, soundscapes. The fact that it was built WITH family members (not just FOR them) makes it special — it's personal software as a creative act.</p>
+<span class="sk">iOS App Store</span>
+<span class="sk">family project</span>
+<span class="sk">vibe coded</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3>Realtime Budget</h3>
+<p class="mt">u/Jero9871 on Reddit &bull; 70K+ Android downloads &bull; Flutter</p>
+<p>A budget app where your balance grows by the millisecond (showing how much of your paycheck you've "earned" so far today). ~150 hours of vibe coding with Cursor. 70,000 downloads with zero advertising. The real-time counter is the hook — it's gamification of budgeting that actually works.</p>
+<blockquote>I simply like a number that goes up, other than in my bank account.</blockquote>
+<span class="sk">Flutter</span>
+<span class="sk">Cursor</span>
+<span class="sk">70K downloads</span>
+<span class="sk">zero ads</span>
+</div></div>
+</div>
+
+<h2 class="sec" id="pa">4. Personal Assistants &amp; Life OS</h2>
+<p class="ss">The category that most resembles Varia — people building entire operating systems for their lives</p>
+
+<h3 class="sub">The serious infrastructure projects</h3>
+<div class="g">
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/moltis-org/moltis">Moltis</a></h3>
+<p class="mt">Fabien Penso &bull; 131 HN pts &bull; Single Rust binary</p>
+<p>150,000 lines of Rust compiled to a 60MB binary with zero Node/Python dependencies. Multi-LLM routing, sandboxed execution, hybrid memory, self-extending skills at runtime, MCP tool servers, multi-channel (web/Telegram/API). The premise: if something touches your files, credentials, and daily workflow, you should be able to inspect every line. MIT licensed, no telemetry.</p>
+<div class="va"><strong>Varia comparison:</strong> Varia is ~50K lines of Python with Redis as the brain. Moltis is 150K lines of Rust with everything embedded in one binary. Both prioritize self-hosting and inspectability. Moltis is more portable (single binary); Varia is more flexible (Python + Redis means easy to extend).</div>
+<span class="sk">Rust</span>
+<span class="sk">60MB binary</span>
+<span class="sk">multi-LLM</span>
+<span class="sk">MIT</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://invisible.ch/2026/01/135000-lines-of-ai-assisted-code-a-month-with-claude-code/">Fischer’s KAI (135K lines)</a></h3>
+<p class="mt">Jens-Christian Fischer &bull; TypeScript &bull; Swiss</p>
+<p>The closest thing to Varia in ambition: 135,000 lines of TypeScript in one month. Email skill with semantic search over 10 years of messages, healthcare tool for wife's practice, meeting preparation that researches contacts, daily briefings, PII anonymizer, Tado thermostat control. Fischer sells courses on building personal AI infrastructure. This is the proof that "personal software" can be as complex as enterprise software.</p>
+<div class="va"><strong>Varia comparison:</strong> Nearly identical feature set — email search, healthcare, calendar, thermostat, meeting prep. Fischer uses TypeScript/Tana; Varia uses Python/Redis/CherryPy. Both are 100K+ line systems built by one person with Claude Code.</div>
+<span class="sk">TypeScript</span>
+<span class="sk">Claude Code</span>
+<span class="sk">135K lines</span>
+<span class="sk">Swiss</span>
+</div></div>
+<div class="p">
+<img src="images/super-tobi.jpg" alt="Super Tobi">
+<div class="bd">
+<h3><a href="https://github.com/tobySolutions/super-tobi">Super Tobi</a></h3>
+<p class="mt">Tobiloba Adedeji &bull; 19 slash commands + 23 Python scripts</p>
+<p>An open-source personal OS on Claude Code. Job hunting, email triage, workout tracking, finance, message aggregation — with CLAUDE.md as the "kernel." What makes it stand out: it's fully open-source with good documentation, so you can actually learn from the architecture instead of just reading a blog post about how great it is.</p>
+<span class="sk">Claude Code</span>
+<span class="sk">open-source</span>
+<span class="sk">Python</span>
+<span class="sk">well-documented</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://okhlopkov.com/always-on-ai-agent-server-setup/">Daniil Okhlopkov’s Always-On Agent</a></h3>
+<p class="mt">Hetzner VPS ($5/mo) + Docker + Telegram</p>
+<p>A persistent 24/7 AI running on a cheap VPS. The key insight: the agent has an immutable "body" (the daemon) and a mutable "brain" (the instructions it can rewrite). Two-tier memory: hot (operational) and long-term (Obsidian vault + git). Self-deploys via Coolify API. The cheapest route to an always-on personal assistant: Docker + Claude CLI + Telethon (Telegram client).</p>
+<div class="va"><strong>Varia comparison:</strong> Varia runs on a Mac Studio with issues_worker as the persistent daemon. Same pattern: always-on process + mutable memory (Redis) + messaging (WhatsApp). Okhlopkov's approach is more portable (Docker on any VPS); Varia has richer local integration (macOS Calendar, Messages.app, Chrome DevTools).</div>
+<span class="sk">Docker</span>
+<span class="sk">Claude Code CLI</span>
+<span class="sk">Telegram</span>
+<span class="sk">$5/mo VPS</span>
+</div></div>
+</div>
+<h3 class="sub">The daily briefing pattern</h3>
+<div class="g">
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/mimurchison/claude-chief-of-staff">Mike Murchison’s Chief of Staff</a></h3>
+<p class="mt">CEO of Ada &bull; 373 stars</p>
+<p>The project that launched a thousand clones. Morning inbox triage went from 90 minutes to 5. Four pillars: Communicate (inbox), Learn (briefings + meeting prep), Deepen Relationships (160+ contacts auto-enriched every 15 min), Achieve Goals (quarterly objectives filter all decisions). goals.yaml as the single source of truth.</p>
+<blockquote>A great chief of staff challenges priorities, says &#x27;no&#x27; to low-leverage work.</blockquote>
+<div class="va"><strong>Varia parallel:</strong> Varia's email triage uses smart rules and AI classification instead of a morning briefing — emails are triaged as they arrive, not in a batch. Different philosophy: Murchison's approach is "review everything once a day," Varia's is "filter in real-time so you never see noise."</div>
+<span class="sk">Claude Code</span>
+<span class="sk">Gmail MCP</span>
+<span class="sk">goals.yaml</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/SterlingChin/marvin-template">MARVIN Template</a></h3>
+<p class="mt">Sterling Chin &bull; 969 stars &bull; Most popular template</p>
+<p>The most forked personal OS template. Flat markdown state files, MCPs for Google Calendar/Gmail/Notion/Telegram, scheduled agents on Cloud Run for overnight work. The self-improving /PAIUpgrade mechanism lets the system modify its own prompts based on what worked. "CLAUDE.md does 80% of the work" — which is either inspiring or terrifying depending on your perspective.</p>
+<span class="sk">Claude Code</span>
+<span class="sk">MCP</span>
+<span class="sk">Google Cloud Run</span>
+<span class="sk">969 stars</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://sidbharath.com/blog/how-i-built-jarvis/">Sid Bharath’s Jarvis</a></h3>
+<p class="mt">Non-coder &bull; Full life OS via conversation</p>
+<p>Didn't write a single line of code. Plans day, triages email, drafts responses, tracks projects across multiple clients, maintains a personal CRM, follows up with neglected contacts, tracks fitness/health/relationship goals, runs weekly reviews. All terminal-based. The most complete "non-programmer builds a life OS" story — and the blog post doubles as a tutorial.</p>
+<span class="sk">Claude Code</span>
+<span class="sk">zero manual coding</span>
+<span class="sk">Google Cloud</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://petrvojacek.cz/en/blog/claude-cowork-daily-briefing/">Petr Vojáček’s Daily Briefing</a></h3>
+<p class="mt">CTO at IDEATECH &bull; 38+ integrations</p>
+<p>Every morning at 8 AM, Claude scans email, calendar, Sentry errors, and financial markets. 38+ integrations via Cowork connectors. The setup takes 10-15 minutes. The key distinction from Zapier: "Zapier moves data. Cowork thinks about it." It doesn't just aggregate — it reasons about what matters.</p>
+<blockquote>It doesn&#x27;t replace Zapier. Zapier moves data. Cowork thinks about it.</blockquote>
+<span class="sk">Claude Cowork</span>
+<span class="sk">38+ integrations</span>
+<span class="sk">10-min setup</span>
+</div></div>
+</div>
+<h3 class="sub">The Reddit goldmine: what real people actually built</h3>
+<div class="g">
+<div class="p">
+<div class="bd">
+<h3><a href="https://www.reddit.com/r/ClaudeAI/comments/1sad9rb/">u/mihai2me’s External Cortex</a></h3>
+<p class="mt">Reddit r/ClaudeAI &bull; AuDHD gamified productivity</p>
+<p>Gamified productivity for someone with both ADHD and autism. Tasks have HP bars (you attack them instead of checking them off). Energy batteries gate which tasks are visible. Physics metaphor instead of deadlines (tasks have "mass" and "momentum"). "Cryo-stasis" mode with no guilt for breaks. Brain dump gets auto-structured into wiki/tasks/events. The most creative rethinking of task management in the whole report.</p>
+<span class="sk">React SPA</span>
+<span class="sk">local-first</span>
+<span class="sk">gamified</span>
+<span class="sk">AuDHD</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://www.reddit.com/r/ClaudeAI/comments/1sad9rb/">u/thebaron2’s Self-Improving Email Triage</a></h3>
+<p class="mt">Reddit r/ClaudeAI &bull; 42% → 98% accuracy</p>
+<p>AI triages 100 emails into Respond Now / Can Wait / Awareness / SPAM. HTML dashboard with dropdown reclassify — corrections are exported back for training. Started at 42% accuracy, now 98-99%. Links to actual Outlook emails by unique ID. The self-improving feedback loop is the key innovation: most email AI is static, this one gets better as you use it.</p>
+<div class="va"><strong>Varia parallel:</strong> Varia's smart rules do exactly this — AI classifies emails, user reclassifies via the UI, rules improve over time. The pattern is identical: triage + feedback + improvement. Varia uses Redis for rules; thebaron2 uses Windows COM + HTML dashboard.</div>
+<span class="sk">Windows COM</span>
+<span class="sk">HTML dashboard</span>
+<span class="sk">self-improving</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://www.reddit.com/r/selfhosted/comments/1sfrer8/">u/speciallight’s Automation Dashboard</a></h3>
+<p class="mt">Reddit r/selfhosted &bull; Most creative automations</p>
+<p>Squash court auto-booker (Claude + Chrome navigates the booking portal), supermarket deal tracker (ALDI/Lidl/REWE/HIT scrapers with AI matching to watchlist), concert monitor (Eventim/Ticketmaster within 100km, fuzzy artist match), Monica CRM face/name flashcards with spaced repetition, body measurement tracker. Circuit breaker for failures. The squash court booker alone is worth reading about.</p>
+<span class="sk">React/SvelteKit</span>
+<span class="sk">FastAPI</span>
+<span class="sk">Pushover</span>
+<span class="sk">Claude Haiku</span>
+</div></div>
+</div>
+
+<h2 class="sec" id="email">5. Email Clients &amp; Filters</h2>
+<p class="ss">The original AI battleground — and the place where Varia started</p>
+
+<div class="g">
+<div class="p">
+<img src="images/exo-site.jpg" alt="Exo — AI-Native Email Client">
+<div class="bd">
+<h3><a href="https://github.com/ankitvgupta/mail-app">Exo — AI-Native Email Client</a></h3>
+<p class="mt">Ankit Gupta &bull; Open source &bull; Electron/React</p>
+<p>An entire desktop email client where every email is analyzed, prioritized, and drafted before you open it. Agent-to-agent communication, persistent AI memories. The most ambitious email project in the report — not an MCP server or a triage plugin, but a complete Gmail replacement. Mac app available.</p>
+<div class="va"><strong>Varia comparison:</strong> Varia's email system triages in the background (smart rules, mute rules, AI categorization) but uses Gmail as the source of truth via sync. Exo replaces the client entirely. Different tradeoffs: Varia never risks losing access to Gmail; Exo provides a richer AI-native experience.</div>
+<span class="sk">Electron</span>
+<span class="sk">React</span>
+<span class="sk">TypeScript</span>
+<span class="sk">agent-to-agent</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/codefuturist/email-mcp">Email MCP Server</a></h3>
+<p class="mt">codefuturist &bull; 30 stars &bull; 47 tools</p>
+<p>The most complete email MCP server: 47 tools, 7 prompts, 6 resources. Multi-account IMAP/SMTP, real-time IMAP IDLE watcher with AI triage, email scheduling with OS-level daemon, calendar extraction. The IDLE watcher is the killer feature — emails are triaged in real-time as they arrive, not in a batch.</p>
+<blockquote>A full-featured email client for AI assistants rather than basic read/send functionality.</blockquote>
+<span class="sk">TypeScript</span>
+<span class="sk">Node.js</span>
+<span class="sk">IMAP/SMTP</span>
+<span class="sk">Docker</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/patrickfreyer/apple-mail-mcp">Apple Mail MCP</a></h3>
+<p class="mt">Patrick Freyer &bull; 96 stars</p>
+<p>22 tools giving AI full access to Apple Mail — reading, search, composition, organization, attachments, analytics. Includes an Inbox Zero companion skill. The macOS-native approach: if you already use Apple Mail, this is the path of least resistance to AI email management.</p>
+<span class="sk">Python</span>
+<span class="sk">FastMCP</span>
+<span class="sk">Apple Mail</span>
+<span class="sk">macOS-native</span>
+</div></div>
+<div class="p">
+<img src="images/harper-email.jpg" alt="Harper Reed’s Email Workflow">
+<div class="bd">
+<h3><a href="https://harper.blog/2025/12/03/claude-code-email-productivity-mcp-agents/">Harper Reed’s Email Workflow</a></h3>
+<p class="mt">Ex-CTO Obama campaign &bull; Claude Code + Pipedream</p>
+<p>Not a tool but a workflow: Reed uses Claude Code + Pipedream MCP to manage email during vacations. The key insight from his blog: "I trust AI to write code way more than to write emails." So instead of AI-generated replies, he uses AI to organize and prioritize, keeping the human in the loop for actual writing.</p>
+<blockquote>I trust AI to write code way more than to write emails.</blockquote>
+<span class="sk">Claude Code</span>
+<span class="sk">Pipedream MCP</span>
+<span class="sk">workflow</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://doneyli.substack.com/p/i-built-an-ai-chief-of-staff-that">Doneyli’s Two-Tier Architecture</a></h3>
+<p class="mt">Two-tier: pattern matching (free) + LLM (expensive)</p>
+<p>The most sophisticated email triage architecture: Tier 1 runs every 30 min with no LLM — pure pattern matching, keyword scanning, Gmail label rules. Tier 2 runs daily at 5 PM with Claude classifying ~50 emails, context-aware drafts. Graduated autonomy model: after 20+ approved drafts with <20% edit rate, emails auto-send. Cost: $100/mo Claude Max, 26 agents.</p>
+<div class="va"><strong>Varia parallel:</strong> Varia uses a similar tiered approach: mute rules (pattern matching, instant) + smart rules (AI classification, delayed). The graduated autonomy is the interesting addition — Varia doesn't auto-send, but the concept of earning trust over time is compelling.</div>
+<span class="sk">Two-tier</span>
+<span class="sk">pattern matching + LLM</span>
+<span class="sk">graduated autonomy</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/cafferychen777/gmail-mcp">Gmail MCP Bridge (Chrome Extension)</a></h3>
+<p class="mt">Caffery Yang &bull; No API keys needed</p>
+<p>Brilliantly lazy: instead of setting up OAuth and Google Cloud projects, this Chrome extension uses your existing browser session as the Gmail API. No Google Cloud, no OAuth, no API keys. 95%+ success rate with auto-recovery. The insight: your browser is already authenticated — why not use that?</p>
+<blockquote>No Google Cloud. No OAuth. No API keys.</blockquote>
+<span class="sk">Chrome Extension</span>
+<span class="sk">MCP</span>
+<span class="sk">zero-config</span>
+</div></div>
+</div>
+
+<h2 class="sec" id="finance">6. Personal Finance</h2>
+<p class="ss">From expense tracking to Bloomberg Terminal-grade portfolio analytics</p>
+
+<div class="g">
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/wshobson/maverick-mcp">MaverickMCP — Stock Analysis</a></h3>
+<p class="mt">Seth Hobson &bull; 29+ tools &bull; Pre-seeded 520 S&P 500 stocks</p>
+<p>A Bloomberg Terminal in your Claude Desktop. VectorBT backtesting with 15+ strategies plus ML, 20+ technical indicators, portfolio optimization. The pre-seeded S&P 500 data means you can start analyzing immediately. This is what happens when a quant builds their own tools instead of paying $25K/year for a Bloomberg terminal.</p>
+<span class="sk">Python</span>
+<span class="sk">FastMCP</span>
+<span class="sk">VectorBT</span>
+<span class="sk">ML backtesting</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/tradermonty/claude-trading-skills">Claude Trading Skills</a></h3>
+<p class="mt">tradermonty &bull; 822 stars</p>
+<p>Curated skills for equity investors: market analysis, backtesting, CANSLIM/VCP/dividend screening, earnings momentum, institutional ownership tracking (13F filings). 822 stars makes it the most popular finance-AI project. The skill-based architecture means you can pick and choose — want just dividend screening? Install that one skill.</p>
+<span class="sk">Python</span>
+<span class="sk">FMP API</span>
+<span class="sk">FINVIZ</span>
+<span class="sk">Alpaca</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://mattstockton.com/2026/02/10/building-a-portfolio-optimization-plan-with-claude-code.html">Matt Stockton’s Portfolio Analysis</a></h3>
+<p class="mt">Reusable Claude Code skill &bull; Multi-brokerage</p>
+<p>Parses CSVs from Fidelity, Schwab, Vanguard, E*TRADE, Merrill. Generates gap analysis across 10 fund categories, four-phase action plans, tax-loss harvesting strategies. Published as a reusable Claude Code skill — install it and point it at your brokerage exports. The kind of analysis a financial advisor charges $500 for.</p>
+<blockquote>The kind of plan you&#x27;d pay a financial advisor to put together, except I built it with an AI.</blockquote>
+<span class="sk">Claude Code skill</span>
+<span class="sk">CSV parsing</span>
+<span class="sk">multi-brokerage</span>
+</div></div>
+<div class="p">
+<img src="images/expense-budget.jpg" alt="AssetsMaven">
+<div class="bd">
+<h3><a href="https://assetsmaven.com">AssetsMaven</a></h3>
+<p class="mt">Vladimir Budilov &bull; AWS Bedrock + Claude Sonnet 3.5</p>
+<p>Upload bank statements and credit card PDFs, get auto-categorized transactions with spending graphs and subscription detection. The "aha moment" from the blog post: "I discovered three subscriptions that had been silently draining money, including a $19.99 monthly charge for an Adobe account we hadn't used in ages." That discovery alone paid for the project.</p>
+<blockquote>I discovered three subscriptions that had been silently draining money.</blockquote>
+<span class="sk">AWS Bedrock</span>
+<span class="sk">Textract</span>
+<span class="sk">Claude Sonnet</span>
+<span class="sk">PDF OCR</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3><a href="https://github.com/s-stefanov/actual-mcp">Actual Budget MCP</a></h3>
+<p class="mt">Stefan Stefanov &bull; 124 stars</p>
+<p>Connects Claude Desktop to Actual Budget (the popular self-hosted finance app) for natural language queries. "How much did I spend on groceries this month?" instead of clicking through the UI. Read-only and write-enabled modes. The most practical finance MCP — it builds on an existing tool rather than replacing it.</p>
+<span class="sk">TypeScript</span>
+<span class="sk">Actual Budget</span>
+<span class="sk">MCP</span>
+<span class="sk">Docker</span>
+</div></div>
+<div class="p">
+<div class="bd">
+<h3>Brian Donelan’s Tax Calculator</h3>
+<p class="mt">React + TypeScript &bull; Saved $300</p>
+<p>Federal + Ohio state + Columbus city taxes, multiple W-2 support, progressive brackets, Child Tax Credit phase-outs with interactive charts. Claude Code built the whole thing. The blog post quote: "Saved me $300" — which is either the cost of TurboTax or an accountant visit. The most satisfying ROI in the report.</p>
+<blockquote>In a terminal window, you can see it thinking through architecture decisions in real time. Saved me $300.</blockquote>
+<span class="sk">React</span>
+<span class="sk">TypeScript</span>
+<span class="sk">Vite</span>
+<span class="sk">Claude Code</span>
+</div></div>
+</div>
+
+<h2 class="sec" id="philosophy">7. Why People Build</h2>
+<p class="ss">The cultural shift behind the code</p>
+
+
+<div class="essay">
+<h3>The "home-cooked meal" philosophy</h3>
+<p>Robin Sloan coined the term <strong>"home-cooked software"</strong> in his influential 2020 essay — apps built for one person's specific needs, not for scale, not for profit. In 2025-2026, AI coding tools made this vision accessible to non-programmers for the first time.</p>
+<p>The analogy is precise: nobody expects a home-cooked meal to compete with a restaurant. It doesn't need to scale, it doesn't need a business model, it doesn't need to handle edge cases for a million users. It just needs to nourish one household. Similarly, a thyroid tracker built by a thyroid patient, or a CRM built by a dad tracking birthday parties, doesn't need to be Salesforce. It just needs to work for one person.</p>
+</div>
+
+<div class="essay">
+<h3>The "small software" movement</h3>
+<p>Maggie Appleton, in her essay on "home-cooked software," argues that AI coding assistants are <strong>creating a new class of software</strong> — too specific for the market, too useful to not exist. The ADHD morning checklist. The Swiss insurance form filler. The baby sleep tracker that reverse-engineers a proprietary API. No company would build any of these. They only exist because one person needed them.</p>
+<p>The a16z thesis extends this: the number of software applications in the world is about to increase by orders of magnitude, with most of them serving audiences of one.</p>
+</div>
+
+<div class="essay">
+<h3>What Varia represents in this landscape</h3>
+<p>Varia is an outlier in this report. Most projects here are weekend builds or single-purpose tools. Varia is a <strong>full personal infrastructure</strong>: email triage with smart rules that learn, package tracking across couriers, a background task runner (issues system) with an Overseer AI, contacts indexed across 5 platforms, smart home thermostat control, payment detection with QR codes, calendar sync, WhatsApp/Signal integration, and a reminder system — all built on Redis + CherryPy + Claude Code.</p>
+<p>Only Fischer's KAI system (135K lines of TypeScript) comes close in scope. The pattern both systems prove: when you build for yourself with AI, there's no ceiling. Personal software can be as sophisticated as enterprise software. The difference is that every feature exists because one person actually needed it, not because a PM spec'd it for a market segment.</p>
+</div>
+
+
+<h2 class="sec" id="patterns">8. Patterns &amp; What's Next</h2>
+<p class="ss">What we learned from 170+ projects</p>
+
+
+<div class="pg">
+<div class="pi"><strong>MCP is the new API</strong><div class="ev">Every category — CRMs, health, email, finance — has MCP servers. The pattern: make existing data accessible to AI without building a new UI.</div></div>
+<div class="pi"><strong>Claude Code + Obsidian is the dominant stack</strong><div class="ev">Torres (tasks), Honchar (health), Rosehill (templates), Amgad (ADHD), Fischer (KAI) — markdown files as the data layer, Claude Code as the processor.</div></div>
+<div class="pi"><strong>Non-programmers ship real products</strong><div class="ev">AANI won a hackathon and shipped to the App Store. Oliur built a platform generating $20K. Multiple 60-year-olds on HN built their first apps.</div></div>
+<div class="pi"><strong>ADHD/neurodivergent tools are a breakthrough category</strong><div class="ev">External Cortex, Mohamed Amgad's system, oh_jaimito's nag escalation, Zachary Proser's voice-first brain dump — these solve problems generic software ignores.</div></div>
+<div class="pi"><strong>The "Chief of Staff" pattern dominates personal assistants</strong><div class="ev">Murchison, tomochang, Doneyli, Gridley, Brown, Forbes — all converged on the same architecture: morning briefing + inbox triage + meeting prep + goal tracking.</div></div>
+<div class="pi"><strong>Self-improving feedback loops separate toys from tools</strong><div class="ev">thebaron2's email went from 42% to 99% accuracy. Doneyli's graduated autonomy. Wiz's self-extending code. The best personal tools learn from their owner.</div></div>
+<div class="pi"><strong>Local-first is the default</strong><div class="ev">SQLite, Obsidian vaults, git repos, localStorage, JSON files. Almost nobody trusts a cloud service with their personal infrastructure data.</div></div>
+<div class="pi"><strong>The scope ceiling has disappeared</strong><div class="ev">Fischer: 135K lines. Varia: 50K+ lines. SmileyOS: a real bare-metal OS in 100K lines of Rust. When AI writes the code, "too ambitious" stops being a constraint.</div></div>
+</div>
+
+<div class="hl">
+<strong>The most interesting trend:</strong> People aren't building apps — they're building <em>infrastructure</em>. Not a to-do app but a life operating system. Not an email client but a personal communications hub. Not a fitness tracker but a health intelligence platform. The AI doesn't just write the code; it raises the ambition of what one person thinks they can build.
+</div>
+
+
+<p class="ft">v4 — April 14, 2026. ~50 curated projects from 170+ researched, across 6 categories.<br>
+Previous versions: <a href="/static/personal-tools-ai-report-v3.html">v3</a><br>
+Built by Tomasz Kolinko using Claude Code. Screenshots from live apps, GitHub READMEs, and landing pages.</p>
+
+</div>
+</body>
+</html>
