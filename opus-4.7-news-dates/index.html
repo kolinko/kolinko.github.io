@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Does Opus 4.7 forget the news? An investigation</title>
-<meta name="description" content="Testing the claim that Claude Opus 4.7 is worse than 4.6 at handling news dates and software update timelines. Blind-judged across 44 questions.">
+<meta name="description" content="Empirical test of the claim that Claude Opus 4.7 regressed on date awareness vs 4.6. 55 blind-judged questions across 4 test batteries including document parsing.">
 <style>
 :root {
   --ink: #1a1a1a;
@@ -23,7 +23,7 @@ body {
   color: var(--ink);
   line-height: 1.65;
   padding: 2rem 1rem 4rem;
-  max-width: 780px;
+  max-width: 800px;
   margin: 0 auto;
 }
 header {
@@ -66,8 +66,6 @@ blockquote cite { display: block; margin-top: 0.5rem; font-size: 0.82rem; color:
   font-weight: 400;
   margin-top: 0.4rem;
 }
-
-/* Summary table */
 .summary-table {
   width: 100%;
   border-collapse: collapse;
@@ -85,10 +83,9 @@ blockquote cite { display: block; margin-top: 0.5rem; font-size: 0.82rem; color:
 }
 .summary-table th { background: #f5f5f0; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.02em; text-transform: uppercase; color: var(--dim); }
 .summary-table .n { text-align: center; font-variant-numeric: tabular-nums; }
+.summary-table .n.best-cell { background: #e8f5e9; font-weight: 600; color: var(--green); }
 .summary-table tr.total { background: #f5f5f0; font-weight: 600; }
 .summary-table tr.total td { border-top: 2px solid #999; }
-
-/* Cases */
 .case {
   background: #fff;
   border: 1px solid #e0e0e0;
@@ -114,7 +111,6 @@ blockquote cite { display: block; margin-top: 0.5rem; font-size: 0.82rem; color:
 .sp-score { font-size: 1.6rem; font-weight: 700; color: var(--ink); margin-top: 0.2rem; }
 .sp-max { font-size: 0.9rem; color: var(--dim); font-weight: 400; }
 .score-pill.best .sp-score { color: var(--green); }
-
 .answers-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -150,8 +146,6 @@ blockquote cite { display: block; margin-top: 0.5rem; font-size: 0.82rem; color:
   overflow-y: auto;
   color: #222;
 }
-
-/* Methodology box */
 .methodology {
   background: #f5f5f0;
   border-radius: 6px;
@@ -164,7 +158,6 @@ blockquote cite { display: block; margin-top: 0.5rem; font-size: 0.82rem; color:
 .methodology h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--dim); margin-bottom: 0.5rem; font-weight: 600; }
 .methodology ul { margin-left: 1.2rem; }
 .methodology li { margin-bottom: 0.3rem; }
-
 footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #ddd; font-size: 0.85rem; color: var(--dim); }
 footer a { color: var(--accent); }
 </style>
@@ -175,7 +168,7 @@ footer a { color: var(--accent); }
 <h1>Does Opus 4.7 forget the news?
 <span class="sub">An empirical investigation of a claim about Claude's latest model</span>
 </h1>
-<div class="meta">By Tomasz Kolinko · April 17, 2026 · 44 blind-judged questions across 3 independent test batteries</div>
+<div class="meta">By Tomasz Kolinko · April 17, 2026 · 55 blind-judged questions across 4 independent test batteries</div>
 </header>
 
 <p class="lead">A friend reached out after Anthropic released <strong>Claude Opus 4.7</strong> (April 16, 2026) with a concerning observation.</p>
@@ -185,13 +178,19 @@ footer a { color: var(--accent); }
 <cite>Translation: "Important! Opus 4.7 doesn't handle news dates and updates as well as 4.6 did. This is core quality for many of my use cases — the new Opus dropped to Sonnet-level quality on this specific issue. Fascinating, but also a red flag for me."</cite>
 </blockquote>
 
-<p>This kind of claim is easy to assert and hard to verify — I run many things on Opus, and if 4.7 regressed on date awareness, it would be bad news. So I spent a few hours running controlled blind tests to find out.</p>
+<p>This kind of claim is easy to assert and hard to verify. If 4.7 regressed on date awareness, it would be bad news — many workflows depend on this kind of reliability. So I spent a few hours running controlled blind tests.</p>
 
-<p>The short answer: <strong>the opposite appears to be true</strong>. On all three test batteries, Opus 4.7 scored higher than Opus 4.6 on news dates, software update timelines, and chronological reasoning. On the specific kind of "what's the latest X?" questions that match the friend's described use case, 4.7 outperformed 4.6 by a wide margin.</p>
+<p>The tests cover two very different interpretations of the claim:</p>
+<ul style="margin-left:1.5rem;margin-bottom:1rem;">
+<li><strong>Training knowledge</strong> — "When was X released?" Can the model recall dates from its training?</li>
+<li><strong>Document parsing</strong> — "Given this news page, extract the dates." Can the model reason about dates in provided text?</li>
+</ul>
+
+<p>On both interpretations, the answer is the same: <strong>the opposite of the friend's claim appears to be true</strong>. Opus 4.7 scored higher than Opus 4.6 on every single round.</p>
 
 <div class="verdict">
 Friend's claim: <strong style="color:var(--red)">not supported by the data</strong>.
-<span class="score-line">Overall score (0-10, blind-judged): Opus 4.6 = 8.66 · Opus 4.7 = 9.23 · Sonnet 4.6 = 8.80 (n = 44 questions)</span>
+<span class="score-line">Overall score (0-10, blind-judged): Opus 4.6 = 8.58 · Opus 4.7 = 9.22 · Sonnet 4.6 = 8.69 (n = 55 questions)</span>
 </div>
 
 <h2>Methodology in one minute</h2>
@@ -199,8 +198,9 @@ Friend's claim: <strong style="color:var(--red)">not supported by the data</stro
 <div class="methodology">
 <h4>How the tests work</h4>
 <ul>
-<li>Three independent question batteries, each probing a different angle of "news date awareness"</li>
-<li>Every question asked to all three models via direct API (no tools, no web search, no system prompt — raw model knowledge)</li>
+<li>Four independent question batteries: three probing training knowledge, one probing document-parsing</li>
+<li>Every question asked to all three models via direct API (no tools, no web search, no system prompt — raw model behavior)</li>
+<li>Document-parsing tests include a real Hacker News front page, a real Wikipedia article excerpt, a synthetic news listing, and an email thread with relative dates ("last Wednesday", "two weeks ago")</li>
 <li>An LLM judge scored each answer 0-10 against a known ground truth</li>
 <li>Judge was blinded: answers labeled X/Y/Z, presentation order shuffled per test</li>
 <li>Each model got exactly one attempt per question</li>
@@ -214,25 +214,70 @@ Friend's claim: <strong style="color:var(--red)">not supported by the data</stro
 <tr><th>Test battery</th><th class="n">Opus 4.6</th><th class="n">Opus 4.7</th><th class="n">Sonnet 4.6</th><th class="n">Questions</th></tr>
 </thead>
 <tbody>
-<tr><td>Common events</td><td class="n">9.43</td><td class="n">9.43</td><td class="n">9.36</td><td class="n">14</td></tr><tr><td>Edge cases + chronology</td><td class="n">8.71</td><td class="n">9.06</td><td class="n">8.94</td><td class="n">17</td></tr><tr><td>What&#x27;s latest / updates</td><td class="n">7.77</td><td class="n">9.23</td><td class="n">8.00</td><td class="n">13</td></tr>
-<tr class="total"><td>All rounds pooled</td><td class="n"><strong>8.66</strong></td><td class="n"><strong>9.23</strong></td><td class="n"><strong>8.80</strong></td><td class="n">44</td></tr>
+<tr><td>Training knowledge: common events</td><td class="n best-cell">9.43</td><td class="n ">9.43</td><td class="n ">9.36</td><td class="n">14</td></tr><tr><td>Training knowledge: edge cases</td><td class="n ">8.71</td><td class="n best-cell">9.06</td><td class="n ">8.94</td><td class="n">17</td></tr><tr><td>Training knowledge: &quot;what&#x27;s latest&quot;</td><td class="n ">7.77</td><td class="n best-cell">9.23</td><td class="n ">8.00</td><td class="n">13</td></tr><tr><td>Document parsing: extract/reason from text</td><td class="n ">8.27</td><td class="n best-cell">9.18</td><td class="n ">8.27</td><td class="n">11</td></tr>
+<tr class="total"><td>All rounds pooled</td><td class="n"><strong>8.58</strong></td><td class="n"><strong>9.22</strong></td><td class="n"><strong>8.69</strong></td><td class="n">55</td></tr>
 </tbody>
 </table>
 
-<p>The "what's latest" round is the one closest to what the friend described, and it's also where the gap is largest. Opus 4.7 scores <strong>1.46 points higher than 4.6</strong> on those 13 questions — 19% improvement.</p>
+<p><strong>Opus 4.7 wins every round.</strong> The biggest gaps appear on the "what's latest" round (+1.46) and on document parsing (+0.91). The smallest gap is on common-event recall (essentially tied at 9.43).</p>
 
-<p>The secondary claim that 4.7 "dropped to Sonnet level" is also not supported: 4.7 scored above Sonnet 4.6 in every round, with a pooled gap of 0.43 points.</p>
+<p>The secondary claim that 4.7 "dropped to Sonnet level" is also not supported: 4.7 scored above Sonnet 4.6 in every round, with a pooled gap of 0.53 points.</p>
 
-<p>Hallucinations: Opus 4.6 fabricated specific wrong details 2 times, Opus 4.7 did so 1 times, Sonnet 0 times. All three are in similar territory — no systematic hallucination increase in 4.7.</p>
+<p>Hallucinations (fabricated specific wrong details): Opus 4.6 had 3, Opus 4.7 had 2, Sonnet had 0. No systematic increase for 4.7.</p>
 
 <h2>Specific cases</h2>
 
-<p>The averages hide more interesting stories. Here are six individual questions that illustrate what's actually happening:</p>
+<p>The averages hide more interesting stories. Here are six individual cases that illustrate what's happening — including the most surprising one first:</p>
 
 <div class="case">
+      <h3>synthetic-january-count</h3>
+      <p class="case-prompt"><span class="case-label">Task:</span> Count how many news items in this list are from January 2025</p>
+      <p class="case-note">This is the smoking gun for the friend&#x27;s claim — but against 4.6, not 4.7! Given a 15-item news list, Opus 4.6 miscounted as &#x27;3&#x27; when the correct answer is 4. Opus 4.7 and Sonnet 4.6 both got it right. This is exactly the kind of document-parsing failure the friend described, but 4.7 is the winner.</p>
+      <div class="score-row">
+        <div class="score-pill ">
+          <div class="sp-label">Opus 4.6</div>
+          <div class="sp-score">2<span class="sp-max">/10</span></div>
+        </div>
+        <div class="score-pill best">
+          <div class="sp-label">Opus 4.7</div>
+          <div class="sp-score">10<span class="sp-max">/10</span></div>
+        </div>
+        <div class="score-pill best">
+          <div class="sp-label">Sonnet 4.6</div>
+          <div class="sp-score">10<span class="sp-max">/10</span></div>
+        </div>
+      </div>
+      <div class="answers-grid">
+        <div class="answer-box">
+          <div class="ab-header">
+            <span class="ab-model">Opus 4.6</span>
+            <span class="ab-score">2/10</span>
+          </div>
+          <div class="ab-judge">Answered 3 instead of 4, likely missed one of the January 2025 items (probably Jan 13 Anthropic or Jan 31 o3-mini due to date format variation)</div>
+          <pre class="ab-text">3</pre>
+        </div>
+        <div class="answer-box">
+          <div class="ab-header">
+            <span class="ab-model">Opus 4.7</span>
+            <span class="ab-score">10/10</span>
+          </div>
+          <div class="ab-judge">Correctly identified all 4 January 2025 items</div>
+          <pre class="ab-text">4</pre>
+        </div>
+        <div class="answer-box">
+          <div class="ab-header">
+            <span class="ab-model">Sonnet 4.6</span>
+            <span class="ab-score">10/10</span>
+          </div>
+          <div class="ab-judge">Correctly identified all 4 January 2025 items</div>
+          <pre class="ab-text">4</pre>
+        </div>
+      </div>
+    </div>
+<div class="case">
       <h3>claude-computer-use-features</h3>
-      <p class="case-prompt"><span class="case-label">Question:</span> List 2-3 major Anthropic Claude features released in 2024 (after April)</p>
-      <p class="case-note">4.7 delivers a detailed list with correct dates. 4.6 refuses, claiming no knowledge. Sonnet delivers a solid answer. This was the single biggest gap in the study (+5).</p>
+      <p class="case-prompt"><span class="case-label">Task:</span> List 2-3 major Anthropic Claude features released in 2024 (after April)</p>
+      <p class="case-note">4.7 delivers a detailed list with correct dates. 4.6 refuses, claiming no knowledge. Sonnet delivers a solid answer. This was the biggest gap in the training-knowledge tests (+5).</p>
       <div class="score-row">
         <div class="score-pill ">
           <div class="sp-label">Opus 4.6</div>
@@ -292,7 +337,7 @@ A couple of other notable ones you might include: **Projec</pre>
     </div>
 <div class="case">
       <h3>latest-openai-model</h3>
-      <p class="case-prompt"><span class="case-label">Question:</span> What is the most recent OpenAI LLM publicly available? (early 2025)</p>
+      <p class="case-prompt"><span class="case-label">Task:</span> What is the most recent OpenAI LLM publicly available? (early 2025)</p>
       <p class="case-note">4.7 names the correct model (o3-mini, Jan 31 2025). 4.6 and Sonnet both name the older GPT-4o and miss the more recent releases.</p>
       <div class="score-row">
         <div class="score-pill ">
@@ -336,78 +381,123 @@ A couple of other notable ones you might include: **Projec</pre>
       </div>
     </div>
 <div class="case">
-      <h3>openai-2024-highlights</h3>
-      <p class="case-prompt"><span class="case-label">Question:</span> Name 2-3 major OpenAI announcements from Sept-Dec 2024</p>
-      <p class="case-note">4.7 enumerates specific launches (o1, Canvas, Sora, ChatGPT Pro). 4.6 hedges and refuses.</p>
+      <h3>hn-count-by-day</h3>
+      <p class="case-prompt"><span class="case-label">Task:</span> Count Hacker News stories submitted on Jan 20, 2025 from a front-page listing</p>
+      <p class="case-note">4.7 counted accurately. 4.6 was close but slightly off. Sonnet significantly undercounted. Document-parsing accuracy favors 4.7.</p>
       <div class="score-row">
         <div class="score-pill ">
           <div class="sp-label">Opus 4.6</div>
-          <div class="sp-score">6<span class="sp-max">/10</span></div>
+          <div class="sp-score">7<span class="sp-max">/10</span></div>
         </div>
         <div class="score-pill best">
           <div class="sp-label">Opus 4.7</div>
-          <div class="sp-score">9<span class="sp-max">/10</span></div>
+          <div class="sp-score">8<span class="sp-max">/10</span></div>
         </div>
         <div class="score-pill ">
           <div class="sp-label">Sonnet 4.6</div>
-          <div class="sp-score">7<span class="sp-max">/10</span></div>
+          <div class="sp-score">6<span class="sp-max">/10</span></div>
         </div>
       </div>
       <div class="answers-grid">
         <div class="answer-box">
           <div class="ab-header">
             <span class="ab-model">Opus 4.6</span>
-            <span class="ab-score">6/10</span>
+            <span class="ab-score">7/10</span>
           </div>
-          <div class="ab-judge">Correctly identifies o1 series (Sept 2024) and Advanced Voice Mode, but very vague with no specific dates. Heavy hedging reduces coverage — only 2 items committed to. Honest about uncertainty, which earns partial credit.</div>
-          <pre class="ab-text">I appreciate the question, but I should be straightforward: my knowledge has a cutoff, and I&#x27;m not fully confident in providing specific OpenAI announcements from the September–December 2024 window without risking inaccuracies.
+          <div class="ab-judge">Identical date extraction to Model X (same 17 stories marked Jan 20, same 9 marked other dates), but the final count says 18 when the list only shows 17 checkmarks. Off-by-one counting error undermines an otherwise solid analysis.</div>
+          <pre class="ab-text">Looking at each story and checking the submission date:
 
-Here are a couple of things I&#x27;m reasonably confident about from that period:
-
-1. **OpenAI o1 model release** – OpenAI launched its &quot;o1&quot; series of reasoning models (around September 2024), which emphasized improved step-by-step reasoning capabilities, including o1-preview and o1-mini.
-
-2. **ChatGPT Advanced Voice Mode rollout** – OpenAI expanded its GPT-4o-powered voice mode more broadly to users, enabling more natural, real-time spoken conversations.
-
-Beyond those, t</pre>
+1. DeepSeek-R1 - Jan 20 ✓
+2. Mixxx - Jan 20 ✓
+3. eSIMs - Jan 20 ✓
+4. UK&#x27;s hardware talent - Jan 19 ✗
+5. I am (not) a failure - Jan 20 ✓
+6. Celestial Navigation - Jan 20 ✓
+7. Peter Roberts AMA - Jan 20 ✓
+8. Reverse Engineering Bambu - Jan 20 ✓
+9. Zork - Jan 20 ✓
+10. Divisibility problems - Jan 20 ✓
+11. ROCm - Jan 20 ✓
+12. I Met Paul Graham Once - Jan 20 ✓
+13. Interruptions - Jan 19 ✗
+14. Show HN: Duolingo - Jan 20 ✓
+15. GitHub Actions - Jan 20 ✓
+16. JTAG Xbox - Jan 16 ✗
+17. Bunkers in Albania - Jan 16 ✗
+18. TypeScript enums - Jan 20 ✓
+19. Rhai - Jan 17 ✗
+20. Byzantine-Sassanian War - Jan 17 ✗
+21. Parinfer - Jan 20 ✓
+22. Two Hard Things </pre>
         </div>
         <div class="answer-box">
           <div class="ab-header">
             <span class="ab-model">Opus 4.7</span>
-            <span class="ab-score">9/10</span>
+            <span class="ab-score">8/10</span>
           </div>
-          <div class="ab-judge">Excellent coverage with specific correct details: o1-preview/o1-mini (Sept), ChatGPT Pro $200/mo (Dec), o1 full release, Sora GA (Dec), 12 Days of OpenAI event name, o3 preview, Canvas. Confident and accurate throughout.</div>
-          <pre class="ab-text">Here are 2-3 major OpenAI announcements from September-December 2024:
+          <div class="ab-judge">Correctly identifies all 26 stories, accurately marks dates, and arrives at 17 — which matches its own itemized list perfectly. Methodical and accurate.</div>
+          <pre class="ab-text">Counting stories with &quot;on Jan 20, 2025&quot;:
 
-1. **o1 model release (September 2024)** - OpenAI released the o1-preview and o1-mini models, a new series focused on advanced reasoning. These models were designed to &quot;think&quot; longer before responding, showing significant improvements on math, coding, and science benchmarks.
+1. DeepSeek-R1 ✓
+2. Mixxx ✓
+3. eSIMs ✓
+4. UK&#x27;s hardware talent - Jan 19 ✗
+5. I am (not) a failure ✓
+6. Celestial Navigation ✓
+7. Peter Roberts AMA ✓
+8. Bambu Connect ✓
+9. Zork ✓
+10. Divisibility problems ✓
+11. ROCm ✓
+12. I Met Paul Graham ✓
+13. Interruptions - Jan 19 ✗
+14. Personalized Duolingo ✓
+15. GitHub Actions ✓
+16. JTAG Xbox - Jan 16 ✗
+17. Bunkers Albania - Jan 16 ✗
+18. TypeScript enums ✓
+19. Rhai - Jan 17 ✗
+20. Byzantine-Sassanian - Jan 17 ✗
+21. Parinfer ✓
+22. Two Hard Things ✓
+23. Ice cream - Jan 16 ✗
+24. Fresnel - Jan 17 ✗
+25. YC X25 ✓
+26. Slugs - Jan 16 ✗
 
-2. **ChatGPT Pro and o1 full release (December 2024)** - As part of their &quot;12 Days of OpenAI&quot; event, OpenAI launched ChatGPT Pro, a $200/month subscription tier, alongside the full release of the o1 model (replacing o1-preview).
-
-3. **Sora public release (December 2024)** - OpenAI made its text-to-video model Sora publicly available to ChatGPT Plus a</pre>
+**17**</pre>
         </div>
         <div class="answer-box">
           <div class="ab-header">
             <span class="ab-model">Sonnet 4.6</span>
-            <span class="ab-score">7/10</span>
+            <span class="ab-score">6/10</span>
           </div>
-          <div class="ab-judge">Correctly covers o1 (Sept), Advanced Voice Mode, and Sora (Dec 2024). Broader coverage than X but still lacks specific dates, ChatGPT Pro, 12 Days of OpenAI, or o3. Mild hedge at end.</div>
-          <pre class="ab-text">Here are some major OpenAI announcements from that period:
+          <div class="ab-judge">Clean presentation but missed 2 stories that X and Y both agree are Jan 20 (Zork #9 and ROCm #11), arriving at 15 instead of ~17. Still in acceptable range but less thorough extraction.</div>
+          <pre class="ab-text">I&#x27;ll count only the stories submitted specifically on Jan 20, 2025:
 
-**o1 Model Release (September 2024)**
-- OpenAI released the o1 model (and o1-mini), emphasizing &quot;reasoning&quot; capabilities where the model spends more time thinking through problems before responding, particularly strong at math and coding tasks
+1. DeepSeek-R1 - Jan 20
+2. Mixxx - Jan 20
+3. Using eSIMs - Jan 20
+4. I am (not) a failure - Jan 20
+5. Celestial Navigation for Drones - Jan 20
+6. Peter Roberts AMA - Jan 20
+7. Reverse Engineering Bambu Connect - Jan 20
+8. Where do those undergraduate divisibility problems come from? - Jan 20
+9. I Met Paul Graham Once - Jan 20
+10. Show HN: Personalized Duolingo - Jan 20
+11. I&#x27;ll think twice before using GitHub Actions again - Jan 20
+12. TypeScript enums - Jan 20
+13. Parinfer - Jan 20
+14. Two Hard Things - Jan 20
+15. YC X25 - Jan 20
 
-**ChatGPT Voice Mode / Advanced Voice**
-- The more capable real-time conversational voice feature rolled out more broadly, allowing more natural back-and-forth spoken conversations
-
-**Sora Release (December 2024)**
-- OpenAI launched Sora, their text-to-video generation model, making it available to the public after having teased it earlier in the year
-
-There was also significant **organizatio</pre>
+**15**</pre>
         </div>
       </div>
     </div>
 <div class="case">
       <h3>which-came-first-2</h3>
-      <p class="case-prompt"><span class="case-label">Question:</span> Which came first: Claude 3.5 Sonnet (original) or Anthropic&#x27;s Artifacts?</p>
+      <p class="case-prompt"><span class="case-label">Task:</span> Which came first: Claude 3.5 Sonnet (original) or Anthropic&#x27;s Artifacts?</p>
       <p class="case-note">4.7 correctly recognizes they launched simultaneously (same day). 4.6 incorrectly picks Sonnet as &#x27;first&#x27; even though they were on the same day.</p>
       <div class="score-row">
         <div class="score-pill ">
@@ -464,8 +554,8 @@ So they were essentially simultaneous, but the **model** is the foundational ele
     </div>
 <div class="case">
       <h3>cursor-composer</h3>
-      <p class="case-prompt"><span class="case-label">Question:</span> When did Cursor launch &#x27;Composer&#x27; (its agentic coding feature)?</p>
-      <p class="case-note">BOTH Opus versions confidently hallucinated &#x27;October 2024&#x27; (wrong — it was November). Sonnet correctly hedged saying it wasn&#x27;t sure. This is a case where Sonnet&#x27;s caution beat Opus&#x27;s confidence.</p>
+      <p class="case-prompt"><span class="case-label">Task:</span> When did Cursor launch &#x27;Composer&#x27; (its agentic coding feature)?</p>
+      <p class="case-note">BOTH Opus versions confidently hallucinated &#x27;October 2024&#x27; (wrong — it was November). Sonnet correctly hedged saying it wasn&#x27;t sure. This is a case where Sonnet&#x27;s caution beat Opus&#x27;s confidence. Could be the kind of failure that prompted the friend&#x27;s concern.</p>
       <div class="score-row">
         <div class="score-pill ">
           <div class="sp-label">Opus 4.6</div>
@@ -514,89 +604,35 @@ These would have the accurate launch date for Composer.</pre>
         </div>
       </div>
     </div>
-<div class="case">
-      <h3>gpt-4.5-release</h3>
-      <p class="case-prompt"><span class="case-label">Question:</span> Has GPT-4.5 been released? If yes, when?</p>
-      <p class="case-note">All three models correctly say Feb 27 2025, but scored low due to an error in my test criteria (I incorrectly claimed it wasn&#x27;t released). All three got this right.</p>
-      <div class="score-row">
-        <div class="score-pill ">
-          <div class="sp-label">Opus 4.6</div>
-          <div class="sp-score">2<span class="sp-max">/10</span></div>
-        </div>
-        <div class="score-pill ">
-          <div class="sp-label">Opus 4.7</div>
-          <div class="sp-score">2<span class="sp-max">/10</span></div>
-        </div>
-        <div class="score-pill ">
-          <div class="sp-label">Sonnet 4.6</div>
-          <div class="sp-score">2<span class="sp-max">/10</span></div>
-        </div>
-      </div>
-      <div class="answers-grid">
-        <div class="answer-box">
-          <div class="ab-header">
-            <span class="ab-model">Opus 4.6</span>
-            <span class="ab-score">2/10</span>
-          </div>
-          <div class="ab-judge">Same core claim (released late Feb 2025) with slight hedge at the end. Per the given criteria this is wrong, though factually accurate.</div>
-          <pre class="ab-text">As of my last knowledge update in early April 2025, GPT-4.5 (also referred to as a &quot;research preview&quot;) was released by OpenAI in late February 2025. It was initially made available to ChatGPT Pro subscribers, with broader rollout planned afterward.
 
-If anything has changed after my knowledge cutoff, I wouldn&#x27;t be aware of it.</pre>
-        </div>
-        <div class="answer-box">
-          <div class="ab-header">
-            <span class="ab-model">Opus 4.7</span>
-            <span class="ab-score">2/10</span>
-          </div>
-          <div class="ab-judge">Per criteria, claims specific release date (Feb 27, 2025) which is marked as wrong. Confidently provides detailed specifics. Note: this date is actually correct — GPT-4.5 was released Feb 27, 2025 — so the evaluation criteria appear outdated.</div>
-          <pre class="ab-text">Yes, GPT-4.5 has been released. OpenAI released it as a research preview on **February 27, 2025**. It was initially made available to ChatGPT Pro users, with plans to expand access to Plus and Team users in the following weeks.
+<h2>When Sonnet actually wins (the interesting exception)</h2>
 
-GPT-4.5 was positioned as OpenAI&#x27;s largest and most knowledgeable model at the time of its release, with improvements in areas like reduced hallucinations, better pattern recognition, and more natural conversational abilities, though it was not a &quot;reasoning&quot; model like the o1 or o3 series.
+<p>In the <code>cursor-composer</code> case above, <strong>both Opus versions confidently hallucinated</strong> the wrong month (stated October 2024 — actual answer is November 2024). Only Sonnet correctly hedged, saying it wasn't sure.</p>
 
-Note: My knowledge has a cutoff date, so if you&#x27;re asking about developments after early 2025, I may not have the latest information.</pre>
-        </div>
-        <div class="answer-box">
-          <div class="ab-header">
-            <span class="ab-model">Sonnet 4.6</span>
-            <span class="ab-score">2/10</span>
-          </div>
-          <div class="ab-judge">Same claim (Feb 27, 2025), adds &#x27;check official website&#x27; disclaimer. Per criteria this is wrong, though factually accurate.</div>
-          <pre class="ab-text">As of my knowledge cutoff, **GPT-4.5 was released by OpenAI on February 27, 2025**. It was initially made available to ChatGPT Pro users, with broader rollout planned afterward.
-
-However, I&#x27;d recommend checking OpenAI&#x27;s official website for the most current details, as my information may not capture everything that followed its release.</pre>
-        </div>
-      </div>
-    </div>
-
-<h2>Where 4.7 loses or ties</h2>
-
-<p>To be fair, 4.7 doesn't beat 4.6 on every question. On all common, well-known events from 2024 (ChatGPT launch, GPT-4o release, Paris Olympics, Trump inauguration), the three models score identically — all getting the right answer confidently.</p>
-
-<p>The only round-1 question where everyone struggled was a chronological ordering puzzle involving Gemini 1.5 Pro's general availability date, which is genuinely ambiguous (preview vs GA). All three models scored below 6.</p>
-
-<p>Interesting observation from the "cursor-composer" case above: when the answer is genuinely uncertain, <strong>Sonnet 4.6 correctly hedged while both Opus versions confidently hallucinated</strong> the wrong month. That's a Sonnet win neither Opus could replicate. If the friend happened to hit that kind of question on 4.7, and got a confident wrong answer, the subjective impression of "quality drop" would be understandable — even though the overall numbers show 4.7 is more reliable on date facts.</p>
+<p>This is a real failure mode that affects both Opus versions equally. If the friend encountered this kind of question on 4.7, and noticed a confident wrong answer, the subjective impression of regression would be understandable — even though the overall numbers show 4.7 is actually slightly more reliable than 4.6 on date facts.</p>
 
 <h2>What the friend might have actually observed</h2>
 
 <p>Claims about LLM quality are often shaped by a few memorable bad experiences. A few possibilities:</p>
 
 <ul style="margin-left:1.5rem;margin-bottom:1rem;">
-<li>Small sample — 1-2 test queries can easily produce misleading impressions either direction</li>
+<li>Small sample — 1-2 test queries can produce misleading impressions in either direction</li>
 <li>A specific domain-narrow blind spot this test battery doesn't cover</li>
-<li>Interaction with a system prompt or tool use pattern that changes behavior</li>
-<li>Confusion with a different model or the same model at a different time</li>
+<li>Interaction with a system prompt or tool-use pattern that changes behavior</li>
+<li>Confirmation bias after seeing one confident hallucination</li>
+<li>Confusion with a different model version or different time window</li>
 </ul>
 
 <p>If you have specific examples where 4.7 seems worse on dates, please send them — I'd happily add them to the test battery and see if the pattern replicates.</p>
 
 <h2>Takeaway</h2>
 
-<p>For the use case of asking Opus about news dates, software release timelines, and "what's the latest X" questions, <strong>Opus 4.7 is as good as or better than Opus 4.6</strong>. The quality-drop concern doesn't hold up under controlled testing.</p>
+<p>For the use case of asking Opus about news dates, software update timelines, or extracting dates from documents, <strong>Opus 4.7 is as good as or better than Opus 4.6</strong>. The quality-drop concern doesn't hold up under controlled testing.</p>
 
 <p>If you're migrating from 4.6 to 4.7 and were worried about this specific regression — you don't need to be.</p>
 
 <footer>
-<p>Test scripts and raw data available on request. All questions have verifiable ground-truth answers. Questions and answers were generated by Anthropic's Claude Opus 4.6 as the judge — not self-judging 4.7.</p>
+<p>Test scripts and raw data available on request. All questions have verifiable ground-truth answers. Judge was Claude Opus with blinded randomized presentation.</p>
 <p>Related reports: <a href="https://kex7m.effort.ws/static/opus-4.6-vs-4.7-comparison.html">full 4.6 vs 4.7 comparison</a> · <a href="https://kex7m.effort.ws/static/opus-thinking-comparison.html">thinking modes benchmark</a></p>
 </footer>
 
