@@ -203,6 +203,7 @@ Friend's claim: <strong style="color:var(--red)">not supported by the data</stro
 <li>Document-parsing tests include a real Hacker News front page, a real Wikipedia article excerpt, a synthetic news listing, and an email thread with relative dates ("last Wednesday", "two weeks ago")</li>
 <li>An LLM judge scored each answer 0-10 against a known ground truth</li>
 <li>Judge was blinded: answers labeled X/Y/Z, presentation order shuffled per test</li>
+<li>Blinding verified: checked all outputs for model self-identification ("I am Claude", version numbers, etc.) — zero leaks across all 55 questions</li>
 <li>Each model got exactly one attempt per question</li>
 </ul>
 </div>
