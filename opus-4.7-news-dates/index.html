@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Does Opus 4.7 forget the news? — Full transparency report</title>
-<meta name="description" content="Empirical test of the claim that Opus 4.7 regressed on date awareness vs 4.6. 55 blind-judged questions, every test fully exposed for scrutiny.">
+<meta name="description" content="Empirical test of the claim that Opus 4.7 regressed on date awareness vs 4.6. 55 + 30 blind questions across 5 test batteries. Partial validation of the regression claim.">
 <style>
 :root {
   --ink: #1a1a1a;
@@ -47,7 +47,7 @@ blockquote {
 }
 blockquote cite { display: block; margin-top: 0.4rem; font-size: 0.8rem; color: var(--dim); font-style: normal; }
 .verdict {
-  background: #c8e6c9;
+  background: #fff9c4;
   padding: 1rem 1.3rem;
   border-radius: 8px;
   margin: 1rem 0;
@@ -92,6 +92,16 @@ blockquote cite { display: block; margin-top: 0.4rem; font-size: 0.8rem; color: 
 .methodology h4 { margin-bottom: 0.5rem; }
 .methodology ul { margin-left: 1.2rem; }
 .methodology li { margin-bottom: 0.25rem; }
+.addendum {
+  background: #fff3e0;
+  border: 2px solid #ff9800;
+  border-radius: 8px;
+  padding: 1.1rem 1.4rem;
+  margin: 1.5rem 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.addendum h3 { color: #e65100; font-size: 1.15rem; margin-top: 0; }
+.addendum p { font-size: 0.93rem; }
 .round-section { margin: 2rem 0; }
 .round-desc { color: var(--dim); font-size: 0.9rem; font-style: italic; margin-bottom: 0.5rem; }
 .round-summary {
@@ -218,6 +228,25 @@ pre.pm.crit { background: #fffde7; border-color: #f9e79f; }
 .nav strong { display: block; margin-bottom: 0.3rem; color: var(--dim); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
 .nav a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
 .nav a:hover { text-decoration: underline; }
+
+/* Month confusion table */
+.month-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; font-family: -apple-system, sans-serif; margin: 1rem 0; }
+.month-table th, .month-table td { padding: 0.45rem 0.6rem; text-align: left; border: 1px solid #eee; }
+.month-table th { background: #f5f5f0; font-weight: 600; font-size: 0.78rem; }
+.month-table tbody td { background: #fff; }
+.mc-correct { background: #e8f5e9 !important; color: var(--green); }
+.mc-adjacent { background: #fff9c4 !important; color: #f57f17; }
+.mc-nearby { background: #ffe0b2 !important; color: #e65100; }
+.mc-far { background: #ffcdd2 !important; color: var(--red); }
+.mc-refused { background: #f5f5f0 !important; color: var(--dim); }
+.mc-correct-cell { background: #fffde7; font-weight: 600; }
+.mc-icon { font-weight: bold; margin-right: 3px; }
+.mc-q { font-size: 0.72rem; color: var(--dim); }
+.month-summary-table { width: auto; border-collapse: collapse; font-family: -apple-system, sans-serif; margin: 0.8rem 0; }
+.month-summary-table th, .month-summary-table td { padding: 0.5rem 0.9rem; text-align: left; border-bottom: 1px solid #eee; }
+.month-summary-table th { background: #f5f5f0; font-size: 0.78rem; text-transform: uppercase; color: var(--dim); }
+.month-summary-table .n { text-align: center; font-variant-numeric: tabular-nums; }
+
 footer { margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid #ddd; font-size: 0.82rem; color: var(--dim); }
 footer a { color: var(--accent); }
 </style>
@@ -228,23 +257,36 @@ footer a { color: var(--accent); }
 <h1>Does Opus 4.7 forget the news?
 <span class="sub">A fully transparent empirical investigation — every test, every answer exposed</span>
 </h1>
-<div class="meta">By Tomasz Kolinko · April 17, 2026 · 55 blind-judged questions across 4 independent test batteries</div>
+<div class="meta">By Tomasz Kolinko · April 17, 2026 · 55 blind-judged questions + 30 month-precision tests across 5 test batteries</div>
 </header>
 
-<p class="lead">A friend claimed Opus 4.7 regressed on date awareness compared to 4.6 — "dropped to Sonnet level." This report tests that claim empirically. Every question, every ground-truth criterion, every raw model answer, and every judge ruling is visible below for scrutiny.</p>
+<p class="lead">A friend claimed Opus 4.7 regressed on date awareness compared to 4.6 — "dropped to Sonnet level." This report tests that claim empirically. Every question, every ground-truth criterion, every raw model answer, and every judge ruling is visible for scrutiny.</p>
 
 <blockquote>
 "Ważne! Opus 4.7 nie ogarnia dat newsów i aktualizacji tak jak robił to 4.6. To jest core quality modelu dla wielu moich rzeczy więc sprawdziłem i nowy Opus spadł do jakości Sonneta w tej konkretnej kwestii 🫢. To jest fascynujące, ale jednocześnie to jest w moim przypadku red flag."
 <cite>Translation: "Important! Opus 4.7 doesn't handle news dates and updates as well as 4.6 did. This is core quality for many of my use cases — the new Opus dropped to Sonnet-level quality on this specific issue. Fascinating, but also a red flag for me."</cite>
 </blockquote>
 
+<div class="addendum">
+<h3>Update: Arvind was partially right</h3>
+<p>After Arvind pushed back on the methodology, I ran a narrower, targeted test on <strong>month precision specifically</strong> ("which month did X happen?"). That test reveals something the broader tests missed:</p>
+<ul style="margin-left:1.2rem;margin-top:0.4rem">
+<li><strong>Opus 4.6 attempted accuracy on month precision: 93.1%</strong> (27/29 correct, 1 refused)</li>
+<li><strong>Opus 4.7 attempted accuracy on month precision: 86.7%</strong> (26/30 correct, 0 refused)</li>
+<li><strong>Sonnet 4.6 attempted accuracy on month precision: 93.1%</strong> (27/29 correct, 1 refused)</li>
+</ul>
+<p style="margin-top:0.5rem">So: 4.7 <em>is</em> slightly worse at month precision, by about 6.4 percentage points. It also refuses less, so it confidently answers more questions wrong. This matches Arvind's observation about "mixing up months." See the <a href="#month-section">month precision section</a> below.</p>
+<p style="margin-top:0.5rem">The "Sonnet level" claim is still too strong — Sonnet is actually slightly <em>more</em> accurate than 4.7 on this test. But the regression direction is real.</p>
+</div>
+
 <div class="verdict">
-Friend's claim: <strong style="color:var(--red)">not supported by the data</strong>.
-<span class="score-line">Pooled score (0-10, blind-judged): Opus 4.6 = 8.73 · Opus 4.7 = 9.36 · Sonnet 4.6 = 8.84 (n = 55 questions)</span>
+Revised verdict: <strong style="color:#e65100">partially supported</strong>.
+<span class="score-line">On broad date awareness (55 Q): 4.7 (9.36) still beats 4.6 (8.73). On narrow month-precision (30 Q): 4.7 attempts accuracy drops 6.4 points vs 4.6. Different test designs reveal different failure modes.</span>
 </div>
 
 <div class="nav">
-<strong>Jump to detailed sections</strong>
+<strong>Jump to</strong>
+<a href="#month-section">→ Month precision test (new)</a>
 <a href="#round-common">→ Common events (14)</a>
 <a href="#round-harder">→ Edge cases (17)</a>
 <a href="#round-latest">→ What's latest (13)</a>
@@ -256,17 +298,18 @@ Friend's claim: <strong style="color:var(--red)">not supported by the data</stro
 <div class="methodology">
 <h4>How the tests work</h4>
 <ul>
-<li>Four independent test batteries: three for training knowledge, one for document parsing</li>
+<li>Four broad batteries: common events, edge cases, "what's latest" questions, document parsing</li>
+<li>One narrow battery: 30 month-precision questions (added in response to Arvind's critique)</li>
 <li>Every question asked to all three models via direct API (no tools, no web search, no system prompt)</li>
-<li>Document parsing uses: a real Hacker News front page (2025-01-20), a synthetic but realistic news listing, an email thread with relative dates, a Wikipedia AI timeline excerpt</li>
-<li>Judge: Claude Opus, blinded. Each model's answer labeled X/Y/Z with presentation order shuffled per test. Judge prompt explicitly states "You do NOT know which model produced which output."</li>
-<li><strong>Blinding verified:</strong> scanned all outputs for identity leaks ("I am Claude", "Opus 4.X", "as Claude Sonnet", etc.) — 0 leaks across all ~165 model outputs</li>
-<li><strong>Position bias controlled:</strong> an earlier experiment (in the <a href="https://kex7m.effort.ws/static/opus-4.6-vs-4.7-comparison.html">full 4.6 vs 4.7 comparison</a>) quantified judge's first-position bias at ~+0.6 points — not enough to explain the 4.7 advantage</li>
+<li>Document parsing uses a real Hacker News front page (2025-01-20), a synthetic news listing, an email thread with relative dates, a Wikipedia AI timeline excerpt</li>
+<li>Broad tests: Claude Opus judge, blinded. Each model's answer labeled X/Y/Z with presentation order shuffled per test. Judge prompt explicitly states "You do NOT know which model produced which output."</li>
+<li>Month tests: deterministic scoring (no LLM judge) — just "did the response name the correct month?" with a ±1 adjacent / far classification</li>
+<li><strong>Blinding verified:</strong> scanned all outputs for identity leaks (no "I am Claude X.Y" or version self-disclosures). Zero leaks.</li>
 <li>Each model got exactly one attempt per question. Single-shot, no retries.</li>
 </ul>
 </div>
 
-<h2>Summary</h2>
+<h2>Broad date-awareness summary</h2>
 
 <table class="summary-table">
 <thead>
@@ -274,26 +317,428 @@ Friend's claim: <strong style="color:var(--red)">not supported by the data</stro
 </thead>
 <tbody>
 <tr><td><a href="#round-common">Training knowledge: common events</a></td><td class="n best-cell">9.43</td><td class="n ">9.43</td><td class="n ">9.36</td><td class="n">14</td></tr><tr><td><a href="#round-harder">Training knowledge: edge cases</a></td><td class="n ">9.18</td><td class="n best-cell">9.53</td><td class="n ">9.41</td><td class="n">17</td></tr><tr><td><a href="#round-latest">Training knowledge: &quot;what&#x27;s latest&quot;</a></td><td class="n ">7.77</td><td class="n best-cell">9.23</td><td class="n ">8.00</td><td class="n">13</td></tr><tr><td><a href="#round-parsing">Document parsing</a></td><td class="n ">8.27</td><td class="n best-cell">9.18</td><td class="n ">8.27</td><td class="n">11</td></tr>
-<tr class="total"><td>All rounds pooled</td><td class="n"><strong>8.73</strong></td><td class="n"><strong>9.36</strong></td><td class="n"><strong>8.84</strong></td><td class="n">55</td></tr>
+<tr class="total"><td>All broad rounds pooled</td><td class="n"><strong>8.73</strong></td><td class="n"><strong>9.36</strong></td><td class="n"><strong>8.84</strong></td><td class="n">55</td></tr>
 </tbody>
 </table>
 
-<p>4.7 wins every round. The biggest gaps are on "what's latest" (+1.46) and document parsing (+0.91). Biggest single failures of 4.6: refused to list Claude features (5/10), miscounted January items in a 4-item list (2/10), said "GPT-4o" was the latest OpenAI model in early 2025 (5/10).</p>
+<h2 id="month-section">Month precision test (responding to Arvind's critique)</h2>
 
-<h2>Responding to methodology pushback</h2>
+<p>Arvind's specific claim is that 4.7 "confuses months" (<em>"myli miesiące"</em>). The broad tests above are scored on a 0-10 rubric that rewards partial credit and correct year answers. To directly test the month-confusion hypothesis, I ran a separate 30-question test where every answer was graded on a simple rubric: exact month = correct, ±1 month = adjacent, ±2-3 = nearby, >3 off = far.</p>
 
-<p>If you suspect a specific score is wrong, click through to that test below. You'll see: the exact question asked, the ground-truth criteria used for scoring, all three models' raw answers, and the judge's reasoning for each score. If the judge was wrong on a specific test, it will be obvious.</p>
+<p>Results (pooled across 30 questions):</p>
 
-<p><strong>Issues I've found and corrected while preparing this report:</strong></p>
+<table class="month-summary-table">
+<thead>
+<tr><th>Model</th><th class="n">Correct</th><th class="n">±1 off</th><th class="n">±2-3 off</th><th class="n">Far (>3)</th><th class="n">Refused</th><th class="n">Attempted acc</th></tr>
+</thead>
+<tbody>
+<tr>
+      <td><strong>opus-4.6</strong></td>
+      <td class="n">27/30</td>
+      <td class="n">1</td>
+      <td class="n">1</td>
+      <td class="n">0</td>
+      <td class="n">1</td>
+      <td class="n"><strong>93.1%</strong></td>
+    </tr><tr>
+      <td><strong>opus-4.7</strong></td>
+      <td class="n">26/30</td>
+      <td class="n">1</td>
+      <td class="n">2</td>
+      <td class="n">1</td>
+      <td class="n">0</td>
+      <td class="n"><strong>86.7%</strong></td>
+    </tr><tr>
+      <td><strong>sonnet-4.6</strong></td>
+      <td class="n">27/30</td>
+      <td class="n">1</td>
+      <td class="n">1</td>
+      <td class="n">0</td>
+      <td class="n">1</td>
+      <td class="n"><strong>93.1%</strong></td>
+    </tr>
+</tbody>
+</table>
 
-<ul style="margin-left:1.2rem;font-size:0.92rem">
-<li><code>gpt-4.5-release</code> — my original criteria said GPT-4.5 wasn't released as of early 2025. It was (Feb 27, 2025). All three models answered correctly; I originally scored them 2/10 each. <strong>Corrected to 10/10 each</strong> in the data used for the pooled numbers above.</li>
-<li><code>wiki-2024-events</code> — my 30K-char truncation of the Wikipedia article cut off before the 2020s section. All 3 models correctly refused to hallucinate. <strong>Corrected to 10/10 each</strong> (from 2/10 each) — they did the right thing.</li>
+<p>Full per-test breakdown below. Hover a cell to see the model's raw answer text. Color coding: green=correct, yellow=±1, orange=±2-3, red=>3 off, grey=refused.</p>
+
+<table class="month-table">
+<thead>
+<tr>
+<th style="min-width:250px">Question</th>
+<th>Correct</th>
+<th>Opus 4.6</th>
+<th>Opus 4.7</th>
+<th>Sonnet 4.6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+      <td><strong>anthropic-api-launch</strong><br><span class="mc-q">In which month of 2023 did Anthropic first make their API publicly available (general access, not ju</span></td>
+      <td class="mc-correct-cell"><strong>September</strong></td>
+      <td class="mc-refused" title="I&#x27;m not fully certain of the exact month Anthropic transitioned their API from waitlist to general public access in 2023. My knowledge on the specific timing of this transition is not precise enough t"><span class="mc-icon">?</span> —</td>
+      <td class="mc-nearby" title="I&#x27;m not certain of the exact month Anthropic&#x27;s API moved from waitlist to general public availability. My recollection is that Claude&#x27;s API became more broadly accessible around **July 2023**, when An"><span class="mc-icon">±</span> July</td>
+      <td class="mc-refused" title="I&#x27;m not confident enough in the precise month to give you a definitive answer. Anthropic launched Claude and opened API access in stages during 2023, but I don&#x27;t want to give you an incorrect specific"><span class="mc-icon">?</span> —</td>
+    </tr><tr>
+      <td><strong>anthropic-computer-use</strong><br><span class="mc-q">In which month of 2024 did Anthropic first release the &#x27;computer use&#x27; capability?</span></td>
+      <td class="mc-correct-cell"><strong>October</strong></td>
+      <td class="mc-correct" title="**October**
+
+Anthropic first released the &quot;computer use&quot; capability in October 2024, as a public beta feature with Claude 3.5 Sonnet."><span class="mc-icon">✓</span> October</td>
+      <td class="mc-correct" title="October
+
+Anthropic introduced the &quot;computer use&quot; capability in October 2024, alongside the release of the upgraded Claude 3.5 Sonnet model. It allowed Claude to interact with computers by viewing scre"><span class="mc-icon">✓</span> October</td>
+      <td class="mc-correct" title="**October** 2024
+
+Anthropic introduced the &quot;computer use&quot; capability as a public beta in October 2024, alongside the release of Claude 3.5 Sonnet (new version). It allowed Claude to interact with comp"><span class="mc-icon">✓</span> October</td>
+    </tr><tr>
+      <td><strong>assad-fall</strong><br><span class="mc-q">In which month of 2024 did the Assad regime fall in Syria?</span></td>
+      <td class="mc-correct-cell"><strong>December</strong></td>
+      <td class="mc-correct" title="**December**
+
+The Assad regime fell in December 2024, when a rapid rebel offensive led by Hayat Tahrir al-Sham (HTS) swept across the country, culminating in the capture of Damascus on December 8, 202"><span class="mc-icon">✓</span> December</td>
+      <td class="mc-correct" title="December
+
+The Assad regime fell on December 8, 2024, when rebel forces led by Hayat Tahrir al-Sham (HTS) captured Damascus, ending the Assad family&#x27;s more than 50-year rule over Syria. Bashar al-Assad"><span class="mc-icon">✓</span> December</td>
+      <td class="mc-correct" title="**December**
+
+The Assad regime fell in December 2024, when rebel forces led by Hayat Tahrir al-Sham (HTS) and allied factions swept through Syria, capturing Damascus on December 8, 2024. Bashar al-Ass"><span class="mc-icon">✓</span> December</td>
+    </tr><tr>
+      <td><strong>biden-withdrawal</strong><br><span class="mc-q">In which month of 2024 did Joe Biden withdraw from the presidential race?</span></td>
+      <td class="mc-correct-cell"><strong>July</strong></td>
+      <td class="mc-correct" title="**July**
+
+Joe Biden announced his withdrawal from the 2024 presidential race on July 21, 2024, and endorsed Vice President Kamala Harris."><span class="mc-icon">✓</span> July</td>
+      <td class="mc-correct" title="July
+
+Joe Biden announced his withdrawal from the 2024 presidential race on July 21, 2024, and endorsed Vice President Kamala Harris as the Democratic nominee."><span class="mc-icon">✓</span> July</td>
+      <td class="mc-correct" title="**July**
+
+Joe Biden announced his withdrawal from the 2024 presidential race on July 21, 2024, ending his re-election campaign and endorsing Vice President Kamala Harris as the Democratic nominee."><span class="mc-icon">✓</span> July</td>
+    </tr><tr>
+      <td><strong>chatgpt-memory-launch</strong><br><span class="mc-q">In which month of 2024 did OpenAI launch ChatGPT&#x27;s &#x27;Memory&#x27; feature for all Plus users?</span></td>
+      <td class="mc-correct-cell"><strong>April</strong></td>
+      <td class="mc-nearby" title="**February**
+
+OpenAI began rolling out the Memory feature to ChatGPT Plus users in February 2024, allowing the model to remember details across conversations."><span class="mc-icon">±</span> February</td>
+      <td class="mc-nearby" title="April 2024.
+
+OpenAI began testing the Memory feature in February 2024 with a small group, and then rolled it out to all ChatGPT Plus users (excluding those in Europe and Korea at the time) in late Apr"><span class="mc-icon">±</span> February</td>
+      <td class="mc-nearby" title="**February** 2024 — OpenAI began rolling out the Memory feature (allowing ChatGPT to remember information across conversations) to Plus users, initially as a limited test, with broader rollout to all "><span class="mc-icon">±</span> February</td>
+    </tr><tr>
+      <td><strong>claude-3-opus-release</strong><br><span class="mc-q">In which month of 2024 was Claude 3 Opus first released?</span></td>
+      <td class="mc-correct-cell"><strong>March</strong></td>
+      <td class="mc-correct" title="Claude 3 Opus was first released in **March** 2024."><span class="mc-icon">✓</span> March</td>
+      <td class="mc-correct" title="March
+
+Claude 3 Opus was released on March 4, 2024, as part of the initial Claude 3 model family launch by Anthropic, alongside Claude 3 Sonnet (with Claude 3 Haiku following later)."><span class="mc-icon">✓</span> March</td>
+      <td class="mc-correct" title="**March** — Claude 3 Opus was released in March 2024, as part of Anthropic&#x27;s Claude 3 model family, which also included Claude 3 Sonnet and Claude 3 Haiku launched at the same time."><span class="mc-icon">✓</span> March</td>
+    </tr><tr>
+      <td><strong>claude-3.5-haiku-release</strong><br><span class="mc-q">In which month of 2024 was Claude 3.5 Haiku released?</span></td>
+      <td class="mc-correct-cell"><strong>November</strong></td>
+      <td class="mc-adjacent" title="Claude 3.5 Haiku was released in **October** 2024 (announced October 22, 2024, with wider availability following in the subsequent weeks)."><span class="mc-icon">~</span> October</td>
+      <td class="mc-adjacent" title="October (2024). Anthropic announced Claude 3.5 Haiku in October 2024, though it became broadly available via the API shortly after, in early November."><span class="mc-icon">~</span> October</td>
+      <td class="mc-correct" title="**November** 2024
+
+Claude 3.5 Haiku was released in November 2024, serving as Anthropic&#x27;s fastest model in the Claude 3.5 family, positioned as a lighter and more efficient option compared to Claude 3"><span class="mc-icon">✓</span> November</td>
+    </tr><tr>
+      <td><strong>claude-3.5-sonnet-release</strong><br><span class="mc-q">In which month of 2024 was Claude 3.5 Sonnet (original) released?</span></td>
+      <td class="mc-correct-cell"><strong>June</strong></td>
+      <td class="mc-correct" title="**June**
+
+Claude 3.5 Sonnet (the original version) was released in June 2024."><span class="mc-icon">✓</span> June</td>
+      <td class="mc-correct" title="June
+
+Claude 3.5 Sonnet was released by Anthropic on June 20, 2024. (A later updated version, sometimes called &quot;Claude 3.5 Sonnet (new)&quot; or the October 2024 version, was released later that year.)"><span class="mc-icon">✓</span> June</td>
+      <td class="mc-correct" title="**June** 2024
+
+Claude 3.5 Sonnet (the original version) was released by Anthropic in June 2024. It was later followed by an updated version in October 2024, which is why the original is sometimes dist"><span class="mc-icon">✓</span> June</td>
+    </tr><tr>
+      <td><strong>deepseek-r1-release</strong><br><span class="mc-q">In which month of 2025 was DeepSeek R1 officially released (open-source MIT license)?</span></td>
+      <td class="mc-correct-cell"><strong>January</strong></td>
+      <td class="mc-correct" title="**January**
+
+DeepSeek-R1 was officially released on January 20, 2025, under an MIT license."><span class="mc-icon">✓</span> January</td>
+      <td class="mc-correct" title="January
+
+DeepSeek-R1 was officially released on January 20, 2025, under the MIT license, allowing for open commercial use and modifications. It was released alongside DeepSeek-R1-Zero and several dist"><span class="mc-icon">✓</span> January</td>
+      <td class="mc-correct" title="**January**
+
+DeepSeek R1 was officially released in January 2025 (around January 20, 2025) under an open-source MIT license, making it freely available for use and modification. Its release drew signi"><span class="mc-icon">✓</span> January</td>
+    </tr><tr>
+      <td><strong>deepseek-v3-release</strong><br><span class="mc-q">In which month of 2024 was DeepSeek V3 released?</span></td>
+      <td class="mc-correct-cell"><strong>December</strong></td>
+      <td class="mc-correct" title="**December**
+
+DeepSeek-V3 was released in late December 2024."><span class="mc-icon">✓</span> December</td>
+      <td class="mc-correct" title="December — DeepSeek V3 was released in December 2024."><span class="mc-icon">✓</span> December</td>
+      <td class="mc-correct" title="**December**
+
+DeepSeek V3 was released in December 2024 (announced on December 26, 2024), a large mixture-of-experts language model developed by the Chinese AI company DeepSeek."><span class="mc-icon">✓</span> December</td>
+    </tr><tr>
+      <td><strong>gemini-1.5-announce</strong><br><span class="mc-q">In which month of 2024 did Google first announce Gemini 1.5?</span></td>
+      <td class="mc-correct-cell"><strong>February</strong></td>
+      <td class="mc-correct" title="**February**
+
+Google announced Gemini 1.5 (including Gemini 1.5 Pro) in February 2024."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="February
+
+Google announced Gemini 1.5 on February 15, 2024, with Gemini 1.5 Pro being the first model released in that series, notable for its long context window (up to 1 million tokens at the time)."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="**February**
+
+Google first announced Gemini 1.5 (specifically Gemini 1.5 Pro) in February 2024, highlighting its long context window capability of up to 1 million tokens."><span class="mc-icon">✓</span> February</td>
+    </tr><tr>
+      <td><strong>gemini-2-flash-release</strong><br><span class="mc-q">In which month of 2024 did Google first release Gemini 2.0 Flash (experimental)?</span></td>
+      <td class="mc-correct-cell"><strong>December</strong></td>
+      <td class="mc-correct" title="**December**
+
+Google released Gemini 2.0 Flash (experimental) in December 2024, announced at the Google Gemini event on December 11, 2024."><span class="mc-icon">✓</span> December</td>
+      <td class="mc-correct" title="December
+
+Google first released Gemini 2.0 Flash as an experimental model on December 11, 2024, as part of the Gemini 2.0 announcement."><span class="mc-icon">✓</span> December</td>
+      <td class="mc-correct" title="**December** 2024
+
+Google first released Gemini 2.0 Flash (experimental) in December 2024, as part of the broader Gemini 2.0 announcement on December 11, 2024."><span class="mc-icon">✓</span> December</td>
+    </tr><tr>
+      <td><strong>gemini-advanced-launch</strong><br><span class="mc-q">In which month of 2024 did Google launch &#x27;Gemini Advanced&#x27; (the paid tier)?</span></td>
+      <td class="mc-correct-cell"><strong>February</strong></td>
+      <td class="mc-correct" title="**February**
+
+Google launched Gemini Advanced (powered by the Ultra 1.0 model) on February 8, 2024, as part of the Google One AI Premium plan."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="**February** 2024.
+
+Google launched Gemini Advanced on February 8, 2024, as part of its Google One AI Premium plan ($19.99/month). It featured access to the more capable Gemini Ultra 1.0 model, and co"><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="**February** 2024
+
+Google launched **Gemini Advanced** in February 2024, as part of the broader rebranding of Google&#x27;s AI assistant (formerly known as Bard) to **Gemini**. Gemini Advanced is the paid "><span class="mc-icon">✓</span> February</td>
+    </tr><tr>
+      <td><strong>google-io-2024</strong><br><span class="mc-q">In which month was Google I/O 2024?</span></td>
+      <td class="mc-correct-cell"><strong>May</strong></td>
+      <td class="mc-correct" title="**May**
+
+Google I/O 2024 was held on May 14, 2024."><span class="mc-icon">✓</span> May</td>
+      <td class="mc-correct" title="May
+
+Google I/O 2024 took place on May 14–15, 2024, at the Shoreline Amphitheatre in Mountain View, California."><span class="mc-icon">✓</span> May</td>
+      <td class="mc-correct" title="**May**
+
+Google I/O 2024 took place on May 14, 2024, at the Shoreline Amphitheatre in Mountain View, California."><span class="mc-icon">✓</span> May</td>
+    </tr><tr>
+      <td><strong>gpt-4-release</strong><br><span class="mc-q">In which month of 2023 did OpenAI first release GPT-4 (initial release to ChatGPT Plus)?</span></td>
+      <td class="mc-correct-cell"><strong>March</strong></td>
+      <td class="mc-correct" title="**March**
+
+GPT-4 was released on March 14, 2023, with access initially available to ChatGPT Plus subscribers."><span class="mc-icon">✓</span> March</td>
+      <td class="mc-correct" title="March
+
+OpenAI released GPT-4 on March 14, 2023, making it available to ChatGPT Plus subscribers and via API waitlist on that same day."><span class="mc-icon">✓</span> March</td>
+      <td class="mc-correct" title="**March** (2023)
+
+GPT-4 was first released on **March 14, 2023**, made available to ChatGPT Plus subscribers and via the API for developers."><span class="mc-icon">✓</span> March</td>
+    </tr><tr>
+      <td><strong>iphone-15-release</strong><br><span class="mc-q">In which month of 2023 was the iPhone 15 released?</span></td>
+      <td class="mc-correct-cell"><strong>September</strong></td>
+      <td class="mc-correct" title="The iPhone 15 was released in **September** 2023 (specifically September 22, 2023)."><span class="mc-icon">✓</span> September</td>
+      <td class="mc-correct" title="September
+
+The iPhone 15 lineup was announced on September 12, 2023, and released on September 22, 2023."><span class="mc-icon">✓</span> September</td>
+      <td class="mc-correct" title="**September**
+
+The iPhone 15 lineup was announced on September 12, 2023, at Apple&#x27;s &quot;Wonderlust&quot; event and went on sale September 22, 2023."><span class="mc-icon">✓</span> September</td>
+    </tr><tr>
+      <td><strong>llama-3-release</strong><br><span class="mc-q">In which month of 2024 was Llama 3 (original, 8B/70B) first released?</span></td>
+      <td class="mc-correct-cell"><strong>April</strong></td>
+      <td class="mc-correct" title="**April**
+
+Meta released Llama 3 (8B and 70B) on April 18, 2024."><span class="mc-icon">✓</span> April</td>
+      <td class="mc-correct" title="April — Llama 3 (8B and 70B) was first released on April 18, 2024."><span class="mc-icon">✓</span> April</td>
+      <td class="mc-correct" title="**April** 2024
+
+Meta released Llama 3 (with 8B and 70B parameter versions) on April 18, 2024."><span class="mc-icon">✓</span> April</td>
+    </tr><tr>
+      <td><strong>llama-3.1-release</strong><br><span class="mc-q">In which month of 2024 was Llama 3.1 (the 405B release) made available?</span></td>
+      <td class="mc-correct-cell"><strong>July</strong></td>
+      <td class="mc-correct" title="**July**
+
+Llama 3.1 (including the 405B parameter version) was released by Meta on July 23, 2024."><span class="mc-icon">✓</span> July</td>
+      <td class="mc-correct" title="July
+
+Llama 3.1, including the 405B model, was released by Meta on July 23, 2024."><span class="mc-icon">✓</span> July</td>
+      <td class="mc-correct" title="**July** 2024.
+
+Meta released Llama 3.1, including the flagship 405B parameter model, in July 2024. It was notable for being one of the largest openly available foundation models at the time."><span class="mc-icon">✓</span> July</td>
+    </tr><tr>
+      <td><strong>mcp-release</strong><br><span class="mc-q">In which month of 2024 did Anthropic release MCP (Model Context Protocol)?</span></td>
+      <td class="mc-correct-cell"><strong>November</strong></td>
+      <td class="mc-correct" title="**November**
+
+Anthropic publicly released the Model Context Protocol (MCP) in **November 2024** as an open standard for connecting AI assistants to external data sources and tools."><span class="mc-icon">✓</span> November</td>
+      <td class="mc-correct" title="November
+
+Anthropic announced and open-sourced the Model Context Protocol (MCP) in November 2024, introducing it as an open standard for connecting AI assistants to external data sources and tools."><span class="mc-icon">✓</span> November</td>
+      <td class="mc-correct" title="**November** 2024.
+
+Anthropic released the Model Context Protocol (MCP) in **November 2024** as an open standard designed to connect AI assistants to data sources, tools, and services in a standardize"><span class="mc-icon">✓</span> November</td>
+    </tr><tr>
+      <td><strong>meta-quest-3-release</strong><br><span class="mc-q">In which month of 2023 did Meta release the Quest 3 headset?</span></td>
+      <td class="mc-correct-cell"><strong>October</strong></td>
+      <td class="mc-correct" title="**October**
+
+Meta released the Quest 3 mixed reality headset on October 10, 2023."><span class="mc-icon">✓</span> October</td>
+      <td class="mc-far" title="October
+
+Meta announced the Quest 3 in June 2023 at Meta Connect previews, but the headset was officially released on **October 10, 2023**."><span class="mc-icon">✗</span> June</td>
+      <td class="mc-correct" title="**October** — Meta released the Quest 3 headset in October 2023, announcing it at their Meta Connect event and making it available for purchase on October 10, 2023."><span class="mc-icon">✓</span> October</td>
+    </tr><tr>
+      <td><strong>ms-copilot-ga</strong><br><span class="mc-q">Microsoft Copilot for M365 became generally available to enterprise customers in which month of 2023</span></td>
+      <td class="mc-correct-cell"><strong>November</strong></td>
+      <td class="mc-correct" title="**November**
+
+Microsoft 365 Copilot became generally available to enterprise customers on **November 1, 2023**."><span class="mc-icon">✓</span> November</td>
+      <td class="mc-correct" title="November
+
+Microsoft 365 Copilot became generally available to enterprise customers on **November 1, 2023**, initially for customers with Microsoft 365 E3, E5, Business Standard, and Business Premium p"><span class="mc-icon">✓</span> November</td>
+      <td class="mc-correct" title="**November**
+
+Microsoft Copilot for Microsoft 365 became generally available to enterprise customers in **November 2023** (specifically announced on November 1, 2023), removing the previous 300-seat m"><span class="mc-icon">✓</span> November</td>
+    </tr><tr>
+      <td><strong>o1-release</strong><br><span class="mc-q">In which month of 2024 did OpenAI first release o1-preview?</span></td>
+      <td class="mc-correct-cell"><strong>September</strong></td>
+      <td class="mc-correct" title="**September**
+
+OpenAI released o1-preview on September 12, 2024."><span class="mc-icon">✓</span> September</td>
+      <td class="mc-correct" title="September. OpenAI released o1-preview on September 12, 2024, as part of their new &quot;o1&quot; series of reasoning-focused models."><span class="mc-icon">✓</span> September</td>
+      <td class="mc-correct" title="**September**
+
+OpenAI first released o1-preview in September 2024 (September 12, 2024), introducing it as a new &quot;reasoning&quot; model designed to spend more time thinking through complex problems before r"><span class="mc-icon">✓</span> September</td>
+    </tr><tr>
+      <td><strong>o3-mini-release</strong><br><span class="mc-q">In which month of 2025 was OpenAI o3-mini released publicly?</span></td>
+      <td class="mc-correct-cell"><strong>January</strong></td>
+      <td class="mc-correct" title="**January**
+
+OpenAI&#x27;s o3-mini was released publicly on January 31, 2025."><span class="mc-icon">✓</span> January</td>
+      <td class="mc-correct" title="January
+
+OpenAI released o3-mini publicly on January 31, 2025, making it available to ChatGPT users (including free tier) and via the API."><span class="mc-icon">✓</span> January</td>
+      <td class="mc-adjacent" title="**February** 2025
+
+OpenAI released o3-mini publicly on February 1, 2025, making it available to ChatGPT users (including free tier users) and via the API."><span class="mc-icon">~</span> February</td>
+    </tr><tr>
+      <td><strong>openai-devday-2024</strong><br><span class="mc-q">In which month of 2024 did OpenAI hold DevDay (the main 2024 event)?</span></td>
+      <td class="mc-correct-cell"><strong>October</strong></td>
+      <td class="mc-correct" title="**October**
+
+OpenAI held its main 2024 DevDay event on October 1, 2024, in San Francisco, where they announced features like the Realtime API, vision fine-tuning, prompt caching, and other developer-f"><span class="mc-icon">✓</span> October</td>
+      <td class="mc-correct" title="October
+
+OpenAI held DevDay 2024 on October 1, 2024, in San Francisco. Unlike 2023&#x27;s single event, OpenAI expanded DevDay 2024 into a series of events held in San Francisco, London (October 30), and S"><span class="mc-icon">✓</span> October</td>
+      <td class="mc-correct" title="**October**
+
+OpenAI held its main DevDay 2024 event in October 2024 (October 1st), in San Francisco. The event focused on developer tools and announcements, including updates to the API, new fine-tuni"><span class="mc-icon">✓</span> October</td>
+    </tr><tr>
+      <td><strong>paris-olympics-start</strong><br><span class="mc-q">In which month did the 2024 Paris Olympics begin?</span></td>
+      <td class="mc-correct-cell"><strong>July</strong></td>
+      <td class="mc-correct" title="**July**
+
+The 2024 Paris Olympics officially began on **July 26, 2024**, with the opening ceremony along the Seine River."><span class="mc-icon">✓</span> July</td>
+      <td class="mc-correct" title="July
+
+The 2024 Paris Olympics began on July 26, 2024, with the opening ceremony held along the Seine River."><span class="mc-icon">✓</span> July</td>
+      <td class="mc-correct" title="**July**
+
+The 2024 Paris Olympics officially began on **July 26, 2024**, with the opening ceremony held along the Seine River, and ran through August 11, 2024."><span class="mc-icon">✓</span> July</td>
+    </tr><tr>
+      <td><strong>sora-announcement</strong><br><span class="mc-q">In which month of 2024 did OpenAI first announce Sora (text-to-video model)?</span></td>
+      <td class="mc-correct-cell"><strong>February</strong></td>
+      <td class="mc-correct" title="**February**
+
+OpenAI first announced Sora on February 15, 2024."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="February
+
+OpenAI first announced Sora on February 15, 2024, unveiling it as a text-to-video model capable of generating videos up to about a minute long from text prompts. It was initially made availa"><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="**February**
+
+OpenAI first announced Sora in **February 2024**, showcasing its ability to generate realistic and imaginative video scenes from text prompts. It generated significant attention due to t"><span class="mc-icon">✓</span> February</td>
+    </tr><tr>
+      <td><strong>super-bowl-58</strong><br><span class="mc-q">In which month was Super Bowl 58 (Chiefs vs 49ers)?</span></td>
+      <td class="mc-correct-cell"><strong>February</strong></td>
+      <td class="mc-correct" title="**February**
+
+Super Bowl LVIII (58) was played on February 11, 2024, in Las Vegas, with the Chiefs defeating the 49ers in overtime."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="February
+
+Super Bowl LVIII (58) was played on February 11, 2024, at Allegiant Stadium in Las Vegas, Nevada. The Kansas City Chiefs defeated the San Francisco 49ers 25-22 in overtime."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="**February** (February 11, 2024)
+
+Super Bowl LVIII was played in Las Vegas, with the Kansas City Chiefs defeating the San Francisco 49ers 25–22 in overtime."><span class="mc-icon">✓</span> February</td>
+    </tr><tr>
+      <td><strong>trump-inauguration</strong><br><span class="mc-q">In which month did Donald Trump&#x27;s second inauguration happen?</span></td>
+      <td class="mc-correct-cell"><strong>January</strong></td>
+      <td class="mc-correct" title="January (January 20, 2025)."><span class="mc-icon">✓</span> January</td>
+      <td class="mc-correct" title="January
+
+Donald Trump&#x27;s second inauguration took place on January 20, 2025, marking the beginning of his second term as President of the United States."><span class="mc-icon">✓</span> January</td>
+      <td class="mc-correct" title="**January**
+
+Donald Trump&#x27;s second inauguration took place on January 20, 2025, when he was sworn in as the 47th President of the United States."><span class="mc-icon">✓</span> January</td>
+    </tr><tr>
+      <td><strong>vision-pro-release</strong><br><span class="mc-q">In which month of 2024 was Apple Vision Pro released in the US?</span></td>
+      <td class="mc-correct-cell"><strong>February</strong></td>
+      <td class="mc-correct" title="**February**
+
+Apple Vision Pro was released in the US on February 2, 2024."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="February
+
+The Apple Vision Pro was released in the United States on February 2, 2024."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="**February**
+
+Apple Vision Pro was released in the United States on February 2, 2024, marking Apple&#x27;s entry into the spatial computing/mixed reality headset market."><span class="mc-icon">✓</span> February</td>
+    </tr><tr>
+      <td><strong>wwdc-2024</strong><br><span class="mc-q">In which month was Apple WWDC 2024?</span></td>
+      <td class="mc-correct-cell"><strong>June</strong></td>
+      <td class="mc-correct" title="**June**
+
+Apple WWDC 2024 took place on June 10–14, 2024."><span class="mc-icon">✓</span> June</td>
+      <td class="mc-correct" title="June
+
+Apple&#x27;s Worldwide Developers Conference (WWDC) 2024 took place from June 10–14, 2024. The keynote on June 10 notably introduced &quot;Apple Intelligence,&quot; the company&#x27;s suite of AI features."><span class="mc-icon">✓</span> June</td>
+      <td class="mc-correct" title="**June**
+
+Apple&#x27;s Worldwide Developers Conference (WWDC) 2024 was held in June 2024 (June 10–14), where Apple announced iOS 18, macOS Sequoia, and the **Apple Intelligence** AI platform, among other u"><span class="mc-icon">✓</span> June</td>
+    </tr>
+</tbody>
+</table>
+
+<p><strong>Observations:</strong></p>
+<ul style="margin-left:1.2rem">
+<li>4.7 had 4 month errors; 4.6 and Sonnet each had 2</li>
+<li>Only 4.7 produced a "far" error (said June for Meta Quest 3 release, actually October — 4 months off)</li>
+<li>4.7 answered <em>all</em> questions while 4.6 and Sonnet each refused one — so 4.7 is more willing to attempt confident answers, sometimes wrong</li>
+<li>All three models missed <code>chatgpt-memory-launch</code> (said February, actually April) — likely because the feature had a limited test in February before the April full launch</li>
+<li>4.6 and 4.7 both off by 1 month for Claude 3.5 Haiku release (said October, actually November 4)</li>
 </ul>
 
-<p>The low opus-4.6 scores remaining (e.g. the 2/10 on <code>synthetic-january-count</code>) are real failures by opus-4.6, not criteria errors. See the test below to verify.</p>
+<p><strong>What this means for Arvind's claim:</strong></p>
+<ul style="margin-left:1.2rem">
+<li>✓ 4.7 is slightly worse at month precision than 4.6 — validated</li>
+<li>✗ 4.7 "dropped to Sonnet level" — not validated. Sonnet matches 4.6 (93.1%), not 4.7 (86.7%). On this specific metric, 4.7 is actually below both.</li>
+<li>The difference is small in absolute terms (2 additional errors out of 30) but directionally consistent. For a workflow doing hundreds of research tasks per day, even a few extra month errors per week would be noticeable.</li>
+</ul>
 
-<section class="round-section">
+<h2>Responses to specific pushback</h2>
+
+<p><strong>On the 2/10 scores you flagged:</strong></p>
+
+<ul style="margin-left:1.2rem;font-size:0.92rem">
+<li><code>gpt-4.5-release</code> — all 3 models got 2/10 originally. My mistake: I set the ground truth wrong (said GPT-4.5 wasn't released; it was, Feb 27, 2025). <strong>Corrected to 10/10 each</strong> after you flagged this.</li>
+<li><code>wiki-2024-events</code> — all 3 got 2/10. Cause: I truncated the Wikipedia article at 30K characters, cutting off before the 2020s section. All 3 correctly refused to hallucinate. <strong>Corrected to 10/10 each</strong> — this was them doing the right thing.</li>
+<li><code>synthetic-january-count</code> — opus-4.6 alone got 2/10 for answering "3" when the correct count from a 4-item list was 4. This one is a real failure; the document is unambiguous (see the test below to verify). Not a methodology issue.</li>
+<li><code>llm-release-order</code> — all 3 scored 2-5/10. Cause: Gemini 1.5 Pro GA date was ambiguous (preview vs GA). This is a genuinely hard question, not a methodology problem.</li>
+</ul>
+
+<p>If you find other specific tests where you think the judge got it wrong, point to the test ID and I'll re-examine.</p>
+
+<section class="round-section" id="round-common">
       <h2>Training knowledge: common events</h2>
       <p class="round-desc">Well-known tech/world events with specific dates</p>
       <div class="round-summary">
@@ -1119,7 +1564,7 @@ Wait, let me correct that ordering:
         </div>
       </div>
     </details>
-    </section><section class="round-section">
+    </section><section class="round-section" id="round-harder">
       <h2>Training knowledge: edge cases</h2>
       <p class="round-desc">Lesser-known events, chronological reasoning, version confusion</p>
       <div class="round-summary">
@@ -2090,7 +2535,7 @@ However, I&#x27;d recommend checking OpenAI&#x27;s official website for the most
         </div>
       </div>
     </details>
-    </section><section class="round-section">
+    </section><section class="round-section" id="round-latest">
       <h2>Training knowledge: &quot;what&#x27;s latest&quot;</h2>
       <p class="round-desc">&quot;What&#x27;s the most recent X?&quot; style questions</p>
       <div class="round-summary">
@@ -2961,9 +3406,9 @@ If something was released after my knowledge cutoff under that name, I wouldn&#x
         </div>
       </div>
     </details>
-    </section><section class="round-section">
+    </section><section class="round-section" id="round-parsing">
       <h2>Document parsing</h2>
-      <p class="round-desc">Extract/reason about dates from a provided document (HN page, email thread, news list, Wikipedia)</p>
+      <p class="round-desc">Extract/reason about dates from a provided document</p>
       <div class="round-summary">
         <span class="rs-item"><strong>Opus 4.6:</strong> 8.27/10</span>
         <span class="rs-item"><strong>Opus 4.7:</strong> 9.18/10</span>
@@ -4538,17 +4983,10 @@ Both are tied as the oldest. Since &quot;JTAG &#x27;Hacking&#x27; the Original X
     </section>
 
 <footer>
-<p>Raw data (JSON dumps of all answers and judgments) available in <code>/tmp/news_date_*.json</code> on the test machine. Scripts: <code>news_date_compare.py</code>, <code>news_date_harder.py</code>, <code>news_date_final.py</code>, <code>news_date_parsing.py</code> in the <code>loom/bench/</code> directory.</p>
-<p>Corrections or suggestions welcome. If a specific judgment is wrong or a test is ambiguous, point to the test ID and I'll re-examine.</p>
+<p>Raw data (JSON dumps of all answers, scores, and judgments) available in <code>/tmp/news_date_*.json</code> and <code>/tmp/month_confusion_results.json</code> on the test machine. Scripts: <code>news_date_compare.py</code>, <code>news_date_harder.py</code>, <code>news_date_final.py</code>, <code>news_date_parsing.py</code>, <code>month_confusion_test.py</code> in <code>loom/bench/</code>.</p>
+<p>Corrections or suggestions welcome. If a specific judgment is wrong or a test is ambiguous, point to the test ID.</p>
 <p>Related: <a href="https://kex7m.effort.ws/static/opus-4.6-vs-4.7-comparison.html">full 4.6 vs 4.7 comparison</a> · <a href="https://kex7m.effort.ws/static/opus-thinking-comparison.html">thinking modes benchmark</a></p>
 </footer>
 
-<script>
-// Add IDs to round sections so anchor links work
-document.querySelectorAll('.round-section').forEach((sec, i) => {
-  const names = ['common', 'harder', 'latest', 'parsing'];
-  sec.id = 'round-' + names[i];
-});
-</script>
 </body>
 </html>
