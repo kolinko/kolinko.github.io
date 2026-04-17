@@ -286,7 +286,8 @@ Revised verdict: <strong style="color:#e65100">partially supported</strong>.
 
 <div class="nav">
 <strong>Jump to</strong>
-<a href="#month-section">→ Month precision test (new)</a>
+<a href="#hard-section">→ Hard document parsing (new)</a>
+<a href="#month-section">→ Month precision test</a>
 <a href="#round-common">→ Common events (14)</a>
 <a href="#round-harder">→ Edge cases (17)</a>
 <a href="#round-latest">→ What's latest (13)</a>
@@ -737,6 +738,767 @@ Apple&#x27;s Worldwide Developers Conference (WWDC) 2024 was held in June 2024 (
 </ul>
 
 <p>If you find other specific tests where you think the judge got it wrong, point to the test ID and I'll re-examine.</p>
+
+<h2 id="hard-section">Hard document-parsing tests (new)</h2>
+
+<p>Both the month-precision tests and the count-in-document tests in earlier rounds turned out to be too easy — all three models regularly scored 100% on simple "count events in October" questions. This new battery (27 questions) is explicitly designed to be harder: long documents (2,000-3,500 chars) with dates buried in prose, mixed date formats (ISO / US MM/DD / European DD/MM / relative phrases like "last Monday" / spelled-out dates), distractor dates, cross-section aggregation, negation filters ("NOT Acme"), and overlapping range queries. Deterministic scoring — no LLM judge.</p>
+
+<p><strong>11 of 27 tests (41%) produced at least one model failure</strong>, compared to ~25% on the previous batteries. The remaining tests are kept as controls to show the models all handle "simple" extraction well — the regressions show up at the boundaries.</p>
+
+<table class="month-summary-table">
+<thead>
+<tr><th>Model</th><th class="n">Correct</th><th class="n">±1 off</th><th class="n">±2-3 off</th><th class="n">Far (&gt;3)</th><th class="n">No answer</th><th class="n">Overall acc</th></tr>
+</thead>
+<tbody>
+<tr>
+      <td><strong>opus-4.6</strong></td>
+      <td class="n">21/27</td>
+      <td class="n">2</td>
+      <td class="n">3</td>
+      <td class="n">1</td>
+      <td class="n">0</td>
+      <td class="n"><strong>77.8%</strong></td>
+    </tr><tr>
+      <td><strong>opus-4.7</strong></td>
+      <td class="n">22/27</td>
+      <td class="n">4</td>
+      <td class="n">1</td>
+      <td class="n">0</td>
+      <td class="n">0</td>
+      <td class="n"><strong>81.5%</strong></td>
+    </tr><tr>
+      <td><strong>sonnet-4.6</strong></td>
+      <td class="n">19/27</td>
+      <td class="n">4</td>
+      <td class="n">3</td>
+      <td class="n">0</td>
+      <td class="n">1</td>
+      <td class="n"><strong>70.4%</strong></td>
+    </tr>
+</tbody>
+</table>
+
+<p><strong>Headline:</strong> On hard parsing, Opus 4.7 (81.5%) edges out Opus 4.6 (77.8%) by a small margin, and both significantly outperform Sonnet 4.6 (70.4%). This pushes back against the "4.7 dropped to Sonnet level" hypothesis — on stress tests explicitly designed to expose weaknesses in date/document parsing, 4.7 actually matches or beats 4.6 overall.</p>
+
+<p><strong>Where 4.7 DOES fail that 4.6 doesn't</strong> (aligned with the friend's concern):</p>
+<ul style="margin-left:1.2rem">
+<li><code>pt-shipped-march</code>: 4.6 correctly interpreted the "[EU format]" tag on FE-107 (3/5/2025 → May 3), but 4.7 read it as March 5 and over-counted (5 vs expected 4). Sonnet made the same mistake.</li>
+<li><code>pt-shipped-q1-frontend</code>: Same pattern — 4.7 treated "3/5/2025 [EU format]" as March 5 and counted FE-107 in Q1. 4.6 correctly read it as May 3 (not Q1).</li>
+<li><code>cal-2024-trips-count</code>: 4.7 undercounted by 1 (6 vs 7). 4.6 and Sonnet got it right.</li>
+</ul>
+
+<p><strong>Where 4.6 fails that 4.7 doesn't:</strong></p>
+<ul style="margin-left:1.2rem">
+<li><code>tl-q2-salary-count</code>: 4.6 conflated AWS cloud-infrastructure expenses with Salaries (counted EXP-7701, 7702, 7703 as "salary payments" because they're all EXP-* in Q2). 4.7 and Sonnet correctly filtered to Salaries only.</li>
+<li><code>pt-shipped-q2-count</code>: 4.6 over-counted by 2 (12 vs 10).</li>
+<li><code>pt-shipped-not-feb-count</code>: 4.6 under-counted by 4. 4.7 and Sonnet both correct.</li>
+<li><code>pt-be-shipped-not-q1</code>: 4.6 off by 1 on the backend-ticket Q1 exclusion.</li>
+</ul>
+
+<p><strong>Tests where both Opus versions fail but 4.7 less severely:</strong></p>
+<ul style="margin-left:1.2rem">
+<li><code>pt-shipped-may</code>: all three models missed FE-107's EU-format date (3/5/2025 = May 3). Expected 5, all said 4 — a shared weak spot on format-tag interpretation.</li>
+<li><code>cal-2025-q1-count</code>: all models undercounted because they missed the UPCOMING section's March entries. This is a section-boundary issue.</li>
+</ul>
+
+<p>Hover a cell in the table below to see the model's raw answer. Color coding: green=correct, yellow=±1, orange=±2-3, red=far (&gt;3 off), grey=no answer.</p>
+
+<table class="month-table">
+<thead>
+<tr>
+<th style="min-width:240px">Test (question preview)</th>
+<th>Expected</th>
+<th>Opus 4.6</th>
+<th>Opus 4.7</th>
+<th>Sonnet 4.6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+      <td><strong>cal-2024-trips-count</strong><br><span class="mc-q">How many distinct travel-related entries (flights, trips, vacations) are listed in this calendar for calendar year 2024 only? Count: Lisbon offsite, SF flight, Paris trip (begin+en</span></td>
+      <td class="mc-correct-cell"><strong>7</strong></td>
+      <td class="mc-correct" title="I need to identify distinct travel-related entries in calendar year 2024.
+
+1. **Lisbon offsite** (2024-01-15) — travel to Lisbon
+2. **Flight to SF** (2024-03-22) — flight for BigConf
+3. **Paris trip begins** (May 10, 2024) — travel entry
+4. **Paris trip ends** (May 14, 2024) — travel entry
+5. **Tene"><span class="mc-icon">✓</span> 7</td>
+      <td class="mc-adjacent" title="6"><span class="mc-icon">~</span> 6</td>
+      <td class="mc-correct" title="I need to count distinct travel-related entries from 2024 only, using the specific items listed in the question.
+
+1. **Lisbon offsite** (Jan 15, 2024) — 1
+2. **SF flight** (Mar 22, 2024) — 1
+3. **Paris trip** (begins May 10 + ends May 14 = 2 entries) — 2
+4. **Tenerife vacation** (begins Aug 1 + ends"><span class="mc-icon">✓</span> 7</td>
+    </tr><tr>
+      <td><strong>cal-2025-q1-count</strong><br><span class="mc-q">How many events are listed in Q1 2025 (January, February, or March 2025)? Include all entries with dates in Jan/Feb/Mar 2025, from both the regular section and the UPCOMING section</span></td>
+      <td class="mc-correct-cell"><strong>9</strong></td>
+      <td class="mc-nearby" title="I need to count all events with dates in January, February, or March 2025, from both sections.
+
+**Events from 2025 section:**
+1. January 6, 2025 — Office reopens; kickoff meeting
+2. 2025-01-20 — US inauguration (watching party)
+3. Around Feb 3 — Another quarterly review
+4. 14 February 2025 — Valenti"><span class="mc-icon">±</span> 7</td>
+      <td class="mc-nearby" title="Regular section (Q1 2025):
+1. January 6, 2025 — Office reopens
+2. 2025-01-20 — US inauguration
+3. ~Feb 3 — Quarterly review
+4. Feb 14, 2025 — Valentine&#x27;s dinner
+5. 2025-02-28 — Q1 mid-quarter review
+6. 3/15/2025 — Ides of March party
+7. March 18, 2025 — Dentist followup
+
+UPCO"><span class="mc-icon">±</span> 7</td>
+      <td class="mc-nearby" title="I need to count all events with dates in January, February, or March 2025, from both sections.
+
+**From the &quot;Events from 2025&quot; section:**
+
+1. January 6, 2025 — Office reopens; kickoff meeting
+2. 2025-01-20 — US inauguration (watching party)
+3. ~February 3, 2025 — Another quarterly review (two weeks a"><span class="mc-icon">±</span> 6</td>
+    </tr><tr>
+      <td><strong>cal-vacation-end-month</strong><br><span class="mc-q">In which month did the 3-week Tenerife vacation end? Just the month name.</span></td>
+      <td class="mc-correct-cell"><strong>August</strong></td>
+      <td class="mc-correct" title="The 3-week vacation to Tenerife started on **August 1, 2024** and ended on **August 22, 2024**.
+
+The month is **August**."><span class="mc-icon">✓</span> August</td>
+      <td class="mc-correct" title="August"><span class="mc-icon">✓</span> August</td>
+      <td class="mc-correct" title="**August**
+
+The 3-week Tenerife vacation started on August 1, 2024, and ended on August 22, 2024."><span class="mc-icon">✓</span> August</td>
+    </tr><tr>
+      <td><strong>conf-delivered-talks</strong><br><span class="mc-q">How many non-cancelled Track A and Track B talks are scheduled across all 5 days? Do NOT count cancelled talks, workshops, keynotes, panels, or unconference sessions. Just the numb</span></td>
+      <td class="mc-correct-cell"><strong>19</strong></td>
+      <td class="mc-correct" title="I need to count all non-cancelled Track A and Track B talks across all 5 days.
+
+**Day 1:**
+- Track A: &quot;Scaling Inference&quot; ✅
+- Track B: &quot;Agent Architectures&quot; — CANCELLED ✗
+- Track A: &quot;Quantization at Scale&quot; ✅
+- Track B: &quot;RAG in Production&quot; ✅
+- Track A: &quot;Open Weights Ethics&quot; ✅
+- Track B: &quot;Fine-tuning "><span class="mc-icon">✓</span> 19</td>
+      <td class="mc-correct" title="Counting non-cancelled Track A and Track B talks:
+
+**Day 1:** Track A (Chen, Rodriguez, Wu) = 3; Track B (Patel) = 1 → 4
+**Day 2:** Track A (Wei, Fields, Hassan) = 3; Track B (Sokolova, Rossi) = 2 → 5
+**Day 3:** Track A (Iyer, Ferrari, O&#x27;Brien) = 3; Track B (Nguyen) = 1 → 4
+**Day 4:** Track A (Chen,"><span class="mc-icon">✓</span> 19</td>
+      <td class="mc-correct" title="I&#x27;ll go through each day and count only the non-cancelled Track A and Track B talks.
+
+**Day 1:**
+- Track A: Scaling Inference ✓
+- Track B: Agent Architectures ✗ (cancelled)
+- Track A: Quantization at Scale ✓
+- Track B: RAG in Production ✓
+- Track A: Open Weights Ethics ✓
+- Track B: Fine-tuning Small"><span class="mc-icon">✓</span> 19</td>
+    </tr><tr>
+      <td><strong>mfl-eu-entries-count</strong><br><span class="mc-q">How many entries in the main Jan-Sep sections (NOT the Cancelled/deferred section) are flagged [EU]? Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>12</strong></td>
+      <td class="mc-correct" title="I&#x27;ll go through each section and count the [EU] flagged entries.
+
+**January-March 2025:**
+1. 25/01/2025 [EU] Warsaw-led rollback of v12.1.1
+2. 28/01/2025 [EU] Patch v12.1.2 deployed
+3. 11/02/2025 [EU] EU review of beta begins
+4. 18/02/2025 [EU] Beta freeze
+5. 20/03/2025 [EU] EU team ships mobile v4."><span class="mc-icon">✓</span> 12</td>
+      <td class="mc-correct" title="Counting [EU] entries in Jan-Sep sections:
+
+Jan-Mar:
+1. 25/01/2025
+2. 28/01/2025
+3. 11/02/2025
+4. 18/02/2025
+5. 20/03/2025
+6. 26/03/2025
+
+Apr-Jun:
+7. 11/04/2025
+8. 07/05/2025
+9. 12/05/2025
+10. 10/06/2025
+11. 17/06/2025
+
+Jul-Sep:
+12. 15/07/2025
+
+**12**"><span class="mc-icon">✓</span> 12</td>
+      <td class="mc-correct" title="I&#x27;ll go through each section and count the [EU] flagged entries:
+
+**January–March 2025:**
+1. 25/01/2025 [EU]
+2. 28/01/2025 [EU]
+3. 11/02/2025 [EU]
+4. 18/02/2025 [EU]
+5. 20/03/2025 [EU]
+6. 26/03/2025 [EU]
+
+**April–June 2025:**
+7. 11/04/2025 [EU]
+8. 07/05/2025 [EU]
+9. 12/05/2025 [EU]
+10. 10/06/2025 [E"><span class="mc-icon">✓</span> 12</td>
+    </tr><tr>
+      <td><strong>mfl-february-deploys</strong><br><span class="mc-q">How many deployments or ship events happened in February 2025 according to this log? Count only entries whose date (after format interpretation) falls in February 2025. Exclude the</span></td>
+      <td class="mc-correct-cell"><strong>5</strong></td>
+      <td class="mc-correct" title="I need to identify all entries with dates falling in February 2025, excluding the &quot;Cancelled / deferred&quot; section.
+
+Let me go through the relevant entries:
+
+1. **2025-02-03 [JP]** — YYYY-MM-DD format → **February 3, 2025** ✓
+2. **02/11/2025 [US]** — MM/DD/YYYY format → **February 11, 2025** ✓
+3. **11"><span class="mc-icon">✓</span> 5</td>
+      <td class="mc-correct" title="Let me identify February 2025 entries:
+
+1. `2025-02-03 [JP]` - Feb 3, 2025 ✓
+2. `02/11/2025 [US]` - Feb 11, 2025 ✓
+3. `11/02/2025 [EU]` - Feb 11, 2025 (DD/MM) ✓
+4. `18/02/2025 [EU]` - Feb 18, 2025 ✓
+5. `02/28/2025 [US]` - Feb 28, 2025 ✓
+
+**5**"><span class="mc-icon">✓</span> 5</td>
+      <td class="mc-correct" title="I need to identify all entries in February 2025, interpreting each date according to its team format.
+
+## Checking each entry in the log (excluding Cancelled/deferred):
+
+**[JP] = YYYY-MM-DD**
+- `2025-02-03` → **3 Feb 2025** ✅
+
+**[US] = MM/DD/YYYY**
+- `02/11/2025` → **11 Feb 2025** ✅
+- `02/28/2025` →"><span class="mc-icon">✓</span> 5</td>
+    </tr><tr>
+      <td><strong>mfl-non-us-count</strong><br><span class="mc-q">In the main Jan-Sep sections (NOT Cancelled/deferred), how many entries are NOT flagged [US]? That is, count entries flagged [EU] OR [JP]. Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>21</strong></td>
+      <td class="mc-correct" title="I need to count all entries flagged [EU] or [JP] in the main January-September sections (excluding the Cancelled/deferred section).
+
+**January-March 2025:**
+1. 2025-01-08 [JP] Deploy v12.1.0 to prod
+2. 25/01/2025 [EU] Warsaw-led rollback of v12.1.1
+3. 28/01/2025 [EU] Patch v12.1.2 deployed
+4. 2025-0"><span class="mc-icon">✓</span> 21</td>
+      <td class="mc-correct" title="Let me count [EU] and [JP] entries in the main Jan-Sep sections (excluding Cancelled/deferred).
+
+**January-March:**
+- 2025-01-08 [JP]
+- 25/01/2025 [EU]
+- 28/01/2025 [EU]
+- 2025-02-03 [JP]
+- 11/02/2025 [EU]
+- 18/02/2025 [EU]
+- 2025-03-12 [JP]
+- 20/03/2025 [EU]
+- 26/03/2025 [EU]
+
+That&#x27;s 9.
+
+**April-Ju"><span class="mc-icon">✓</span> 21</td>
+      <td class="mc-correct" title="I need to count entries flagged [EU] or [JP] in the main Jan-Sep sections only (excluding the Cancelled/deferred section).
+
+**January-March:**
+1. 2025-01-08 [JP]
+2. 25/01/2025 [EU]
+3. 28/01/2025 [EU]
+4. 2025-02-03 [JP]
+5. 11/02/2025 [EU]
+6. 18/02/2025 [EU]
+7. 2025-03-12 [JP]
+8. 20/03/2025 [EU]
+9. 26"><span class="mc-icon">✓</span> 21</td>
+    </tr><tr>
+      <td><strong>nf-amazon-nova-ga-month</strong><br><span class="mc-q">In which month did Amazon Nova go GA (general availability)? Just the month.</span></td>
+      <td class="mc-correct-cell"><strong>January</strong></td>
+      <td class="mc-correct" title="**December**
+
+Wait, let me re-read the document more carefully.
+
+The document states that the Nova models **launched** at re:Invent 2024 (December 2–6, 2024), but they **went GA on January 15, 2025**.
+
+The answer is **January**."><span class="mc-icon">✓</span> January</td>
+      <td class="mc-correct" title="January"><span class="mc-icon">✓</span> January</td>
+      <td class="mc-correct" title="Based on the document, Amazon Nova went GA in **January** (specifically January 15, 2025)."><span class="mc-icon">✓</span> January</td>
+    </tr><tr>
+      <td><strong>nf-grok3-month</strong><br><span class="mc-q">In which month did xAI announce Grok 3? Just the month.</span></td>
+      <td class="mc-correct-cell"><strong>February</strong></td>
+      <td class="mc-correct" title="**February**
+
+xAI announced Grok 3 on February 17, 2025."><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="February"><span class="mc-icon">✓</span> February</td>
+      <td class="mc-correct" title="Based on the document, xAI announced Grok 3 in **February**."><span class="mc-icon">✓</span> February</td>
+    </tr><tr>
+      <td><strong>nf-march-ai-releases</strong><br><span class="mc-q">How many distinct AI model/system releases or announcements happened in March 2025 according to this news feed? Include: Apple visionOS 2.4, GPT-5 announce, Gemini 2.5 Pro, Llama 4</span></td>
+      <td class="mc-correct-cell"><strong>4</strong></td>
+      <td class="mc-correct" title="Looking at the news feed, I need to identify distinct AI model/system **releases or announcements** that happened **in March 2025**, while excluding court rulings, acquisitions, and EU AI Act milestones.
+
+Here are the qualifying items:
+
+1. **Apple visionOS 2.4** — released March 18, 2025
+2. **GPT-5 "><span class="mc-icon">✓</span> 4</td>
+      <td class="mc-correct" title="4"><span class="mc-icon">✓</span> 4</td>
+      <td class="mc-nearby" title="I need to count distinct AI model/system releases or announcements that occurred in **March 2025**, using the specified inclusions and exclusions.
+
+**Applying the rules:**
+- ✅ Include: Apple visionOS 2.4, GPT-5 announce, Gemini 2.5 Pro, Llama 4 preview
+- ❌ Exclude: court rulings, acquisitions, EU AI"><span class="mc-icon">±</span> 2</td>
+    </tr><tr>
+      <td><strong>nf-releases-in-2024-count</strong><br><span class="mc-q">According to this news feed, how many distinct AI model releases or announcements from 2024 are mentioned anywhere in the feed? Include: GPT-4o, Gemini 2.0 Flash, Claude 3.5 Sonnet</span></td>
+      <td class="mc-correct-cell"><strong>9</strong></td>
+      <td class="mc-correct" title="I need to count distinct AI model releases/announcements **from 2024** mentioned in the feed.
+
+Let me go through each one listed in the question:
+
+1. **GPT-4o** — &quot;launched in May 2024&quot; ✅
+2. **Gemini 2.0 Flash** — &quot;December 11, 2024 release&quot; ✅
+3. **Claude 3.5 Sonnet** — &quot;shipped 20 June 2024&quot; ✅
+4. *"><span class="mc-icon">✓</span> 9</td>
+      <td class="mc-correct" title="Let me identify 2024 AI model releases/announcements:
+
+1. GPT-4o (May 2024) ✓
+2. Gemini 2.0 Flash (December 11, 2024) ✓
+3. Claude 3.5 Sonnet (June 20, 2024) ✓
+4. Claude 3.5 Sonnet &quot;new&quot; (October 22, 2024) ✓
+5. Claude 3.5 Haiku (November 4, 2024) ✓
+6. Grok 2 (August 14, 2024) ✓
+7. Llama 3.3 (December"><span class="mc-icon">✓</span> 9</td>
+      <td class="mc-correct" title="I need to count distinct AI model releases or announcements from **2024** mentioned in the feed, using the specified inclusion list plus Amazon Nova.
+
+Going through the feed:
+
+1. **GPT-4o** — &quot;launched in May 2024&quot; ✅
+2. **Gemini 2.0 Flash** — &quot;December 11, 2024 release&quot; ✅
+3. **Claude 3.5 Sonnet** — "><span class="mc-icon">✓</span> 9</td>
+    </tr><tr>
+      <td><strong>pt-all-shipped-april</strong><br><span class="mc-q">How many tickets across ALL teams were SHIPPED (DONE) in April 2025? Note: FE-108 shipped on &#x27;3/14/2025 [US format]&#x27; (which is March, not April). Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>5</strong></td>
+      <td class="mc-correct" title="I need to find all tickets with [DONE] status that shipped in April 2025.
+
+**Frontend:**
+- FE-111 [DONE] shipped 4/22/2025 [US] → **April 2025** ✓
+
+**Backend:**
+- BE-207 [DONE] shipped 2025-04-04 → **April 2025** ✓
+- BE-209 [DONE] shipped 2025-04-18 → **April 2025** ✓
+
+**Mobile:**
+- MOB-306 [DONE] s"><span class="mc-icon">✓</span> 5</td>
+      <td class="mc-correct" title="April 2025 DONE tickets:
+- FE-111: 4/22/2025 ✓
+- BE-207: 2025-04-04 ✓
+- BE-209: 2025-04-18 ✓
+- MOB-306: April 9, 2025 ✓
+- DEVOPS-405: 2025-04-15 ✓
+
+Answer: **5**"><span class="mc-icon">✓</span> 5</td>
+      <td class="mc-correct" title="I&#x27;ll go through each team and find tickets shipped in April 2025.
+
+**Frontend:**
+- FE-111: shipped 4/22/2025 ✅
+
+**Backend:**
+- BE-207: shipped 2025-04-04 ✅
+- BE-209: shipped 2025-04-18 ✅
+
+**Mobile:**
+- MOB-306: shipped April 9th, 2025 ✅
+
+**Platform / DevOps:**
+- DEVOPS-405: shipped 2025-04-15 ✅
+
+**5"><span class="mc-icon">✓</span> 5</td>
+    </tr><tr>
+      <td><strong>pt-be-shipped-not-q1</strong><br><span class="mc-q">How many Backend (BE-*) tickets were shipped (DONE) but NOT in Q1 2025 (Q1 = Jan, Feb, Mar 2025)? Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>3</strong></td>
+      <td class="mc-adjacent" title="I need to find Backend (BE-*) tickets that are [DONE] but **not** shipped in Q1 2025 (January, February, or March 2025).
+
+First, let me list all BE-* tickets with [DONE] status:
+
+1. **BE-201** [DONE] shipped 2025-01-08 → Q1 (January)
+2. **BE-202** [DONE] shipped 2025-01-25 → Q1 (January)
+3. **BE-204"><span class="mc-icon">~</span> 4</td>
+      <td class="mc-correct" title="BE DONE tickets: BE-201 (Jan), BE-202 (Jan), BE-204 (Feb), BE-206 (Mar), BE-207 (Apr), BE-209 (Apr), BE-210 (May).
+
+Not in Q1: BE-207, BE-209, BE-210 = 3"><span class="mc-icon">✓</span> 3</td>
+      <td class="mc-refused" title="I need to find BE-* tickets that are [DONE] but shipped **outside** Q1 2025 (i.e., not in January, February, or March 2025).
+
+**All DONE BE tickets:**
+
+- BE-201 [DONE] — shipped 2025-01-08 → Q1 ❌
+- BE-202 [DONE] — shipped 2025-01-25 → Q1 ❌
+- BE-204 [DONE] — shipped 2025-02-24 → Q1 ❌
+- BE-206 [DONE] "><span class="mc-icon">∅</span> —</td>
+    </tr><tr>
+      <td><strong>pt-fe-ambiguous-eu-format</strong><br><span class="mc-q">Consider FE-107, which shipped on &#x27;3/5/2025 [EU format]&#x27;. What is the specific DAY OF THE MONTH when FE-107 shipped? Answer with just the numeric day (e.g. &#x27;3&#x27; or &#x27;14&#x27;).</span></td>
+      <td class="mc-correct-cell"><strong>3</strong></td>
+      <td class="mc-correct" title="The date &#x27;3/5/2025&#x27; in EU format means day/month/year, so it is the **3rd** of May, 2025.
+
+**3**"><span class="mc-icon">✓</span> 3</td>
+      <td class="mc-correct" title="3"><span class="mc-icon">✓</span> 3</td>
+      <td class="mc-correct" title="Looking at FE-107, the date is listed as &#x27;3/5/2025 [EU format]&#x27;.
+
+In EU date format, the order is **DD/MM/YYYY**, so 3/5/2025 means the **3rd day**, month 5 (May), year 2025.
+
+**3**"><span class="mc-icon">✓</span> 3</td>
+    </tr><tr>
+      <td><strong>pt-fe-eu-format-month</strong><br><span class="mc-q">FE-107 shipped on a date written as &#x27;3/5/2025 [EU format]&#x27;. In which month did it ship? Just the month name.</span></td>
+      <td class="mc-correct-cell"><strong>May</strong></td>
+      <td class="mc-correct" title="In EU date format, &#x27;3/5/2025&#x27; means day/month/year, so 3/5/2025 is the 3rd of May, 2025.
+
+The month is **May**."><span class="mc-icon">✓</span> May</td>
+      <td class="mc-correct" title="May"><span class="mc-icon">✓</span> May</td>
+      <td class="mc-correct" title="## March
+
+In EU format, dates are written as **DD/MM/YYYY**, so **3/5/2025** means the **3rd of May**... 
+
+Wait — let me re-examine. EU format is **DD/MM/YYYY**, so 3/5/2025 = **3rd day, 5th month = May**.
+
+**May**"><span class="mc-icon">✓</span> May</td>
+    </tr><tr>
+      <td><strong>pt-shipped-march</strong><br><span class="mc-q">How many tickets were SHIPPED (status: DONE) in March 2025? Count only tickets with status DONE whose shipped date is in March 2025. Include all teams (FE, BE, MOB, DEVOPS). Just t</span></td>
+      <td class="mc-correct-cell"><strong>4</strong></td>
+      <td class="mc-correct" title="I need to find all tickets with status **[DONE]** that shipped in **March 2025**.
+
+Let me go through each team:
+
+**Frontend:**
+- FE-107 [DONE] shipped on 3/5/2025 [EU format] → 3rd of May? Wait, EU format means day/month/year, so 3/5/2025 = **3 May 2025**. Not March.
+- FE-108 [DONE] shipped on 3/14/"><span class="mc-icon">✓</span> 4</td>
+      <td class="mc-adjacent" title="March 2025 DONE tickets:
+- FE-107: 3/5/2025 ✓
+- FE-108: 3/14/2025 ✓
+- BE-206: 3/28/2025 ✓
+- MOB-303: 2025-03-04 ✓
+- DEVOPS-403: 2025-03-10 ✓
+
+5"><span class="mc-icon">~</span> 5</td>
+      <td class="mc-adjacent" title="I&#x27;ll go through each team and find tickets with status [DONE] and a shipped date in March 2025.
+
+**Frontend:**
+- FE-107 [DONE] shipped 3/5/2025 ✓
+- FE-108 [DONE] shipped 3/14/2025 ✓
+
+**Backend:**
+- BE-206 [DONE] shipped 3/28/2025 ✓
+
+**Mobile:**
+- MOB-303 [DONE] shipped 2025-03-04 ✓
+
+**DevOps:**
+- DE"><span class="mc-icon">~</span> 5</td>
+    </tr><tr>
+      <td><strong>pt-shipped-may</strong><br><span class="mc-q">How many tickets were shipped (status DONE) in May 2025? Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>5</strong></td>
+      <td class="mc-adjacent" title="Looking at all tickets with status [DONE] and a May 2025 ship date:
+
+1. **FE-113** – shipped 2025-05-07
+2. **BE-210** – shipped the fifth of May, 2025
+3. **MOB-307** – shipped 5/2/2025
+4. **DEVOPS-406** – shipped 5/10/2025
+
+**4**"><span class="mc-icon">~</span> 4</td>
+      <td class="mc-adjacent" title="Shipped (DONE) in May 2025:
+- FE-113: 2025-05-07
+- BE-210: May 5, 2025
+- MOB-307: 5/2/2025
+- DEVOPS-406: 5/10/2025
+
+4"><span class="mc-icon">~</span> 4</td>
+      <td class="mc-adjacent" title="I&#x27;ll go through all tickets with status [DONE] and a May 2025 ship date:
+
+- **FE-113** — shipped 2025-05-07 ✓
+- **BE-210** — shipped the fifth of May, 2025 ✓
+- **MOB-307** — shipped 5/2/2025 ✓
+- **DEVOPS-406** — shipped 5/10/2025 ✓
+
+**4**"><span class="mc-icon">~</span> 4</td>
+    </tr><tr>
+      <td><strong>pt-shipped-not-feb-count</strong><br><span class="mc-q">How many tickets across ALL teams were SHIPPED (DONE) in the period Jan-May 2025, but EXCLUDING those shipped in February 2025? Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>20</strong></td>
+      <td class="mc-far" title="I need to find all tickets with [DONE] status shipped in January, March, April, or May 2025 (excluding February 2025).
+
+**January 2025:**
+1. FE-101 — shipped 2025-01-12
+2. FE-102 — shipped 2025-01-22
+3. BE-201 — shipped 2025-01-08
+4. BE-202 — shipped 2025-01-25
+5. MOB-301 — shipped 2025-01-30
+6. DEV"><span class="mc-icon">✗</span> 16</td>
+      <td class="mc-correct" title="Let me identify all DONE tickets Jan-May 2025, then exclude February.
+
+**Frontend DONE (excluding Feb):**
+- FE-101 Jan 12 ✓
+- FE-102 Jan 22 ✓
+- FE-103 Feb 5 ✗
+- FE-105 Feb 17 ✗
+- FE-107 Mar 5 ✓
+- FE-108 Mar 14 ✓
+- FE-111 Apr 22 ✓
+- FE-113 May 7 ✓
+
+Count: 6
+
+**Backend DONE (excluding Feb):**
+- BE-201"><span class="mc-icon">✓</span> 20</td>
+      <td class="mc-correct" title="I need to count all [DONE] tickets shipped between January and May 2025, **excluding** those shipped in February 2025.
+
+---
+
+### February 2025 tickets to EXCLUDE:
+- FE-103 (Feb 5)
+- FE-105 (Feb 17)
+- BE-204 (Feb 24)
+- MOB-302 (Feb 18)
+- DEVOPS-402 (Feb 12)
+
+---
+
+### Remaining DONE tickets (Jan, Mar,"><span class="mc-icon">✓</span> 20</td>
+    </tr><tr>
+      <td><strong>pt-shipped-q1-frontend</strong><br><span class="mc-q">How many Frontend (FE-*) tickets were SHIPPED (DONE) in Q1 2025 (January, February, or March)? Remember that FE-107 shipped on &#x27;3/5/2025 [EU format]&#x27; — interpret the date carefully</span></td>
+      <td class="mc-correct-cell"><strong>5</strong></td>
+      <td class="mc-correct" title="I need to find all Frontend (FE-*) tickets with status [DONE] that shipped in Q1 2025 (January, February, or March).
+
+Let me go through each FE ticket:
+
+- **FE-101 [DONE]** shipped 2025-01-12 → January ✅
+- **FE-102 [DONE]** shipped 2025-01-22 → January ✅
+- **FE-103 [DONE]** shipped 2025-02-05 → Febr"><span class="mc-icon">✓</span> 5</td>
+      <td class="mc-adjacent" title="FE Q1 DONE tickets:
+- FE-101: 2025-01-12 ✓
+- FE-102: 2025-01-22 ✓
+- FE-103: 2025-02-05 ✓
+- FE-105: Feb 17, 2025 ✓
+- FE-107: 3/5/2025 EU = March 5, 2025 ✓
+- FE-108: 3/14/2025 US = March 14, 2025 ✓
+
+Answer: 6"><span class="mc-icon">~</span> 6</td>
+      <td class="mc-adjacent" title="I need to find Frontend (FE-*) tickets that are [DONE] and shipped in Q1 2025 (January, February, or March).
+
+Let me go through each FE ticket:
+
+- **FE-101** [DONE] — shipped 2025-01-12 ✅ January
+- **FE-102** [DONE] — shipped 2025-01-22 ✅ January
+- **FE-103** [DONE] — shipped 2025-02-05 ✅ February
+-"><span class="mc-icon">~</span> 6</td>
+    </tr><tr>
+      <td><strong>pt-shipped-q2-count</strong><br><span class="mc-q">How many tickets across ALL teams were SHIPPED (DONE) in Q2 2025 (April, May, or June 2025)? Note: FE-107 shipped on &#x27;3/5/2025 [EU format]&#x27; — interpret carefully. Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>10</strong></td>
+      <td class="mc-nearby" title="I need to identify all tickets with [DONE] status that shipped in Q2 2025 (April, May, or June 2025).
+
+**Key note on FE-107:** &quot;shipped on 3/5/2025 [EU format]&quot; means 3rd of May 2025 (day/month/year), which is in Q2. Wait — actually, EU format 3/5/2025 = 3 May 2025? Let me reconsider: EU format is D"><span class="mc-icon">±</span> 12</td>
+      <td class="mc-correct" title="FE-107 shipped 3/5/2025 EU format = May 3, 2025 (Q2).
+
+Q2 2025 DONE tickets (April/May/June):
+
+Frontend:
+- FE-107 (May 3) ✓
+- FE-111 (Apr 22) ✓
+- FE-113 (May 7) ✓
+
+Backend:
+- BE-207 (Apr 4) ✓
+- BE-209 (Apr 18) ✓
+- BE-210 (May 5) ✓
+
+Mobile:
+- MOB-306 (Apr 9) ✓
+- MOB-307 (May 2) ✓
+
+DevOps:
+- DEVOPS-40"><span class="mc-icon">✓</span> 10</td>
+      <td class="mc-adjacent" title="I need to find all tickets with status [DONE] that shipped in Q2 2025 (April, May, or June).
+
+**Key note on FE-107:** &quot;shipped on 3/5/2025 [EU format]&quot; → EU format = DD/MM/YYYY → 5th of March 2025 → Q1, not Q2.
+
+Now let me go through each team:
+
+---
+
+**Frontend:**
+- FE-111 [DONE] shipped 4/22/2025 ✅"><span class="mc-icon">~</span> 9</td>
+    </tr><tr>
+      <td><strong>sh-2020-count</strong><br><span class="mc-q">How many major corporate or product events are dated in 2020 in this document? Include: prototype ship, Series A close, second product launch. Exclude reference to &#x27;COVID lockdown&#x27;</span></td>
+      <td class="mc-correct-cell"><strong>3</strong></td>
+      <td class="mc-correct" title="Looking at the document for major corporate or product events dated in 2020:
+
+1. **First product prototype shipped** — 22 January 2020
+2. **Series A closed** — 8 June 2020
+3. **Second product launched** — 11 November 2020
+
+The answer is **3**."><span class="mc-icon">✓</span> 3</td>
+      <td class="mc-correct" title="3"><span class="mc-icon">✓</span> 3</td>
+      <td class="mc-correct" title="I need to count major corporate or product events dated in 2020, including the three specified types, and excluding the undated COVID lockdown reference.
+
+1. **Prototype ship** — 22 January 2020 ✓
+2. **Series A close** — 8 June 2020 ✓
+3. **Second product launch** — 11 November 2020 ✓
+
+**Answer: 3**"><span class="mc-icon">✓</span> 3</td>
+    </tr><tr>
+      <td><strong>tl-acme-invoices</strong><br><span class="mc-q">How many invoices in the INFLOWS section are to &#x27;Acme Corp&#x27;? Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>8</strong></td>
+      <td class="mc-correct" title="**8**"><span class="mc-icon">✓</span> 8</td>
+      <td class="mc-correct" title="8"><span class="mc-icon">✓</span> 8</td>
+      <td class="mc-correct" title="Looking through the INFLOWS section for invoices to &#x27;Acme Corp&#x27;:
+
+1. INV-5501
+2. INV-5503
+3. INV-5505
+4. INV-5509
+5. INV-5513
+6. INV-5519
+7. INV-5523
+8. INV-5526
+
+**8**"><span class="mc-icon">✓</span> 8</td>
+    </tr><tr>
+      <td><strong>tl-highest-monthly-inflows-month</strong><br><span class="mc-q">Which month in the INFLOWS section has the MOST invoices (highest count, not highest amount)? Answer with just the month name.</span></td>
+      <td class="mc-correct-cell"><strong>July</strong></td>
+      <td class="mc-correct" title="**July**
+
+July has 6 invoices (INV-5516 through INV-5521)."><span class="mc-icon">✓</span> July</td>
+      <td class="mc-correct" title="July (5501-5505 is April=5, May=5, June=5, July=6, August=4, September=5)
+
+Wait, let me recount.
+
+April: 5501,5502,5503,5504,5505 = 5
+May: 5506,5507,5508,5509,5510 = 5
+June: 5511,5512,5513,5514,5515 = 5
+July: 5516,5517,5518,5519,5520,5521 = 6
+August: 5522,5523,5524,5525 = 4
+September: 5526,5527,5528"><span class="mc-icon">✓</span> July</td>
+      <td class="mc-correct" title="Counting the invoices by month in the INFLOWS section:
+
+- **April**: INV-5501, 5502, 5503, 5504, 5505 = **5 invoices**
+- **May**: INV-5506, 5507, 5508, 5509, 5510 = **5 invoices**
+- **June**: INV-5511, 5512, 5513, 5514, 5515 = **5 invoices**
+- **July**: INV-5516, 5517, 5518, 5519, 5520, 5521 = **6 i"><span class="mc-icon">✓</span> July</td>
+    </tr><tr>
+      <td><strong>tl-multi-customer-count</strong><br><span class="mc-q">Among the INFLOWS, how many DISTINCT customers appear MORE than once in the entire ledger (in all of Q2-Q3 2024 combined)? Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>6</strong></td>
+      <td class="mc-correct" title="I need to count distinct customers in the INFLOWS section that appear more than once.
+
+Let me tally each customer&#x27;s appearances:
+
+1. **Acme Corp**: INV-5501, 5503, 5505, 5509, 5513, 5519, 5523, 5526 → **8 times**
+2. **BigBuyer Ltd**: INV-5502, 5507, 5512, 5520, 5527 → **5 times**
+3. **StartupX**: IN"><span class="mc-icon">✓</span> 6</td>
+      <td class="mc-correct" title="Customers in inflows:
+- Acme Corp: 8 times
+- BigBuyer Ltd: 5 times
+- StartupX: 4 times
+- MediumCo: 3 times
+- LongTime Co: 3 times
+- TechGiant: 3 times
+- NewCustomer1: 1
+- SmallCo: 1
+- NewCustomer2: 1
+- NewCustomer3: 1
+
+More than once: 6"><span class="mc-icon">✓</span> 6</td>
+      <td class="mc-correct" title="I need to find distinct customers in the INFLOWS section who appear more than once across Q2-Q3 2024 (April–September 2024).
+
+Let me count appearances per customer:
+
+- **Acme Corp**: INV-5501, 5503, 5505, 5509, 5513, 5519, 5523, 5526 → 8 times ✓
+- **BigBuyer Ltd**: INV-5502, 5507, 5512, 5520, 5527 →"><span class="mc-icon">✓</span> 6</td>
+    </tr><tr>
+      <td><strong>tl-not-acme-q3</strong><br><span class="mc-q">How many invoices in Q3 2024 (July, August, September) are to customers OTHER than Acme Corp? Just the number. Count only invoices, not expenses or adjustments.</span></td>
+      <td class="mc-correct-cell"><strong>12</strong></td>
+      <td class="mc-correct" title="Looking at Q3 2024 invoices (July, August, September):
+
+**July:**
+- INV-5516: MediumCo
+- INV-5517: LongTime Co
+- INV-5518: StartupX
+- INV-5519: Acme Corp *(exclude)*
+- INV-5520: BigBuyer Ltd
+- INV-5521: NewCustomer2
+
+**August:**
+- INV-5522: TechGiant
+- INV-5523: Acme Corp *(exclude)*
+- INV-5524: Med"><span class="mc-icon">✓</span> 12</td>
+      <td class="mc-correct" title="Q3 2024 invoices (July, Aug, Sept): INV-5516 through INV-5530 = 15 invoices.
+
+Acme Corp ones: INV-5519, INV-5523, INV-5526 = 3
+
+Non-Acme: 15 - 3 = 12"><span class="mc-icon">✓</span> 12</td>
+      <td class="mc-nearby" title="I&#x27;ll go through Q3 2024 (July, August, September) invoices only, excluding Acme Corp:
+
+- INV-5516 2024-07-02 MediumCo ✓
+- INV-5517 2024-07-09 LongTime Co ✓
+- INV-5518 2024-07-15 StartupX ✓
+- INV-5519 2024-07-22 Acme Corp ✗
+- INV-5520 2024-07-25 BigBuyer Ltd ✓
+- INV-5521 2024-07-30 NewCustomer2 ✓
+- I"><span class="mc-icon">±</span> 10</td>
+    </tr><tr>
+      <td><strong>tl-q2-salary-count</strong><br><span class="mc-q">How many salary payments (EXP-*) were in Q2 2024 (April, May, June)? Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>1</strong></td>
+      <td class="mc-nearby" title="Looking at the EXP-* entries with dates in Q2 2024 (April, May, June):
+
+1. EXP-7701 2024-04-15
+2. EXP-7702 2024-05-15
+3. EXP-7703 2024-06-15
+4. EXP-7707 2024-06-01
+
+**4**"><span class="mc-icon">±</span> 4</td>
+      <td class="mc-correct" title="Salary payments in Q2 2024 (April, May, June):
+- EXP-7707 2024-06-01 Salaries
+
+Answer: 1"><span class="mc-icon">✓</span> 1</td>
+      <td class="mc-correct" title="Looking at the EXP-* entries for April, May, and June 2024:
+
+- **April**: EXP-7701 (AWS, 2024-04-15) — no salary payment
+- **May**: EXP-7702 (AWS, 2024-05-15) — no salary payment
+- **June**: EXP-7703 (AWS, 2024-06-15) + **EXP-7707** (Salaries, 2024-06-01) — 1 salary payment
+
+**1**"><span class="mc-icon">✓</span> 1</td>
+    </tr><tr>
+      <td><strong>tl-unique-customers-q3</strong><br><span class="mc-q">How many DISTINCT customers appear in the Q3 2024 (Jul/Aug/Sep) INFLOWS? Count unique customer names in that quarter. Just the number.</span></td>
+      <td class="mc-correct-cell"><strong>8</strong></td>
+      <td class="mc-correct" title="Looking at the INFLOWS entries dated July, August, and September 2024:
+
+- **July**: MediumCo, LongTime Co, StartupX, Acme Corp, BigBuyer Ltd, NewCustomer2
+- **August**: TechGiant, Acme Corp, MediumCo, LongTime Co
+- **September**: Acme Corp, BigBuyer Ltd, StartupX, NewCustomer3, TechGiant
+
+Distinct c"><span class="mc-icon">✓</span> 8</td>
+      <td class="mc-correct" title="Q3 2024 inflows (Jul/Aug/Sep):
+- MediumCo
+- LongTime Co
+- StartupX
+- Acme Corp
+- BigBuyer Ltd
+- NewCustomer2
+- TechGiant
+- NewCustomer3
+
+8"><span class="mc-icon">✓</span> 8</td>
+      <td class="mc-correct" title="I&#x27;ll go through the Q3 2024 (July, August, September) inflow entries and identify unique customer names:
+
+- INV-5516 2024-07-02 **MediumCo**
+- INV-5517 2024-07-09 **LongTime Co**
+- INV-5518 2024-07-15 **StartupX**
+- INV-5519 2024-07-22 **Acme Corp**
+- INV-5520 2024-07-25 **BigBuyer Ltd**
+- INV-5521 "><span class="mc-icon">✓</span> 8</td>
+    </tr>
+</tbody>
+</table>
+
+<p><strong>What this implies for the "handling dates in news and updates" critique:</strong></p>
+<ul style="margin-left:1.2rem">
+<li>Broad qualitative tests: 4.7 ≥ 4.6 overall.</li>
+<li>Narrow month-precision test: 4.7 slightly worse than 4.6 (86.7% vs 93.1%).</li>
+<li>Hard document-parsing: 4.7 slightly <em>better</em> than 4.6 (81.5% vs 77.8%). Sonnet meaningfully worse (70.4%).</li>
+<li>The 4.7 failures that <em>don't</em> appear in 4.6 cluster around <strong>format-tag interpretation</strong>: when a document explicitly labels a date as "[EU format]" with digits that could go either way (3/5 = May 3 or March 5?), 4.7 is slightly more likely to default to the US reading even when the tag says otherwise.</li>
+<li>This is a narrow, specific failure mode — consistent with the friend's "mixing up months" observation, but not a general regression on date handling.</li>
+</ul>
 
 <section class="round-section" id="round-common">
       <h2>Training knowledge: common events</h2>
