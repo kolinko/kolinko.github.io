@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Parrot Assistant v1 — Assembly Card</title>
+<style>
+@page { size: A4; margin: 12mm 14mm; }
+* { box-sizing: border-box; }
+html, body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: #111;
+  font-size: 9.5pt;
+  line-height: 1.35;
+  margin: 0;
+  padding: 0;
+}
+h1 { font-size: 17pt; margin: 0 0 2pt; color: #0a0a0a; }
+h2 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #1a3a8c;
+     border-bottom: 1px solid #1a3a8c; padding-bottom: 2pt; }
+h3 { font-size: 10pt; margin: 6pt 0 2pt; color: #222; font-weight: 600; }
+.subtitle { color: #555; font-size: 9pt; margin-bottom: 8pt; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
+.box { border: 1px solid #c8c8c8; border-radius: 4px; padding: 6pt 9pt;
+       background: #fafafa; margin-bottom: 6pt; }
+.box.yellow { background: #fffbeb; border-color: #d6b849; }
+.box.blue   { background: #eef6ff; border-color: #8bb8e3; }
+.box.green  { background: #f0fbef; border-color: #80c080; }
+ul, ol { margin: 2pt 0 4pt 16pt; padding: 0; }
+li { margin: 1pt 0; }
+table { border-collapse: collapse; width: 100%; font-size: 8.5pt; margin: 3pt 0; }
+th, td { border: 1px solid #bbb; padding: 2pt 4pt; text-align: left; }
+th { background: #e8e8e8; font-weight: 600; }
+code { font-family: 'Courier New', monospace; font-size: 8.5pt;
+       background: #f0ecdb; padding: 0 2pt; }
+.check { margin-right: 4pt; display: inline-block; width: 10pt; height: 10pt;
+         border: 1px solid #555; vertical-align: middle; }
+.small { font-size: 8pt; color: #555; }
+hr { border: none; border-top: 1px dashed #ccc; margin: 6pt 0; }
+.wiring td:first-child { font-weight: 600; background: #f5f5f5; }
+.big { font-size: 11pt; font-weight: 600; }
+footer { text-align: center; color: #777; font-size: 8pt;
+         border-top: 1px solid #ddd; margin-top: 10pt; padding-top: 4pt; }
+.pgbreak { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<h1>🦜 Parrot Assistant v1 — Assembly Card</h1>
+<div class="subtitle">Tomasz Kolinko · Apr 2026 · full guide at <code>kolinko.eu/parrot</code></div>
+
+<div class="cols">
+  <div>
+    <h2>① Unboxing checklist</h2>
+
+    <h3>Kamami (order #337481, ~292 PLN)</h3>
+    <ul>
+      <li><span class="check"></span> XIAOML Kit · <code>1202930</code> · 1×</li>
+      <li><span class="check"></span> MAX98357A · <code>1182935</code> · 1× <span class="small">— verify 6-pin header is pre-soldered by Kamami!</span></li>
+      <li><span class="check"></span> Speaker 28 mm · <code>234920</code> · 1×</li>
+      <li><span class="check"></span> JST-PH 2.0 pigtail · <code>1181279</code> · 3×</li>
+      <li><span class="check"></span> Magnets 10×1.5 mm · <code>1186978</code> · pack of 10</li>
+    </ul>
+
+    <h3>Botland (order #1618961, ~43 PLN)</h3>
+    <ul>
+      <li><span class="check"></span> F-F jumper ribbon · <code>19620</code> · 1× (use 6)</li>
+      <li><span class="check"></span> USB-A→USB-C cable · <code>14829</code> · 2×</li>
+    </ul>
+
+    <h3>Printstein (~65 PLN)</h3>
+    <ul>
+      <li><span class="check"></span> body_top.stl (matte light grey PLA)</li>
+      <li><span class="check"></span> belly_plate.stl</li>
+      <li><span class="check"></span> feet.stl (×2)</li>
+    </ul>
+
+    <h3>User-sourced</h3>
+    <ul>
+      <li><span class="check"></span> USB power bank (Wozinsky WPower 10000 or existing)</li>
+      <li><span class="check"></span> Brooch bar pin ~38 mm (pasmanteria)</li>
+    </ul>
+
+    <h2>② Tools</h2>
+    <div class="box">
+      <strong>Required:</strong> CA (super) glue · scissors or wire strippers · PVC insulation tape.<br>
+      <strong>Optional:</strong> multimeter · Posca paint markers (white/black/red).<br>
+      <strong>Not needed:</strong> soldering iron · 3D printer · crimper.
+    </div>
+  </div>
+
+  <div>
+    <h2>③ Assembly steps</h2>
+    <ol>
+      <li><strong>Flash XIAO first</strong> (before gluing) — see back panel.</li>
+      <li><strong>Glue magnets:</strong> 2 in belly plate (N up/out), 2 in body_top floor (N down/in). CA glue, hold 20 s. <em>Dry-fit: belly plate should <strong>snap</strong> shut.</em></li>
+      <li><strong>Glue brooch bar pin</strong> into rear recess on belly plate (external). Hold 30 s, cure 10 min.</li>
+      <li><strong>Friction-fit feet</strong> into belly plate holes (dab CA glue if loose).</li>
+      <li><strong>Speaker→JST pigtail:</strong> strip 5 mm, twist pairs, wrap with tape. Tug-test.</li>
+      <li><strong>Wire XIAO ↔ MAX98357A</strong> (6 F-F jumpers, see wiring table).</li>
+      <li><strong>Plug JST plug</strong> into MAX98357A PH2.0 socket.</li>
+      <li><strong>Mount boards</strong> in body_top cavity with 2 cm² foam tape (camera bore at front, USB-C at tail).</li>
+      <li><strong>Drop speaker</strong> into hex grille pocket (belly-facing).</li>
+      <li><strong>Close belly plate</strong> — magnets snap shut.</li>
+      <li><strong>Thread USB-C cable</strong> through tail slot into XIAO port.</li>
+      <li><strong>Plug into power bank</strong> — double-press flashlight button to lock always-on.</li>
+      <li><strong>Pin</strong> through shirt shoulder seam via brooch bar.</li>
+    </ol>
+
+    <h2>④ Wiring: XIAO ↔ MAX98357A</h2>
+    <table class="wiring">
+      <tr><th>XIAO</th><th>GPIO</th><th>MAX98357A</th><th>What</th></tr>
+      <tr><td>3V3</td><td>—</td><td>VIN</td><td>+3.3 V supply</td></tr>
+      <tr><td>GND</td><td>—</td><td>GND</td><td>ground</td></tr>
+      <tr><td>GND</td><td>—</td><td><strong>SD</strong></td><td><strong>tie LOW</strong> (enables amp)</td></tr>
+      <tr><td>D1</td><td>2</td><td>BCLK</td><td>I²S bit clock</td></tr>
+      <tr><td>D3</td><td>4</td><td>LRC</td><td>I²S word-select</td></tr>
+      <tr><td>D4</td><td>5</td><td>DIN</td><td>I²S data in</td></tr>
+    </table>
+    <div class="box yellow small">
+      <strong>Gotcha:</strong> leaving SD floating silently mutes the amp — the #1 "no audio" cause.
+      GAIN pin stays unconnected (default 9 dB is fine).
+    </div>
+  </div>
+</div>
+
+<div class="pgbreak"></div>
+
+<h1>Part 2 — Flash · Boot · First Chat</h1>
+
+<div class="cols">
+  <div>
+    <h2>⑤ Flashing the XIAO</h2>
+    <div class="box">
+      <strong>Do this BEFORE gluing.</strong> Confirm the board is alive first.
+    </div>
+    <ol>
+      <li>Install PlatformIO: <code>brew install platformio</code></li>
+      <li>Find Mac IP: <code>ipconfig getifaddr en0</code> (wired) or <code>en1</code> (WiFi)</li>
+      <li>Copy template + edit:
+        <pre style="font-size:8pt;background:#f0f0f0;color:#111;padding:4pt;border-radius:3px;">
+cd /Users/kolinko/claude/varia/parrot/firmware
+cp src/secrets.h.template src/secrets.h
+# edit src/secrets.h:
+#   WIFI_SSID, WIFI_PASS
+#   MAC_BRAIN_HOST = (IP from step 2)
+#   MAC_BRAIN_PORT = 8766</pre>
+      </li>
+      <li>Plug XIAO via USB-C into Mac. First flash: hold BOOT, tap RESET, release BOOT.</li>
+      <li>Compile + upload:
+        <pre style="font-size:8pt;background:#f0f0f0;color:#111;padding:4pt;border-radius:3px;">
+pio run
+pio run -t upload
+pio device monitor -b 115200</pre>
+      </li>
+      <li>Look for: <code>ws: connected</code> — that's the green light.</li>
+    </ol>
+
+    <h2>⑥ Start the Mac brain</h2>
+    <div class="box green">
+      <strong>Run preflight first — catches all Mac-side problems before you flash:</strong>
+      <pre style="font-size:8pt;background:#f0f0f0;color:#111;padding:4pt;border-radius:3px;margin-top:3pt;">python3 parrot/brain/preflight.py</pre>
+      Want all PASS. Then:
+      <pre style="font-size:8pt;background:#f0f0f0;color:#111;padding:4pt;border-radius:3px;">
+cd /Users/kolinko/claude/varia/parrot/brain
+./run.sh            # or: ./run.sh dry (no TTS)</pre>
+    </div>
+  </div>
+
+  <div>
+    <h2>⑦ First chat</h2>
+    <ol>
+      <li>Pin parrot to shoulder · plug power bank · lock always-on.</li>
+      <li>Say: <em>"Hey parrot, can you see me?"</em></li>
+      <li>Within ~6–8 s, expect a reply through the speaker.</li>
+      <li>Watch admin panel: <code>kex7m.effort.ws/parrot</code></li>
+    </ol>
+    <div class="box blue small">
+      <strong>Expected behaviour:</strong><br>
+      · <strong>Reactive</strong> = replies when you speak<br>
+      · <strong>Proactive</strong> = checks every 5 min, talks ≤ once per 20 min<br>
+      · May say <em>nothing</em> intentionally — it's a companion, not a chatbot
+    </div>
+
+    <h2>⑧ Troubleshooting cheatsheet</h2>
+    <table>
+      <tr><th>Symptom</th><th>First thing to try</th></tr>
+      <tr><td>Power bank auto-shuts</td><td>Double-press flashlight button<br>or swap for Voltaic/Green Cell/Anker</td></tr>
+      <tr><td>WS won't connect</td><td>Check MAC_BRAIN_HOST IP<br><code>nc -vz MAC 8766</code> · 2.4 GHz only</td></tr>
+      <tr><td>No audio out</td><td><strong>SD pin → GND?</strong> (most common)</td></tr>
+      <tr><td>No audio in</td><td>Sense board fully seated? speak louder</td></tr>
+      <tr><td>Speaker crackles</td><td>Seat deeper + foam gasket</td></tr>
+      <tr><td>Black JPEGs</td><td>Peel OV2640 lens film</td></tr>
+    </table>
+
+    <h2>⑨ Safety</h2>
+    <ul>
+      <li>Indoor only — not waterproof.</li>
+      <li>Magnets are strong — away from cards / pacemakers.</li>
+      <li>Camera privacy: unplug in confidential rooms (no mic mute in v1).</li>
+      <li>LAN-only ws:// — don't take on hotel WiFi.</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+Parrot Assistant v1 · <code>kolinko.eu/parrot</code> · full guide: <code>assembly-guide.html</code> ·
+admin panel: <code>kex7m.effort.ws/parrot</code>
+</footer>
+
+</body>
+</html>

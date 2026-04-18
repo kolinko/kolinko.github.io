@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parrot Assistant v1 — Tomasz Kolinko</title>
+<style>
+body{font-family:-apple-system,'Inter',Georgia,serif;background:#fafaf8;color:#2a2a2a;max-width:780px;margin:2rem auto;padding:0 1.5rem;line-height:1.65}
+h1{font-size:2rem;margin-bottom:.2rem;color:#0a0a0a}
+.subtitle{color:#666;font-size:1rem;margin-bottom:1.5rem}
+h2{font-size:1.3rem;margin-top:2rem;color:#1a3a8c;border-bottom:1px solid #ccd8ec;padding-bottom:.3rem}
+a{color:#1a5276}
+.hero{margin:1rem 0 1.5rem}
+.hero img{max-width:100%;border-radius:8px;border:1px solid #d0d0d0}
+.docs{margin-top:1rem}
+.docs a{display:block;padding:.6rem .8rem;text-decoration:none;border:1px solid #d8d8d8;background:#fff;border-radius:6px;margin-bottom:.5rem}
+.docs a:hover{background:#f0f4fa;border-color:#a0b8d8}
+.docs .title{font-weight:600;color:#111}
+.docs .desc{font-size:.9rem;color:#666;margin-top:.15rem}
+ul{padding-left:1.4rem}
+.tag{display:inline-block;background:#eef6ff;color:#1a3a8c;padding:.1rem .5rem;border-radius:3px;font-size:.8rem;margin-right:.3rem}
+</style>
+</head>
+<body>
+
+<h1>🦜 Parrot Assistant v1</h1>
+<div class="subtitle">A shoulder-mounted, 3D-printed, AI-observant African Grey. <span class="tag">Apr 2026</span></div>
+
+<div class="hero">
+<img src="assembly_preview.png" alt="Parrot Assistant — front, side, rear, top views">
+</div>
+
+<p>A WiFi-tethered ESP32-S3 wearable that hears, sees, and occasionally decides to comment on what's happening around you. Built in ~2 weeks by an autonomous agent pipeline — BOM, CAD, firmware, Mac-side brain, ordering, and payment tracking all handled agent-side. Only 4 user messages from kickoff to hardware-on-desk.</p>
+
+<h2>Hardware</h2>
+<ul>
+<li><strong>Compute:</strong> Seeed XIAO ESP32-S3 Sense (onboard OV2640 camera + PDM mic)</li>
+<li><strong>Audio out:</strong> MAX98357A I²S amp + 28 mm 8 Ω speaker</li>
+<li><strong>Power:</strong> external USB-C power bank worn in pocket — no LiPo / no charge circuit</li>
+<li><strong>Shell:</strong> 3D-printed two-part body, magnet-latched, shirt-seam brooch pin mount</li>
+<li><strong>Total BOM:</strong> ~590 PLN delivered-to-doorstep (parts + shipping + print)</li>
+</ul>
+
+<h2>Software</h2>
+<ul>
+<li><strong>On-device firmware:</strong> PlatformIO + Arduino ESP32 core v3.x. Streams 16 kHz PCM audio + 320×240 JPEGs over WebSocket to the Mac brain.</li>
+<li><strong>Mac brain:</strong> Python asyncio WebSocket server. Reactive loop (Claude Opus 4.7 + ElevenLabs TTS + whisper.cpp STT) + proactive loop ("should I speak?" every 5 min, 20-min cooldown).</li>
+<li><strong>Daily compute:</strong> ~$2.70–4.60/day in API calls at default 5-min proactive interval.</li>
+</ul>
+
+<h2>Docs</h2>
+<div class="docs">
+<a href="assembly-guide.html">
+<div class="title">Assembly &amp; Bring-Up Guide</div>
+<div class="desc">Full step-by-step from three paczkomat boxes to a working parrot in ~90 min. Flashing, wiring, troubleshooting, safety.</div>
+</a>
+<a href="assembly-card.pdf">
+<div class="title">Printable A4 Assembly Card (PDF)</div>
+<div class="desc">Compact 2-page reference: unboxing checklist + pictorial assembly + wiring diagram + first-boot checklist.</div>
+</a>
+<a href="bom-v2.md">
+<div class="title">Bill of Materials (v2, solder-free)</div>
+<div class="desc">9-line BOM, 363.52 PLN electronics. One unavoidable 6-pin MAX98357A joint — handled by Kamami's paid header-install service.</div>
+</a>
+<a href="cad-brief-v4.md">
+<div class="title">CAD Brief (v4.1)</div>
+<div class="desc">Body design, magnet mechanics, feet, brooch mount.</div>
+</a>
+<a href="parrot_v41_combined.stl">
+<div class="title">STL Files</div>
+<div class="desc">Printable 3D model for the body shell. <a href="print_settings.md">print settings</a> · <a href="dimensions.svg">dimensions SVG</a></div>
+</a>
+</div>
+
+<h2>Renders</h2>
+<p style="display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem">
+<img src="cad/view_front.png" alt="front view">
+<img src="cad/view_side.png" alt="side view">
+<img src="cad/view_rear.png" alt="rear view">
+<img src="cad/view_top.png" alt="top view">
+</p>
+
+<h2>Status</h2>
+<p>Hardware on order as of April 18, 2026. Parts expected Apr 20–24. Live status + agent activity log: <a href="https://kex7m.effort.ws/parrot">kex7m.effort.ws/parrot</a> (requires Cloudflare tunnel access).</p>
+
+<hr style="margin-top:3rem;border:none;border-top:1px solid #ddd">
+<p style="color:#888;font-size:.85rem">← <a href="/">back to kolinko.eu</a></p>
+
+</body>
+</html>

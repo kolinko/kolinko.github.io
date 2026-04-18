@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Parrot Assistant v1 — Assembly Guide</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+* { box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #fafafa;
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  font-size: 16px;
+}
+h1 { font-size: 2.2rem; font-weight: 700; margin-top: 0.5em; color: #0a0a0a;
+     border-bottom: 3px solid #2563eb; padding-bottom: 0.4em; }
+h2 { font-size: 1.55rem; font-weight: 600; margin-top: 2em; color: #111;
+     border-bottom: 1px solid #e0e0e0; padding-bottom: 0.3em; }
+h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.6em; color: #222; }
+h4 { font-size: 1.05rem; font-weight: 600; margin-top: 1.2em; color: #333; }
+p { margin: 0.8em 0; }
+code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.9em;
+       background: #f0ecdb; padding: 0.1em 0.4em; border-radius: 3px;
+       color: #6b4a20; }
+pre { background: #1e1e2e; color: #e4e4e7; padding: 16px 20px; border-radius: 8px;
+      overflow-x: auto; font-size: 0.88rem; line-height: 1.45; }
+pre code { background: transparent; color: inherit; padding: 0; }
+a { color: #2563eb; text-decoration: none; border-bottom: 1px solid #cfd8e8; }
+a:hover { border-bottom-color: #2563eb; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.95em; }
+th, td { border: 1px solid #d4d4d8; padding: 8px 12px; text-align: left; }
+th { background: #f0f0f0; font-weight: 600; }
+tr:nth-child(even) td { background: #fafafa; }
+ul, ol { padding-left: 1.8em; }
+li { margin: 0.3em 0; }
+input[type="checkbox"] { margin-right: 6px; }
+blockquote { border-left: 3px solid #facc15; background: #fffbeb; padding: 12px 18px;
+             margin: 1em 0; color: #4c3a10; border-radius: 0 6px 6px 0; }
+hr { border: none; border-top: 1px solid #e0e0e0; margin: 2.5em 0; }
+img { max-width: 100%; height: auto; border-radius: 6px; margin: 0.8em 0; }
+.print-note {
+  background: #eef6ff; border: 1px solid #b8d4ee; border-radius: 6px;
+  padding: 12px 18px; margin: 1.2em 0; font-size: 0.95em;
+}
+@media print {
+  body { background: white; max-width: 100%; padding: 20px; }
+  pre { background: #f5f5f5; color: #1a1a1a; border: 1px solid #ccc; }
+  a { color: #1a1a1a; border-bottom: none; }
+}
+</style>
+
+</head>
+<body>
+<div class="print-note">
+  <strong>Printable version:</strong> <a href="assembly-card.pdf">assembly-card.pdf</a> (A4) ·
+  <strong>Source:</strong> <a href="assembly-guide.md">markdown</a> ·
+  <strong>Admin panel:</strong> <a href="https://kex7m.effort.ws/parrot">live status</a>
+</div>
+<h1 id="parrot-assistant-v1-assembly-bring-up-guide">Parrot Assistant v1 — Assembly &amp; Bring-Up Guide</h1>
+<p><strong>For Tomasz.</strong> Day-1 instructions for when parts land (expected Apr 20–24, 2026).</p>
+<p>This guide gets you from <strong>three paczkomat boxes + a print</strong> to a working shoulder-mounted parrot in about 60–90 minutes. No soldering iron needed — Kamami soldered the one unavoidable joint for you. You will need roughly 2 cm² of CA glue and a pair of scissors.</p>
+<p>If anything is ambiguous, trust the photos. If the parrot doesn't talk at the end, jump to <strong>Troubleshooting</strong>.</p>
+<p>Project root on the Mac Studio: <code>/Users/kolinko/claude/varia/parrot/</code>
+Admin panel: <a href="http://localhost:8686/parrot">http://localhost:8686/parrot</a> (on the Mac itself) · <a href="https://kex7m.effort.ws/parrot">https://kex7m.effort.ws/parrot</a> (same panel via Cloudflare tunnel, works from anywhere).</p>
+<h3 id="day-1-flow-at-a-glance">Day-1 flow at a glance</h3>
+<p>The sections below are written as reference material. The <strong>order you actually execute</strong> on Day 1 is:</p>
+<ol>
+<li><strong>§1</strong> — Unbox and verify every part arrived.</li>
+<li><strong>§5a</strong> — Run preflight on the Mac. Catches all software-side problems before you touch hardware.</li>
+<li><strong>§4</strong> — Flash the XIAO via USB-C from the Mac, <strong>before gluing anything</strong>. Confirms the board isn't DOA.</li>
+<li><strong>§3</strong> — Physical assembly (glue magnets → pin → feet → wiring → close belly plate).</li>
+<li><strong>§5b</strong> — Start the Mac brain (<code>./run.sh</code>).</li>
+<li><strong>§6</strong> — Pin to shoulder, say hi.</li>
+</ol>
+<p><img alt="Assembly preview — front, side, rear, top views" src="cad/assembly_preview.png" /></p>
+<p><img alt="Exploded view showing how body_top, belly_plate, feet, and internal electronics fit together" src="cad/assembly_exploded.png" /></p>
+<hr />
+<h2 id="1-unboxing-checklist">1. Unboxing checklist</h2>
+<p>Tick each item before you start. If something is missing, stop and chase it up before you glue anything together.</p>
+<h3 id="1a-kamami-paczkomat-order-337481-292-pln">1a. Kamami paczkomat (order #337481, ~292 PLN)</h3>
+<ul>
+<li><input type="checkbox" disabled>  <strong>XIAOML Kit</strong> (SKU <code>1202930</code>) — 1× pre-soldered XIAO ESP32-S3 Sense + OV2640 camera + PDM mic + antenna + heatsinks + 32 GB microSD. Factory-soldered 7+7 pin headers on the XIAO.</li>
+<li><input type="checkbox" disabled>  <strong>MAX98357A I2S amp</strong> (SKU <code>1182935</code>) — 1×. <strong>Verify the 6-pin male header strip is soldered on</strong> — Kamami did this as a paid service per the order note. If the header is loose in the bag, email Kamami immediately; do <strong>not</strong> try to solder it yourself.</li>
+<li><input type="checkbox" disabled>  <strong>Mini speaker 28 mm 8 Ω 1 W</strong> (SKU <code>234920</code>) — 1×, comes with bare-tinned lead wires.</li>
+<li><input type="checkbox" disabled>  <strong>JST-PH 2.0 pigtail 10 cm</strong> (SKU <code>1181279</code>) — 3× (2 to use, 1 spare).</li>
+<li><input type="checkbox" disabled>  <strong>Neodymium disc magnets 10×1.5 mm</strong> (SKU <code>1186978</code>) — pack of 10 (we use 4).</li>
+</ul>
+<h3 id="1b-botland-paczkomat-order-1618961-43-pln">1b. Botland paczkomat (order #1618961, ~43 PLN)</h3>
+<ul>
+<li><input type="checkbox" disabled>  <strong>justPi F-F jumper ribbon 20 cm, 40 pcs</strong> (SKU <code>19620</code>) — 1× ribbon (we use 6 of 40).</li>
+<li><input type="checkbox" disabled>  <strong>USB-A → USB-C 1 m Lanberg cable</strong> (SKU <code>14829</code>) — 2× (1 for the parrot, 1 spare).</li>
+</ul>
+<h3 id="1c-printstein-paczkomat-print-order-65-pln">1c. Printstein paczkomat (print order, ~65 PLN)</h3>
+<ul>
+<li><input type="checkbox" disabled>  <strong>body_top.stl</strong> in matte light grey PLA — the parrot's main body (~75 g).</li>
+<li><input type="checkbox" disabled>  <strong>belly_plate.stl</strong> in matte light grey PLA — the magnet-latched bottom cover (~20 g).</li>
+<li><input type="checkbox" disabled>  <strong>feet.stl</strong> — two small printed feet.</li>
+</ul>
+<p>If the feet came as a combined plate, snap them off cleanly along the break lines.</p>
+<h3 id="1d-user-sourced">1d. User-sourced</h3>
+<ul>
+<li><input type="checkbox" disabled>  <strong>USB power bank ~6000–10000 mAh</strong> — Wozinsky WPower 10000 mAh from x-kom (~40 PLN) OR any power bank you already own that supports "always-on / flashlight mode".</li>
+<li><input type="checkbox" disabled>  <strong>Brooch bar pin ~38 mm</strong> — from any pasmanteria / haberdashery (~3 PLN). Looks like a safety-pin bar with a flat back plate.</li>
+<li><input type="checkbox" disabled>  <strong>microSD card</strong> (already bundled in the XIAOML Kit — 32 GB).</li>
+</ul>
+<hr />
+<h2 id="2-tools-youll-need">2. Tools you'll need</h2>
+<p><strong>Required:</strong></p>
+<ul>
+<li>CA (cyanoacrylate / "super") glue — small bottle, standard. Any brand.</li>
+<li>Scissors <strong>or</strong> wire strippers. Either works for stripping the speaker leads.</li>
+<li><strong>PVC / insulation tape</strong> — any roll from Castorama, Leroy Merlin, Obi, or any general-purpose hardware store. Botland discontinued theirs, so we skipped it in the BOM.</li>
+</ul>
+<p><strong>Optional but useful:</strong></p>
+<ul>
+<li>Multimeter (for debugging "no audio" if it happens).</li>
+<li>Posca paint markers in matte white, black, and red — if you want to paint the face/beak/tail accents.</li>
+<li>Small flat-blade screwdriver or tweezers — for seating the magnets into their pockets.</li>
+</ul>
+<p><strong>You do not need:</strong></p>
+<ul>
+<li>A soldering iron (Kamami did the one joint for you).</li>
+<li>A 3D printer (Printstein did the print).</li>
+<li>A heat gun, crimper, or specialty tooling.</li>
+</ul>
+<hr />
+<h2 id="3-step-by-step-assembly">3. Step-by-step assembly</h2>
+<p>Work on a clean flat surface under good light. Total time: <strong>~60 minutes glue-in-hand + 30 minutes waiting on cure/software</strong>.</p>
+<p><strong>Before you glue anything</strong>, skip to section <strong>4. Flashing the XIAO</strong> and confirm the firmware compiles and uploads. You do not want to discover a bad board after you've glued magnets into the body. If flashing is green, come back here.</p>
+<h3 id="step-3a-prep-the-magnets">Step 3a. Prep the magnets</h3>
+<p>There are 4 magnet slots, arranged so the belly plate snaps shut when you close it:</p>
+<ul>
+<li>2 slots in the <strong>belly plate</strong> pockets (external pockets, opposite magnets face <strong>N-up</strong>).</li>
+<li>2 slots in the <strong>body_top floor</strong> pockets (internal pockets, opposite magnets face <strong>N-down</strong>).</li>
+</ul>
+<p><strong>Foolproof polarity trick</strong> (skips the N/S bookkeeping):</p>
+<ol>
+<li>Stick <strong>pair #1</strong> together by their attracting faces — they'll snap as a 2-thick disc. This pair is "magnet A (belly) + magnet B (body_top)".</li>
+<li>Dry-fit the <strong>stuck pair</strong> into one belly plate pocket + its matching body_top pocket, with the belly-side magnet (A) in the belly pocket and the body-side magnet (B) in the body_top pocket.</li>
+<li>Glue <strong>A</strong> in place (thin CA bead around the edge, press with a wooden toothpick, hold 20 s).</li>
+<li>While the body_top is still on top, put glue around <strong>B</strong>'s edge too, and let the body_top rest on the belly plate under gravity for 20 s — the magnets will self-align and the glue will cure in the right orientation.</li>
+<li>Repeat steps 1–4 for pair #2 on the other side.</li>
+</ol>
+<p>Done this way, the polarity is correct <strong>by construction</strong> — you don't have to track N vs S. The magnets pull themselves into the right orientation.</p>
+<p><strong>Dry-fit check after cure:</strong> bring the belly plate up to the body_top — it should <strong>snap shut</strong> and resist being pulled straight off. If it repels (meaning you accidentally flipped a magnet mid-glue), pry it out with a thin blade, re-orient, re-glue. Better to catch it now than after wiring.</p>
+<p><strong>Cure time:</strong> 2 min before you move on. Full strength 10 min.</p>
+<h3 id="step-3b-glue-the-brooch-bar-pin">Step 3b. Glue the brooch bar pin</h3>
+<p>The belly plate has a rear recess on the <strong>external</strong> (outside) face, sized for a ~38 mm brooch bar pin. This is how the parrot pins to your shirt shoulder seam.</p>
+<ol>
+<li>Dry-fit the pin flat-side-down into the recess. It should sit flush, with the hinge/clasp pointing out the rear of the parrot.</li>
+<li>Apply a thin bead of CA glue to the flat plate of the pin.</li>
+<li>Press into the recess, align with the rear axis of the parrot.</li>
+<li>Hold 30 s. Let cure 10 min before you test pinning it through fabric.</li>
+</ol>
+<h3 id="step-3c-fit-the-feet">Step 3c. Fit the feet</h3>
+<p>Two small printed feet go into matching holes on the belly plate underside (toward the front).</p>
+<ol>
+<li>Push-fit each foot into its hole. They should click in with moderate thumb pressure.</li>
+<li>If the fit is loose (common after one wash of the PLA), add a pinhead of CA glue to the foot peg before pushing it in.</li>
+</ol>
+<h3 id="step-3d-join-the-speaker-leads-to-a-jst-ph-pigtail">Step 3d. Join the speaker leads to a JST-PH pigtail</h3>
+<p>The speaker has two factory-soldered <strong>bare tinned</strong> lead wires. The JST-PH pigtail has a JST plug on one end and <strong>bare tinned leads</strong> on the other. We twist the matching ends together, wrap them in insulation tape, and plug the JST side into the MAX98357A amp. No solder required.</p>
+<ol>
+<li>With scissors or strippers, shorten each speaker lead to ~5 cm. Strip 5 mm of insulation off each end (if there's any — the Kamami speaker leads are usually pre-tinned bare already).</li>
+<li>Do the same for the JST-PH pigtail bare ends — 5 mm strip.</li>
+<li>Pair <strong>speaker red / JST red</strong>, twist them together firmly for ~1 cm. Do the same for <strong>speaker black / JST black</strong>.</li>
+<li>Wrap each joint separately with PVC tape, 3–4 turns. The two joints must not touch each other.</li>
+<li>Gently tug-test each joint — they should hold against 1 kg pull. If one pulls apart, re-twist tighter and re-tape.</li>
+</ol>
+<blockquote>
+<p><strong>Polarity note:</strong> the speaker is a passive 8 Ω coil and is tolerant of reverse polarity. But by convention red = +, black = −. Keep them matched so future you doesn't get confused.</p>
+</blockquote>
+<h3 id="step-3e-wire-the-xiao-to-the-max98357a-with-f-f-jumpers">Step 3e. Wire the XIAO to the MAX98357A with F-F jumpers</h3>
+<p>Use <strong>6 jumpers</strong> from the justPi ribbon. Colour code is your choice; pick whatever's easy to trace.</p>
+<table>
+<thead>
+<tr>
+<th>XIAO pad</th>
+<th>GPIO</th>
+<th>MAX98357A pin</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>3V3</strong></td>
+<td>—</td>
+<td><strong>VIN</strong></td>
+<td>+3.3 V supply to the amp</td>
+</tr>
+<tr>
+<td><strong>GND</strong></td>
+<td>—</td>
+<td><strong>GND</strong></td>
+<td>Ground</td>
+</tr>
+<tr>
+<td><strong>GND</strong></td>
+<td>—</td>
+<td><strong>SD</strong></td>
+<td>Shutdown pin <strong>tied LOW</strong> — keeps the amp on. If this floats, the amp mutes.</td>
+</tr>
+<tr>
+<td><strong>D1</strong></td>
+<td>GPIO 2</td>
+<td><strong>BCLK</strong></td>
+<td>I2S bit clock</td>
+</tr>
+<tr>
+<td><strong>D3</strong></td>
+<td>GPIO 4</td>
+<td><strong>LRC</strong> (aka LRCLK / WS)</td>
+<td>I2S word-select</td>
+</tr>
+<tr>
+<td><strong>D4</strong></td>
+<td>GPIO 5</td>
+<td><strong>DIN</strong></td>
+<td>I2S data in</td>
+</tr>
+</tbody>
+</table>
+<p>On the XIAO, the pin labels are printed on the silk-screen (top side). Use the <strong>D1 / D3 / D4</strong> labels — GPIO numbers are <em>not</em> printed.</p>
+<p>On the MAX98357A, the 6-pin header row is labeled <code>LRC · BCLK · DIN · GAIN · SD · GND · VIN</code> in some order — <strong>read the silk-screen labels</strong> on your specific board to match. Kamami <code>1182935</code> labels are printed clearly; do not guess.</p>
+<p><strong>GAIN pin:</strong> Kamami soldered a 6-pin header, which may or may not populate the GAIN hole depending on the board revision. If GAIN is present, leave it <strong>unconnected</strong> — the default 9 dB gain is fine for a 28 mm driver. If GAIN is absent, ignore it.</p>
+<p><strong>Two jumpers on one GND pad?</strong> You only have two things going to GND from the XIAO side (<code>GND → GND</code> and <code>GND → SD</code>), but the XIAO has <strong>multiple GND pads</strong> along the edge (typically 3–4 of them — check the XIAO silk-screen). Use <strong>two separate GND pads</strong> on the XIAO — any two work, they're all common ground. Don't try to stack two dupont connectors on one pin.</p>
+<ol>
+<li>Press each female dupont end firmly onto the corresponding gold-pin. They should click on snugly.</li>
+<li>After wiring all 6, double-check <strong>SD is tied to GND</strong> — this is the #1 "no audio" cause, because a floating SD pin silently mutes the amp.</li>
+<li>Double-check <strong>VIN goes to 3V3</strong> (NOT 5V). The MAX98357A is happy with 2.5–5.5 V; we power from the XIAO's 3V3 regulator.</li>
+</ol>
+<h3 id="step-3f-plug-the-speaker-into-the-max98357a">Step 3f. Plug the speaker into the MAX98357A</h3>
+<ol>
+<li>Take the speaker-side JST-PH plug (the end with the red/black pair you wrapped).</li>
+<li>Plug it into the <strong>PH2.0 socket</strong> on the MAX98357A (the white 2-pin connector). Only fits one way — keyed.</li>
+</ol>
+<h3 id="step-3g-seat-xiao-amp-in-the-body_top-cavity">Step 3g. Seat XIAO + amp in the body_top cavity</h3>
+<p>You'll use small foam tape pads (3M VHB or generic 2 mm foam tape) to hold the boards in place. A 2 cm² patch is plenty for each board.</p>
+<blockquote>
+<p>If you don't have foam tape, a dab of CA glue on the plastic corners works but is harder to rework later. Foam tape is preferred.</p>
+</blockquote>
+<ol>
+<li>Stick a pad of foam tape to the back of the XIAO (non-component side).</li>
+<li>Press it into the rear half of the body_top cavity, camera lens aligned with the front bore. The USB-C port should face the tail slot.</li>
+<li>Stick a pad of foam tape to the back of the MAX98357A.</li>
+<li>Press it next to the XIAO, leaving enough slack in the 6 jumpers to close the belly plate.</li>
+</ol>
+<h3 id="step-3h-drop-the-speaker-into-its-pocket">Step 3h. Drop the speaker into its pocket</h3>
+<ol>
+<li>The body_top has a <strong>hex grille speaker pocket</strong> on the underside (belly-facing). Drop the 28 mm driver in, magnet side facing into the body.</li>
+<li>The speaker is held by the belly plate when closed — no glue needed. If it rattles after close, add a thin foam gasket ring (cut from a sponge) around the rim.</li>
+</ol>
+<h3 id="step-3i-close-the-belly-plate">Step 3i. Close the belly plate</h3>
+<ol>
+<li>Check that no jumpers are pinched across the seam.</li>
+<li>Bring the belly plate up to the body_top. The magnets will pull it shut — you should hear a satisfying <strong>snap</strong>.</li>
+<li>The belly plate is now held by 4 magnets and can be pried open with a fingernail at the rear edge when you need to service the electronics.</li>
+</ol>
+<h3 id="step-3j-thread-the-usb-c-cable">Step 3j. Thread the USB-C cable</h3>
+<ol>
+<li>Take one of the 2× USB-A→USB-C Lanberg cables.</li>
+<li>Thread the <strong>USB-C end</strong> through the <strong>tail slot</strong> on the rear of the body_top.</li>
+<li>Plug it into the XIAO's USB-C port (already inside the cavity).</li>
+<li>The USB-A end stays outside, ready to plug into the power bank.</li>
+</ol>
+<h3 id="step-3k-power-on">Step 3k. Power on</h3>
+<ol>
+<li>Plug the USB-A end into the power bank.</li>
+<li><strong>Lock the power bank into always-on mode</strong>: most power banks (including the Wozinsky WPower) have a flashlight button. <strong>Double-press it</strong> — many banks interpret that as "lock on, ignore low-current auto-shutoff". If the bank auto-shuts after 20–30 s, you'll need a different bank (see <strong>Troubleshooting</strong>).</li>
+<li>The XIAO's power LED should light up. You should see the firmware boot log on the serial monitor (if the Mac is still connected via USB for flashing).</li>
+</ol>
+<h3 id="step-3l-pin-to-shirt">Step 3l. Pin to shirt</h3>
+<ol>
+<li>Open the brooch bar pin clasp.</li>
+<li>Push the pin through the <strong>shoulder seam</strong> of your shirt (any shirt — dress shirt, t-shirt, hoodie). Going through the seam gives the best support.</li>
+<li>Close the clasp.</li>
+<li>The parrot should sit upright on your shoulder, camera facing forward.</li>
+<li>The power bank lives in your pocket or belt clip. The USB cable runs under your shirt.</li>
+</ol>
+<hr />
+<h2 id="4-flashing-the-xiao">4. Flashing the XIAO</h2>
+<p>Do this <strong>before</strong> you glue anything permanent. If the board is DOA, you want to know now.</p>
+<h3 id="4a-install-platformio-on-the-mac-one-time">4a. Install PlatformIO on the Mac (one-time)</h3>
+<p>PlatformIO is the build tool that compiles + uploads ESP32 firmware. If you've ever used the Arduino IDE, this is the command-line equivalent.</p>
+<pre><code class="language-bash">brew install platformio
+pio --version      # expect 6.x
+</code></pre>
+<p>If <code>pio: command not found</code> after the install, your shell hasn't picked up <code>/opt/homebrew/bin</code> yet. Open a new terminal, or run <code>hash -r</code> in the current one.</p>
+<p>Alternatives: <code>pipx install platformio</code>, or the <strong>PlatformIO VS Code extension</strong> (graphical UI, same toolchain).</p>
+<h3 id="4b-prepare-the-firmware">4b. Prepare the firmware</h3>
+<pre><code class="language-bash">cd /Users/kolinko/claude/varia/parrot/firmware
+cp src/secrets.h.template src/secrets.h
+</code></pre>
+<h3 id="4c-find-your-macs-lan-ip">4c. Find your Mac's LAN IP</h3>
+<p>The ESP needs to know where to find the Mac brain. Run:</p>
+<pre><code class="language-bash">ipconfig getifaddr en0   # wired
+# or
+ipconfig getifaddr en1   # WiFi
+</code></pre>
+<p>You'll get something like <code>192.168.1.12</code>. Note this down — it goes into <code>secrets.h</code> as <code>MAC_BRAIN_HOST</code>.</p>
+<blockquote>
+<p><strong>Consider booking a static DHCP lease</strong> for the Mac on your router now. If the router reboots and the Mac gets a different IP, the parrot won't find the brain and you'll need to re-flash. Every consumer router has a "DHCP reservations" page in its admin UI where you can pin a MAC address to an IP. Alternative: use <code>mac-studio.local</code> (mDNS) as <code>MAC_BRAIN_HOST</code> — but mDNS resolution from ESP32 can be flaky, static DHCP is more reliable.</p>
+</blockquote>
+<h3 id="4d-edit-secretsh">4d. Edit secrets.h</h3>
+<p>Open <code>src/secrets.h</code> in any editor:</p>
+<pre><code class="language-c">#define WIFI_SSID       &quot;your-wifi-name&quot;
+#define WIFI_PASS       &quot;your-wifi-password&quot;
+#define MAC_BRAIN_HOST  &quot;192.168.1.12&quot;   // the IP you just found
+#define MAC_BRAIN_PORT  8766              // leave as default
+</code></pre>
+<blockquote>
+<p><strong>2.4 GHz only.</strong> The ESP32-S3 radio does not support 5 GHz. If your home WiFi is dual-band, connect the parrot to the 2.4 GHz SSID (usually the same name or <code>-2G</code> suffix).</p>
+</blockquote>
+<h3 id="4e-plug-in-and-flash">4e. Plug in and flash</h3>
+<ol>
+<li>Plug the <strong>other</strong> USB-A→USB-C cable into the Mac and the XIAO's USB-C port.</li>
+<li>If this is the first flash and the board is stuck in an unknown state: <strong>force bootloader mode</strong> by holding <strong>BOOT</strong>, tapping <strong>RESET</strong>, and releasing <strong>BOOT</strong>. Both are tiny SMD buttons on the XIAO Sense — <strong>BOOT is next to the USB-C port, RESET is at the opposite end of the board</strong> (the "tail" end). "Bootloader mode" just means the ESP32 is waiting for a new firmware upload; without it, the upload tool can't talk to the chip. You should see the board reappear as a new <code>/dev/cu.usbmodem*</code> device after this.</li>
+<li>Compile and upload:</li>
+</ol>
+<pre><code class="language-bash">cd /Users/kolinko/claude/varia/parrot/firmware
+pio run                # compile — takes 2–4 min first time
+pio run -t upload      # flash — ~30 s. Expect &quot;Hash of data verified.&quot;
+pio device monitor -b 115200
+</code></pre>
+<h3 id="4f-what-to-expect-in-the-serial-monitor">4f. What to expect in the serial monitor</h3>
+<p>Within ~5 s of the flash finishing:</p>
+<pre><code>parrot fw v0.1.0 boot
+[wifi] connecting to &lt;your-ssid&gt;..........
+[wifi] ip=192.168.x.y rssi=-54
+I (xxx) camera: camera up (fb in PSRAM)
+I (xxx) audio: mic up @ 16000 Hz
+I (xxx) audio: spk up BCLK=2 LRCLK=4 DIN=5
+I (xxx) ws: dialing ws://&lt;mac-ip&gt;:8766/parrot
+I (xxx) ws: connected -&gt; ws://&lt;mac-ip&gt;:8766/parrot
+</code></pre>
+<p>The key line is <strong><code>ws: connected</code></strong>. That means the firmware found the Mac brain and is talking. If you don't see it, jump to <strong>Troubleshooting → WebSocket doesn't connect</strong>.</p>
+<p>Press <code>Ctrl+C</code> to exit the monitor when you're done watching.</p>
+<hr />
+<h2 id="5-starting-the-mac-brain">5. Starting the Mac brain</h2>
+<h3 id="5a-preflight-run-this-first-before-flashing">5a. Preflight (run this FIRST, before flashing)</h3>
+<p>Before you even bother flashing, run the preflight script. It checks everything Mac-side is wired up correctly — Mac's LAN IP, Python deps, vault credentials, port 8766 free, Claude API, ElevenLabs TTS, STT backend, admin panel reachable.</p>
+<pre><code class="language-bash">cd /Users/kolinko/claude/varia
+source venv/bin/activate
+python3 parrot/brain/preflight.py
+</code></pre>
+<p>You want <strong>PASS</strong> on every hard check. If something fails, the script prints a fix-up hint.</p>
+<p><strong>Two WARN-but-not-fatal conditions to know about:</strong></p>
+<ol>
+<li><strong><code>WARN no STT backend available</code></strong> — this means reactive (voice-triggered) replies won't work. The proactive loop (parrot deciding to speak every 5 min) still works. To enable reactive replies, pick <strong>one</strong>:</li>
+<li><code>brew install whisper-cpp</code> + download a ggml model (free, local):
+     <code>bash
+     mkdir -p ~/whisper_models
+     curl -L -o ~/whisper_models/ggml-base.en.bin \
+       https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin
+     export WHISPER_CPP_BIN=$(which whisper-cli)
+     export WHISPER_CPP_MODEL=~/whisper_models/ggml-base.en.bin</code></li>
+<li>or add an <code>openai</code> or <code>deepgram</code> api_key to the vault (cloud STT, ~$0.006/min).</li>
+<li><strong><code>WARN varia server not reachable</code></strong> — the brain still works, the admin panel just won't show live activity. Start varia if you want it: <code>cd /Users/kolinko/claude/varia &amp;&amp; source venv/bin/activate &amp;&amp; python app.py &amp;</code>.</li>
+</ol>
+<p>Re-run preflight after you fix failures until everything passes.</p>
+<h3 id="5b-start-the-service">5b. Start the service</h3>
+<pre><code class="language-bash">cd /Users/kolinko/claude/varia/parrot/brain
+chmod +x run.sh        # first run only
+./run.sh
+</code></pre>
+<p><code>run.sh</code> activates the varia venv internally — you don't need to <code>source venv/bin/activate</code> yourself for this.</p>
+<p>Expected log:</p>
+<pre><code>[brain] starting (dry_run=False)
+[brain] port=8766 path=/parrot
+[brain] ready — waiting for ESP32 to connect
+</code></pre>
+<p>Leave this terminal open. When the flashed parrot boots and connects, you'll see:</p>
+<pre><code>[conn] 192.168.x.y session=parrot-v1
+[tx] 0x06 CONFIG {...}
+[rx] 0x05 STATUS {'rssi': -54, 'uptime_ms': 12034, ...}
+</code></pre>
+<h3 id="5c-dry-run-first-optional-recommended">5c. Dry-run first (optional, recommended)</h3>
+<p>If you want to test the pipeline without spending ElevenLabs credits:</p>
+<pre><code class="language-bash">./run.sh dry
+</code></pre>
+<p>The brain runs the full Claude reactive/proactive loop but skips TTS and audio-back. Speech text gets logged to stdout, Redis, and the <code>/parrot</code> admin panel. Swap to <code>./run.sh</code> once you're happy.</p>
+<hr />
+<h2 id="6-first-conversation">6. First conversation</h2>
+<h3 id="6a-say-hi">6a. Say hi</h3>
+<p>With the parrot pinned to your shoulder, the Mac brain running, and the USB-C cable powering it from your pocket:</p>
+<ol>
+<li><strong>Speak normally.</strong> "Hey parrot, can you see me?"</li>
+<li>Within ~6–8 seconds, the speaker should crackle and the parrot replies. Something like: <em>"I see you, Tomasz — you're wearing a dark shirt today."</em></li>
+<li>If nothing happens:</li>
+<li>Look at the brain terminal — is there a <code>[rx] 0x01 AUDIO_IN</code> line? If no, the mic isn't hearing you (try speaking louder or closer).</li>
+<li>Is there a <code>[agent] reactive_reply</code> line? If yes but no audio out → TTS failed (check ElevenLabs key / credits).</li>
+<li>Is there an <code>[error]</code> anywhere? That's your clue.</li>
+</ol>
+<h3 id="6b-expected-behaviour">6b. Expected behaviour</h3>
+<ul>
+<li><strong>Reactive:</strong> the parrot responds when you speak near it. VAD (voice activity detector) triggers on your voice.</li>
+<li><strong>Proactive:</strong> every <strong>5 minutes</strong> the parrot <em>checks</em> whether it has something to say, looking at the camera frame + recent conversation. It only <strong>speaks</strong> if the check returns <code>speak: true</code>. Cooldown is <strong>20 minutes</strong> between proactive utterances — don't expect it to pipe up constantly.</li>
+<li><strong>Silence after reactive:</strong> if you say something boring ("uh"), the parrot may choose to stay silent. That's by design — a companion, not an eager chatbot.</li>
+</ul>
+<h3 id="6c-monitor-the-conversation">6c. Monitor the conversation</h3>
+<p>Open <a href="http://localhost:8686/parrot">http://localhost:8686/parrot</a> on the Mac. The Activity Log shows every connect / heard / speaking event in real time. Useful for debugging and for watching what the parrot is <em>thinking</em> about saying.</p>
+<hr />
+<h2 id="7-troubleshooting">7. Troubleshooting</h2>
+<h3 id="power-bank-auto-shuts-after-30-s">Power bank auto-shuts after ~30 s</h3>
+<p>Most consumer power banks auto-cut power when load drops below 50–100 mA. The XIAO in idle can drop below that threshold.</p>
+<p><strong>Fix attempts, in order:</strong></p>
+<ol>
+<li><strong>Double-press the power-bank flashlight button</strong> to lock always-on mode. Works on most Wozinsky, Xiaomi, Anker banks.</li>
+<li>Reduce firmware light-sleep (keep CPU awake). If needed, edit <code>config.h</code> and set <code>AUDIO_FRAME_MS</code> lower to keep the pipeline busy.</li>
+<li>Swap to a power bank marketed for IoT / Arduino use:</li>
+<li><strong>Voltaic V15 / V25</strong> — designed for always-on low-current loads.</li>
+<li><strong>Tracer / Green Cell</strong> — many models have an "always-on" physical switch.</li>
+<li><strong>Anker PowerCore</strong> — some models lock on with a double-press.</li>
+</ol>
+<h3 id="websocket-doesnt-connect">WebSocket doesn't connect</h3>
+<p>Symptom: serial monitor shows <code>[wifi] ip=...</code> but then <code>connect failed</code> on WS.</p>
+<p><strong>Check, in order:</strong></p>
+<ol>
+<li>Is the Mac brain actually running? <code>lsof -iTCP:8766 -sTCP:LISTEN</code> should show <code>python</code> holding port 8766.</li>
+<li>Is <code>MAC_BRAIN_HOST</code> correct? Re-run <code>ipconfig getifaddr en0</code> on the Mac — the IP may have changed after a router reboot.</li>
+<li>Is the Mac firewall blocking inbound on 8766? <strong>System Settings → Network → Firewall</strong> → add <code>python3</code> to allowed apps, or disable the firewall temporarily to test.</li>
+<li>Are the parrot and Mac on the <strong>same subnet</strong>? IoT guest networks sometimes isolate devices. Both should be on the main LAN.</li>
+<li>From another machine on the same LAN: <code>nc -vz &lt;mac-ip&gt; 8766</code> should print <code>Connection succeeded</code>. If not, the firewall or port is wrong.</li>
+</ol>
+<h3 id="no-audio-in-parrot-doesnt-hear-you">No audio in (parrot doesn't hear you)</h3>
+<ol>
+<li>Speak louder / closer (~20 cm from the beak).</li>
+<li>In the brain log, look for <code>[rx] 0x01 AUDIO_IN</code> lines during speech. If you see them but STT returns nothing, the VAD threshold may be too high.</li>
+<li>From a Python REPL with a websocket client (or by tweaking <code>test_ws_echo.py</code>), push a CONFIG to lower thresholds:
+   <code>python
+   await ws.send(bytes([0x06]) + json.dumps({"vad_threshold": 800, "vad_low": 400}).encode())</code></li>
+<li>The PDM mic is on GPIO 41/42 — these are internal to the Sense expansion board and not exposed as pads. If the Sense expansion board is not fully seated on the XIAO, you get no mic.</li>
+</ol>
+<h3 id="no-audio-out-speaker-silent">No audio out (speaker silent)</h3>
+<p>The single most common cause: <strong>SD pin on the MAX98357A is not tied to GND</strong>, so the amp is in shutdown. Double-check that jumper.</p>
+<p>If SD is tied:</p>
+<ol>
+<li>Multimeter VIN→GND at the MAX98357A pads — should read ~3.3 V.</li>
+<li>Check BCLK (XIAO D1 / GPIO2) with a scope or logic analyser — should clock whenever audio is playing.</li>
+<li>Swap the speaker wires (± polarity). The speaker is tolerant but it's a free check.</li>
+<li>Verify the JST-PH plug is seated in the PH2.0 socket (sometimes it's one click shy).</li>
+<li>Check your wire joins (step 3d) — a badly twisted joint can open under vibration.</li>
+<li>Worst case: plug a known-good speaker via a spare JST-PH pigtail to rule out a dead driver.</li>
+</ol>
+<h3 id="speaker-crackles-distorts">Speaker crackles / distorts</h3>
+<ol>
+<li>The driver is seated shallow — push it deeper into the hex grille pocket.</li>
+<li>Add a foam gasket ring (cut from a kitchen sponge) around the speaker rim to couple to the body shell.</li>
+<li>In <code>config.py</code> on the Mac, drop <code>ELEVEN_VOICE_SETTINGS["use_speaker_boost"]</code> to <code>False</code> — it's on by default and can clip on small drivers.</li>
+</ol>
+<h3 id="parrot-says-nothing-at-all-brain-connected-no-utterances">Parrot says nothing at all (brain connected, no utterances)</h3>
+<ol>
+<li><strong>Reactive:</strong> triggers on VAD. Speak louder; check <code>AUDIO_IN</code> frames arrive.</li>
+<li><strong>Proactive:</strong> fires every 5 min, but most checks return <code>speak: false</code>. Watch <code>/parrot</code> admin panel Activity Log — you'll see <code>proactive_check</code> entries with the reason.</li>
+<li><strong>Cooldown:</strong> after a proactive utterance, there's a 20-min cooldown. For testing, override:
+   <code>bash
+   PARROT_PROACTIVE_COOLDOWN_S=0 PARROT_PROACTIVE_INTERVAL_S=20 ./run.sh</code></li>
+<li>Check the Claude Opus API key is funded. In the brain log, look for <code>[agent] reactive_reply</code> errors.</li>
+</ol>
+<h3 id="xiao-doesnt-show-up-on-devcuusbmodem">XIAO doesn't show up on <code>/dev/cu.usbmodem*</code></h3>
+<ol>
+<li>Try the other USB cable (the one for power only — USB-A end plugged into Mac).</li>
+<li>Put the board into bootloader mode: hold <strong>BOOT</strong>, tap <strong>RESET</strong>, release <strong>BOOT</strong>. It should appear as <code>/dev/cu.usbmodem14XXX</code>.</li>
+<li><code>ls /dev/cu.*</code> before and after plugging in — if nothing new appears, suspect the USB cable is power-only (no data).</li>
+<li>Last resort: a different Mac port. Hubs can be flaky with esp32 serial.</li>
+</ol>
+<h3 id="camera-returns-all-black-jpegs">Camera returns all-black JPEGs</h3>
+<ol>
+<li>Peel the <strong>protective film</strong> off the OV2640 lens. There's a tiny plastic sheet you probably missed.</li>
+<li>Verify the Sense expansion board is fully seated on the XIAO — all 14 castellated pads.</li>
+</ol>
+<h3 id="camera-returns-magenta-jpegs">Camera returns magenta JPEGs</h3>
+<p>The sensor init raced. Power-cycle the board (unplug USB, wait 3 s, re-plug).</p>
+<hr />
+<h2 id="8-painting-optional">8. Painting (optional)</h2>
+<p>The body prints in matte light grey PLA. If you want it to look more parrot-like, decorate with Posca paint markers:</p>
+<ol>
+<li><strong>Matte white</strong> for the face mask around the camera / "eyes" area.</li>
+<li><strong>Black</strong> for the beak tip (front tail of the body, below the camera bore).</li>
+<li><strong>Red</strong> for the tail tip (rear fin).</li>
+</ol>
+<p>Steps:</p>
+<ol>
+<li>Shake each Posca marker vigorously for 30 s before first use.</li>
+<li>Prime the tip on scrap paper until paint flows.</li>
+<li>Paint in <strong>thin coats</strong>. Let each coat dry 10 min before re-coating.</li>
+<li>After the final coat, wait 30 min before handling.</li>
+<li><strong>Fingernail test:</strong> gently scratch an inconspicuous spot — if the paint lifts, wait longer.</li>
+</ol>
+<p>Posca is water-resistant but not waterproof. Don't wear the parrot in the rain.</p>
+<hr />
+<h2 id="9-safety-notes">9. Safety notes</h2>
+<ul>
+<li><strong>Do not submerge.</strong> This is an indoor shoulder companion. Splash-safe at best.</li>
+<li><strong>Unplug from the power bank</strong> when charging the bank itself (don't pass-through charge).</li>
+<li><strong>Not a toy for children under 3</strong> — contains small magnets and a fragile camera lens.</li>
+<li><strong>Magnets:</strong> the 10×1.5 mm neodymium discs are strong. Keep well away from pacemakers and credit cards.</li>
+<li><strong>Audio:</strong> the 1 W speaker at 5 cm from your ear is loud. Test volume in a quiet room first. ElevenLabs TTS defaults are tuned for conversational levels.</li>
+<li><strong>Camera privacy:</strong> the parrot sees whatever you see. If you're in a private meeting or a confidential space, unplug it. There's no mic mute switch in v1.</li>
+<li><strong>WiFi / network:</strong> the parrot streams audio + JPEGs over unencrypted <code>ws://</code> on your LAN. Do not take it on hotel WiFi or public networks in v1. Add TLS for v2 if you want to roam.</li>
+</ul>
+<hr />
+<h2 id="10-maintenance">10. Maintenance</h2>
+<h3 id="reflashing">Reflashing</h3>
+<p>You can re-flash any time by plugging the USB-C cable into the Mac and running:</p>
+<pre><code class="language-bash">cd /Users/kolinko/claude/varia/parrot/firmware
+pio run -t upload
+</code></pre>
+<p>No need to open the belly plate — the USB-C port is accessible through the tail slot.</p>
+<h3 id="updating-firmware">Updating firmware</h3>
+<p>The firmware lives in <code>/Users/kolinko/claude/varia/parrot/firmware/src/</code>. Edit, <code>pio run -t upload</code>, done.</p>
+<p>Key files:</p>
+<ul>
+<li><code>main.cpp</code> — setup/loop + WS handlers.</li>
+<li><code>audio.cpp</code> — PDM mic + I2S speaker. Tune VAD here.</li>
+<li><code>camera.cpp</code> — OV2640 JPEG capture.</li>
+<li><code>wsclient.cpp</code> — reconnecting WS client.</li>
+<li><code>config.h</code> — pin map, defaults. <strong>Don't change pins</strong> unless you rewire.</li>
+</ul>
+<h3 id="updating-the-brain">Updating the brain</h3>
+<p>Brain code is at <code>/Users/kolinko/claude/varia/parrot/brain/</code>. Python, no build step — just edit and restart <code>./run.sh</code>.</p>
+<p>Key files:</p>
+<ul>
+<li><code>brain.py</code> — WebSocket server + reactive/proactive loops.</li>
+<li><code>agent.py</code> — Claude prompts. Tweak the parrot's personality here.</li>
+<li><code>tts.py</code> — ElevenLabs TTS. Change voice via <code>PARROT_VOICE_ID</code> env var.</li>
+<li><code>config.py</code> — all tunables (intervals, cooldowns, model IDs).</li>
+</ul>
+<h3 id="iterating-on-cad">Iterating on CAD</h3>
+<p>CAD source at <code>/Users/kolinko/claude/varia/parrot/cad/parrot_body.scad</code> (OpenSCAD). Recompile with:</p>
+<pre><code class="language-bash">openscad -o parrot_v42.stl parrot_body.scad
+</code></pre>
+<p>Re-print at Printstein (or any PLA service).</p>
+<h3 id="running-autonomously-launch-at-boot">Running autonomously (launch at boot)</h3>
+<p>Once you're happy the brain works:</p>
+<ol>
+<li>Create a launchd plist at <code>~/Library/LaunchAgents/com.kolinko.parrot-brain.plist</code>.</li>
+<li>Point it at <code>/Users/kolinko/claude/varia/parrot/brain/run.sh</code>.</li>
+<li><code>launchctl load ~/Library/LaunchAgents/com.kolinko.parrot-brain.plist</code>.</li>
+<li>The brain survives Mac reboots and WiFi flaps.</li>
+</ol>
+<hr />
+<h2 id="reference-links">Reference links</h2>
+<ul>
+<li><strong>Admin panel (live status):</strong> <a href="https://kex7m.effort.ws/parrot">https://kex7m.effort.ws/parrot</a></li>
+<li><strong>Firmware source:</strong> <code>/Users/kolinko/claude/varia/parrot/firmware/</code></li>
+<li><strong>Brain source:</strong> <code>/Users/kolinko/claude/varia/parrot/brain/</code></li>
+<li><strong>CAD source:</strong> <code>/Users/kolinko/claude/varia/parrot/cad/</code></li>
+<li><strong>BOM:</strong> <a href="https://kex7m.effort.ws/static/parrot/bom-v2.md">https://kex7m.effort.ws/static/parrot/bom-v2.md</a></li>
+<li><strong>Printable A4 card:</strong> <a href="assembly-card.pdf">assembly-card.pdf</a></li>
+<li><strong>Public mirror:</strong> <a href="https://kolinko.eu/parrot/">https://kolinko.eu/parrot/</a></li>
+</ul>
+<hr />
+<p><em>End of guide.</em> Squawk.</p>
+</body>
+</html>
