@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="680" viewBox="0 0 980 680" font-family="Helvetica, Arial, sans-serif" font-size="13">
+  <style>
+    .dim    { stroke: #333; stroke-width: 1; fill: none; }
+    .arrow  { fill: #333; }
+    .body   { fill: #d4d6da; stroke: #333; stroke-width: 1.5; }
+    .foot   { fill: #8a8d93; stroke: #333; stroke-width: 1; }
+    .seam   { stroke: #c44; stroke-width: 1.2; stroke-dasharray: 4 3; fill: none; }
+    .feat   { stroke: #2563eb; stroke-width: 1; fill: none; stroke-dasharray: 3 2; }
+    .pin    { stroke: #cc8800; stroke-width: 1.4; fill: #ffe7b0; }
+    .lbl    { fill: #111; font-size: 13px; }
+    .lbltt  { fill: #111; font-size: 11px; font-style: italic; }
+    .h1     { font-size: 18px; font-weight: bold; fill: #111; }
+    .key    { fill: #2563eb; font-size: 11px; }
+    .keynew { fill: #cc8800; font-size: 11px; font-weight: bold; }
+    text    { font-family: Helvetica, Arial, sans-serif; }
+  </style>
+
+  <text x="490" y="32" text-anchor="middle" class="h1">Parrot Assistant — African Grey body (v4, feet + bar-pin mount)</text>
+  <text x="490" y="52" text-anchor="middle" class="lbltt">Dimensions in mm. Side elevation, +X = beak forward, +Z = head up. Orange highlights = v4 additions.</text>
+
+  <g transform="translate(490, 360) scale(3, -3)">
+    <path d="
+      M -32, 7
+      C -42, 12 -50, 19 -50, 26
+      C -50, 30 -47, 32 -44, 33
+      C -44, 36 -42, 38 -38, 39
+      C -36, 42 -33, 45 -29, 46
+      C -25, 50 -19, 53 -10, 53
+      C 0, 53 8, 51 16, 48
+      C 18, 56 18, 62 18, 70
+      C 18, 78 22, 86 30, 88
+      C 36, 90 41, 88 45, 84
+      C 49, 81 50, 77 50, 73
+      C 53, 73 55, 71 55, 68
+      C 57, 67 58, 65 58, 63
+      C 60, 60 60, 56 58, 54
+      C 56, 52 53, 53 52, 55
+      C 52, 53 50, 52 48, 53
+      C 47, 49 45, 47 42, 47
+      C 39, 47 36, 50 35, 53
+      C 30, 51 26, 48 22, 44
+      C 24, 38 24, 32 22, 26
+      C 24, 22 24, 18 22, 14
+      C 22, 11 19, 8 14, 6
+      C 5, 2 -5, 1 -15, 1
+      C -22, 1 -28, 3 -32, 7
+      Z
+    " class="body"/>
+
+    <ellipse cx="38" cy="70" rx="4.5" ry="3.5" class="feat"/>
+    <ellipse cx="22" cy="36" rx="6" ry="13" class="feat" transform="rotate(-20 22 36)"/>
+    <circle cx="34" cy="58" r="1.3" class="feat"/>
+    <ellipse cx="-46" cy="22" rx="8" ry="4" class="body"/>
+    <path d="M -50 24 L 50 24" class="seam"/>
+    <rect x="-52" y="22" width="3" height="6" class="feat"/>
+
+    <!-- v4.1: Bar-pin recess (side elevation; X extent = pin width 9mm, Y extent into page = 34mm) -->
+    <rect x="-14.5" y="-0.75" width="9" height="1.5" class="pin"/>
+
+    <!-- v4.1: Foot peg-hole positions — front at x=+5, rear moved to x=-33 (was -20) -->
+    <circle cx="5"   cy="-0.5" r="1.3" class="feat"/>
+    <circle cx="-33" cy="-0.5" r="1.3" class="feat"/>
+
+    <!-- v4.1: Feet installed below belly (stylized tripod silhouettes), pad height 1.6mm -->
+    <g class="foot">
+      <ellipse cx="5"   cy="-3.5" rx="5.5" ry="1.0"/>
+      <path d="M 5 -3.5 L 11 -6 L 12 -5 Z"/>
+      <path d="M 5 -3.5 L -1 -6 L -2 -5 Z"/>
+      <ellipse cx="-33" cy="-3.5" rx="5.5" ry="1.0"/>
+      <path d="M -33 -3.5 L -27 -6 L -26 -5 Z"/>
+      <path d="M -33 -3.5 L -39 -6 L -40 -5 Z"/>
+    </g>
+  </g>
+
+  <g class="dim">
+    <line x1="325" y1="560" x2="670" y2="560"/>
+    <line x1="325" y1="555" x2="325" y2="565"/>
+    <line x1="670" y1="555" x2="670" y2="565"/>
+  </g>
+  <text x="497" y="580" text-anchor="middle" class="lbl">125 mm — body length (beak → tail)</text>
+
+  <g class="dim">
+    <line x1="740" y1="80" x2="740" y2="360"/>
+    <line x1="735" y1="80" x2="745" y2="80"/>
+    <line x1="735" y1="360" x2="745" y2="360"/>
+  </g>
+  <text x="753" y="220" class="lbl">88 mm — height (ex. feet)</text>
+
+  <g class="dim">
+    <line x1="190" y1="290" x2="230" y2="290"/>
+  </g>
+  <text x="50" y="294" class="lbl" fill="#c44">seam @ Z=24</text>
+  <text x="50" y="308" class="lbltt" fill="#c44">(belly plate split, magnet latched)</text>
+
+  <text x="640" y="130" class="key">camera eye socket</text>
+  <text x="640" y="145" class="lbltt">9 mm Ø outer, 7.2 mm shelf</text>
+  <line x1="640" y1="148" x2="610" y2="150" class="dim"/>
+
+  <text x="650" y="180" class="key">PDM mic port</text>
+  <text x="650" y="194" class="lbltt">2.5 mm Ø, 6.5 mm grille recess</text>
+  <line x1="648" y1="188" x2="596" y2="186" class="dim"/>
+
+  <text x="110" y="230" class="key">speaker grille</text>
+  <text x="110" y="244" class="lbltt">34 mm Ø hex pattern, 1.6 mm holes / 2.4 mm pitch</text>
+  <line x1="262" y1="242" x2="420" y2="260" class="dim"/>
+
+  <text x="50" y="390" class="key">USB-C access slot</text>
+  <text x="50" y="404" class="lbltt">12.5 × 7.5 mm rounded rect</text>
+  <line x1="190" y1="390" x2="320" y2="388" class="dim"/>
+
+  <text x="50" y="445" class="key">tail stub</text>
+  <text x="50" y="459" class="lbltt">cosmetic, paint red</text>
+  <line x1="110" y1="445" x2="315" y2="298" class="dim"/>
+
+  <text x="740" y="290" class="key">hooked beak</text>
+  <text x="740" y="304" class="lbltt">printed-in, paint matte black</text>
+  <line x1="738" y1="290" x2="663" y2="288" class="dim"/>
+
+  <text x="470" y="485" class="keynew">v4.1: bar-pin brooch recess</text>
+  <text x="470" y="499" class="lbltt">9 × 34 × 1.5 mm (X×Y×Z), Y-aligned, glued-in 38 mm bar pin</text>
+  <line x1="475" y1="482" x2="478" y2="380" class="dim"/>
+
+  <text x="150" y="485" class="keynew">v4.1: friction-fit feet (interference)</text>
+  <text x="150" y="499" class="lbltt">2× on feet.stl, 2.7 mm Ø pegs × 2 each (0.2 mm interference fit)</text>
+  <line x1="240" y1="485" x2="420" y2="395" class="dim"/>
+
+  <text x="720" y="455" class="keynew">v4.1: foot peg holes</text>
+  <text x="720" y="469" class="lbltt">4× 2.5 mm Ø × 5 mm, at x=+5 (front) and x=-33 (rear), y=±3</text>
+  <line x1="720" y1="460" x2="620" y2="368" class="dim"/>
+
+  <text x="490" y="625" text-anchor="middle" class="lbltt" fill="#666">Body width (Y axis, into page) = 64 mm. Internal cavity ≈ 60 × 50 × 70 mm (≈ 70 ml). Feet span ±6 mm in Y.</text>
+  <text x="490" y="642" text-anchor="middle" class="lbltt" fill="#666">Wall thickness 2.5 mm typical, 3 mm at seam. Foot pegs: 2.5 mm Ø × 4 mm into 2.75 mm Ø × 5 mm holes (0.25 mm clearance, firm press-fit).</text>
+  <text x="490" y="659" text-anchor="middle" class="lbltt" fill="#666">v4 additions highlighted in orange. Existing belly magnets retained (shirt-magnet mount remains as fallback).</text>
+</svg>
