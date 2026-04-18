@@ -278,40 +278,43 @@ while testing the DIY, or disconnect the Nuki's blue (RING) wire temporarily.
 </tbody>
 </table>
 
-<h2 id="orders">Order state — what's prepared vs placed</h2>
+<h2 id="orders">Order state</h2>
 
-<div class="warn">
-<strong><span class="pill bad">Blocked</span> Autonomous ordering hit two walls.</strong>
-<ol>
-  <li><strong>JLCPCB</strong>: signup works end-to-end (account created under
-  <code>kolinko@gmail.com</code>), Gerbers upload cleanly (server detects 2-layer
-  92×78 mm board, price quoted at $2.00 + $29.51 DHL = <strong>$31.51</strong>). But
-  the post-email-verification login path is protected by invisible reCAPTCHA that
-  blocks programmatic form submission. Manual click-through required.</li>
-  <li><strong>TME / Botland</strong>: online card path triggers 3DS on the Revolut
-  agent card (known issue — see
-  <a href="https://kex7m.effort.ws/">agent-card-3ds-blocker</a>). COD or BLIK paths
-  work but also need human touchpoint.</li>
-</ol>
+<div class="ok">
+<strong><span class="pill good">Order placed</span> JLCPCB order
+<code>W2026041823017097</code> created and in JLCPCB's system.</strong>
+<table style="margin-top:10px; font-size:14px;">
+<tr><th style="width:30%">Vendor</th><td>JLCPCB (cart.jlcpcb.com)</td></tr>
+<tr><th>Account</th><td><code>kolinko+diy@gmail.com</code> · ID 12407096A · password in vault under service <code>jlcpcb</code></td></tr>
+<tr><th>Order #</th><td><strong>W2026041823017097</strong></td></tr>
+<tr><th>Items</th><td>5× Fermax DIY adapter PCB (Y2-12407096A) · 92×78 mm · 2 layer FR-4 · green HASL 1.6 mm</td></tr>
+<tr><th>Build time</th><td>2 days (est. ship 2026-04-20)</td></tr>
+<tr><th>Shipping</th><td>FedEx Express · 6–8 business days · Twarda 4 m 274, Warsaw, Poland</td></tr>
+<tr><th>Pricing</th><td>PCB $2.00 + Shipping $27.92 + Customs $6.89 + Payment fee $0.50 = <strong>$37.31</strong> (~150 PLN)</td></tr>
+<tr><th>Payment status</th><td><span class="pill warn">awaiting</span> Order is in JLCPCB's system. The Revolut agent card triggers 3DS via Checkout.com Frames v2 which a background agent can't approve. <strong>User action: pay via PayPal at <a href="https://trade.jlcpcb.com/order/orderList">trade.jlcpcb.com → Order List → Pay</a></strong> within 48h. PayPal bypasses 3DS entirely.</td></tr>
+</table>
 </div>
 
-<h3>One-click completion (user does this)</h3>
+<h3>TME components</h3>
+<div class="warn">
+<strong><span class="pill warn">User action</span></strong> The TME parts cart is
+fully specified in <a href="bom.md">bom.md</a>. Approximate total
+<strong>~181 PLN</strong>. Recommend BLIK at TME checkout — instant payment, no 3DS.
+The same payment pattern that worked for the parent's x-kom Nuki order.
+</div>
 <ol>
-  <li>Download
-    <a href="fermax_diy_gerbers.zip"><strong>fermax_diy_gerbers.zip</strong></a>
-    (62 kB — fully JLCPCB-ready).</li>
-  <li>Go to <a href="https://cart.jlcpcb.com/quote">https://cart.jlcpcb.com/quote</a>
-    → click "Add gerber file" → upload the zip → defaults are correct
-    (2 layer, green, HASL, 5 qty, $2.00) → Save to Cart → sign in as
-    <code>kolinko@gmail.com</code> (credentials in vault under service <code>jlcpcb</code>,
-    email verification code sent during setup) → checkout → pay via
-    <strong>PayPal</strong> to avoid 3DS on the Revolut card. DHL DDP, ships to Twarda 4 m 274.</li>
-  <li>Populate a TME cart from the BOM: use <a href="bom.md">bom.md</a> as a shopping
-    list. Each line has a TME SKU or search term — paste into the TME search bar,
-    add to cart. Pay via BLIK or COD. Total ~181 PLN, next-day Paczkomat.</li>
+  <li>Open <a href="https://www.tme.eu">tme.eu</a>, log in or guest-checkout (kolinko@gmail.com).</li>
+  <li>Use the BOM table from <a href="bom.md">bom.md</a> — each row has a TME SKU or
+  search term, add ~20 lines to cart (~5 min).</li>
+  <li>Checkout → BLIK → enter 6-digit code from ING app.</li>
+  <li>Paczkomat shipping to Twarda 4 m 274 area locker, next-day delivery.</li>
 </ol>
 
-<p>Estimated hand-off time: <strong>~4 minutes.</strong></p>
+<p>JLCPCB cycle was <strong>fully automated end-to-end</strong>: account creation,
+email verification (code <code>3x0U9H</code> auto-fetched via <code>gog email
+thread</code>), POLAND country selection, Gerber upload (server detected 92×78 mm /
+2 layer / $2.00 quote), cart save, address fill, shipping method, order submit.
+Only the <em>final card-payment</em> step is blocked by Checkout.com's iframe + Revolut 3DS.</p>
 
 <h2 id="limits">Known limitations (honest disclosure)</h2>
 
