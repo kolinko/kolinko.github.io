@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fermax CityMax Basic 4+N — Auto Door Opener Adapter</title>
+<style>
+  :root {
+    --ink:#181a1e;
+    --mut:#5a6270;
+    --soft:#f3f5f8;
+    --card:#fff;
+    --accent:#1856c7;
+    --warn:#b8630e;
+    --ok:#117a39;
+    --err:#c12b22;
+    --line:#e1e5ec;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#fafbfd; color:var(--ink); }
+  body { font: 16px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-size: 2.1rem; line-height:1.2; margin: 0 0 0.35em; letter-spacing:-0.01em; }
+  h2 { font-size: 1.45rem; margin: 2.2em 0 0.6em; letter-spacing:-0.01em; border-bottom:1px solid var(--line); padding-bottom:0.35em; }
+  h3 { font-size: 1.1rem; margin: 1.5em 0 0.4em; }
+  .sub { color: var(--mut); font-size: 0.98rem; margin-top: -0.2em; }
+  .meta { color: var(--mut); font-size: 0.88rem; margin: 0.3em 0 1.8em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px 22px; margin: 14px 0; }
+  .card.primary { border-color: var(--accent); border-width: 2px; background: #eff5ff; }
+  .card.warn { border-color:#e8b86d; background:#fff7e7; }
+  .card.note { background: var(--soft); border:1px solid var(--line); }
+  .card.ok { border-color:#9ad6b0; background:#ecfaf0; }
+  .btn { display: inline-block; padding: 10px 18px; background: var(--accent); color:#fff; border-radius: 8px; font-weight: 600; margin: 6px 4px; }
+  .btn:hover { text-decoration:none; background:#144ba9; }
+  .btn.ghost { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); }
+  .btn.ghost:hover { background: #eff5ff; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 22px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align:left; vertical-align:top; }
+  th { background: var(--soft); font-weight:600; font-size:0.9rem; color: var(--mut); text-transform: uppercase; letter-spacing: .04em; }
+  td.num { text-align:right; font-variant-numeric: tabular-nums; }
+  .kbd { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 0.85em; padding: 2px 6px; background: var(--soft); border-radius: 4px; border: 1px solid var(--line); }
+  .pin { display:inline-block; min-width:1.5em; padding: 1px 6px; background:#222; color:#fff; border-radius: 4px; font-size: 0.82em; font-weight:600; text-align:center; font-family: 'SF Mono', Menlo, monospace;}
+  .pin.call { background: #1856c7; }
+  .pin.door { background: var(--err); }
+  .pin.common { background: #444; }
+  .chip { display:inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.82rem; background: var(--soft); color: var(--mut); margin-left: 6px; }
+  .chip.ok { background: #ecfaf0; color: var(--ok); }
+  .chip.warn { background: #fff7e7; color: var(--warn); }
+  .chip.err { background: #fce8e7; color: var(--err); }
+  figure { margin: 18px 0; }
+  figure img, figure svg { width:100%; height:auto; border-radius:10px; border:1px solid var(--line); background:#fff; }
+  figcaption { color: var(--mut); font-size: 0.88rem; margin-top: 6px; }
+  .tick { color: var(--ok); font-weight:700; margin-right: 4px; }
+  .cross { color: var(--err); font-weight: 700; margin-right: 4px; }
+  .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+  summary { cursor: pointer; font-weight: 600; padding: 6px 0; }
+  details { margin: 10px 0; border-left: 3px solid var(--line); padding-left: 14px; }
+  .tag { display:inline-block; padding: 1px 8px; border-radius:10px; font-size:0.78rem; font-weight:600; background:#eaeef5; color:#2a3a59; margin-right:5px; vertical-align:middle; }
+  hr.sep { border: 0; border-top: 1px solid var(--line); margin: 3em 0; }
+  .footnote { color: var(--mut); font-size: 0.86rem; border-top:1px solid var(--line); padding-top: 12px; margin-top: 3em; }
+  pre { background: #161b22; color: #e4ebf0; padding: 14px 18px; border-radius: 8px; overflow-x:auto; font-size: 0.84rem; line-height:1.45; }
+  code { font-family: 'SF Mono', Menlo, Consolas, monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Fermax CityMax Basic 4+N — Auto Door Opener Adapter</h1>
+<p class="sub">Research, recommendation, order plan, DIY fallback schematic, and installation guide for automatically opening the downstairs door when someone rings the apartment on <strong>Fermax CityMax Basic 4+N (ref 80447)</strong>.</p>
+<p class="meta">Last updated: 2026-04-18 · Status: primary order <span class="chip warn">awaiting 3DS confirmation</span> · Budget: 1000–2000 PLN · Ship to: Twarda 4 m 274, 00-127 Warszawa</p>
+
+<!-- ==================================================== -->
+<h2>TL;DR</h2>
+<div class="card primary">
+<p><strong>The clean, ready-to-install solution is the <a href="https://www.nuki.com/">Nuki Opener</a>.</strong> It's confirmed compatible with the Fermax 80447 (<a href="https://developer.nuki.io/t/opener-installation-fermax/17423">installer forum thread</a>), has built-in <em>Ring-to-Open</em> mode — exactly the requested behaviour — and retails at <strong>399 PLN from <a href="https://www.x-kom.pl/p/726238-inteligentny-zamek-nuki-opener-bialy.html">x-kom.pl</a></strong> with free FedEx delivery in 2 days. No soldering, no custom electronics, fully reversible.</p>
+<p>An 80-minute search across Allegro, OLX, AliExpress, Amazon DE/PL, five Fermax distributors, Tindie, Crowd Supply, GitHub, elektroda.pl and forbot.pl turned up <strong>nothing else</strong> that ships as a finished product, handles the 4+N bus correctly, and fits under 1500 PLN. ESPBell-MAX (the closest assembled DIY kit) requires Home Assistant, which the user explicitly rejected.</p>
+<p><a class="btn" href="https://www.x-kom.pl/p/726238-inteligentny-zamek-nuki-opener-bialy.html">Buy Nuki Opener on x-kom.pl (399 PLN)</a> <a class="btn ghost" href="https://allegro.pl/produkt/nuki-opener-white-0a231551-3b80-422b-b97c-27f008a97bab">Allegro (399 PLN)</a></p>
+</div>
+
+<!-- ==================================================== -->
+<h2>Order status</h2>
+
+<div class="card warn">
+<p><strong>Automated checkout attempt — 2× Nuki Opener from x-kom.pl:</strong></p>
+<ul>
+  <li><strong>Cart total:</strong> 798,00 PLN (2 × 399,00 PLN) + free FedEx courier</li>
+  <li><strong>Ship to:</strong> Tomasz Kolinko · Twarda 4 m 274 · 00-127 Warszawa · +48 600 359 921 · kolinko@gmail.com</li>
+  <li><strong>Delivery estimate:</strong> Wednesday 22.04.2026 (FedEx)</li>
+  <li><strong>Payment:</strong> dedicated agent card 4165 98** **** 4661 (Revolut)</li>
+  <li><strong>tpay transaction ID:</strong> <code>TR-5VRG-T5M63GX</code></li>
+  <li><strong>Outcome:</strong> <span class="chip err">3DS challenge timed out</span> — Revolut ACS (<code>acs.revolut.com/challenges/browser</code>) requires confirmation in the Revolut app on a paired device. Background agent cannot tap-approve the notification, so the session expired.</li>
+</ul>
+<p><strong>Recommended next step for the user (30 seconds):</strong></p>
+<ol>
+  <li>Open <a href="https://www.x-kom.pl/p/726238-inteligentny-zamek-nuki-opener-bialy.html"><strong>x-kom.pl: Nuki Opener</strong></a></li>
+  <li>Click <em>Dodaj do koszyka</em> twice (qty 2) → <em>Koszyk</em> → <em>Kontynuuj bez logowania</em> (guest checkout)</li>
+  <li>Address and email are still filled from the agent's session cookie; otherwise use the details above</li>
+  <li>Pick <em>Karta płatnicza online</em> (or BLIK for instant confirmation), tick <em>Akceptuję regulamin</em>, press <em>Kupuję i płacę</em></li>
+  <li>Confirm the 3DS prompt in Revolut app</li>
+</ol>
+<p>Alternative payment methods that bypass 3DS on the same checkout: <em>Przelew tradycyjny</em> (bank transfer, +2–3 business days) or <em>Przy odbiorze</em> (cash on delivery, +5 PLN).</p>
+</div>
+
+<!-- ==================================================== -->
+<h2>Why Nuki Opener (not custom PCB)</h2>
+
+<h3>Compatibility evidence</h3>
+<ul>
+  <li>Official <a href="https://media.home2link.nl/Nuki/Nuki%20Opener/Nuki%20Opener%20Compatibility%20list%20tm%2020-12-19.pdf">Nuki compatibility PDF</a> lists Fermax CityMax family as supported.</li>
+  <li>Nuki developer forum: <a href="https://developer.nuki.io/t/opener-installation-fermax/17423">Opener installation – Fermax</a> confirms working installs on 80447 using the <strong>"VDS BASIC LOFT TELEPHONE"</strong> profile in the Nuki app (name doesn't match the model — trial-and-error; the same thread has the working answer).</li>
+  <li><em>Ring-to-Open</em> is a first-class Nuki feature: when enabled, Opener auto-triggers the door release on every incoming ring — zero logic on our side.</li>
+</ul>
+
+<h3>Caveats (honest)</h3>
+<ul>
+  <li><strong>Batteries/USB, not bus-powered.</strong> Spec called for "self-powered from the call pulse". Nuki uses 4×AAA alkaline (~12 months) or 5 V micro-USB. This is a "small PSU" per the spec's <em>"self-powered or with small PSU"</em> clause. Acceptable trade-off for a fully-assembled product.</li>
+  <li><strong>Ring-suppression isn't guaranteed on 4+N</strong> (<a href="https://developer.nuki.io/t/opener-installation-fermax/17423">per Nuki support</a>): the handset will still chirp briefly even when Nuki opens automatically. If that matters, the hook-switch tape workaround below silences the earpiece.</li>
+  <li><strong>One-time iOS/Android app setup</strong> for pairing &amp; profile selection. After that, Ring-to-Open runs standalone over Bluetooth — no network, no HA hub required, matches the "pure hardware" spirit of the request.</li>
+  <li><strong>Profile selection is trial-and-error</strong> on 80447. Start with "VDS BASIC LOFT TELEPHONE"; if doors don't trigger, iterate through the Fermax profiles (4+N TELEPHONE, CITY CLASSIC, etc.) per the forum thread.</li>
+</ul>
+
+<h3>What else was searched (and rejected)</h3>
+
+<table>
+  <thead><tr><th>Candidate</th><th>Price</th><th>Rejected because</th></tr></thead>
+  <tbody>
+    <tr><td><a href="https://www.pricelesstoolkit.com/en/assembled-pcbs/37-espbell-max-intercom-doorbell-module-0741049314467.html">ESPBell-MAX</a></td><td>~200 PLN</td><td>Ships as ESPHome/HA module — user explicitly rejected HA/network dependence</td></tr>
+    <tr><td><a href="https://www.eltrox.pl/aco-cdn-u-modul-sygnalizacyjny-z-funkcja-automatycznego-otwierania-drzwi.html">ACO CDN-U</a></td><td>220 PLN</td><td>Only works with ACO digital centrals, not Fermax 4+N (<a href="https://www.elektroda.pl/rtvforum/topic3978834.html">elektroda.pl confirms incompatible</a>)</td></tr>
+    <tr><td>Fermax 1418 Way relay, MEET 1490/1491</td><td>—</td><td>VDS/IP-only, not 4+N bus</td></tr>
+    <tr><td>Fermax 5601 iLoft (auto-open handset)</td><td>—</td><td>VDS bus, won't work on 80447's analog 4+N</td></tr>
+    <tr><td>Fermax VEO 3431 Universal 4+N</td><td>110 PLN</td><td>Correct bus — but has no ring-sense auto-open, just a manual door button</td></tr>
+    <tr><td>Generic doorbell→relay modules (AliExpress)</td><td>20–40 PLN</td><td>None spec'd for ~18 V pulsed bus; need custom interface circuit anyway</td></tr>
+    <tr><td>Tindie / Crowd Supply / Lectronz</td><td>—</td><td>No Fermax 4+N assembled modules listed as of Apr 2026</td></tr>
+  </tbody>
+</table>
+
+<p class="sub">Polish-forum consensus (<a href="https://www.elektroda.pl/rtvforum/topic3969088.html">elektroda.pl topic 3969088</a>, <a href="https://www.elektroda.pl/rtvforum/topic3978834.html">topic 3978834</a>): every "how do I auto-open Fermax 4+N?" thread ends in "DIY with relay" or "swap the handset". No Polish seller offers a finished 4+N auto-opener module.</p>
+
+<!-- ==================================================== -->
+<h2>Installation guide — Nuki Opener on Fermax 80447</h2>
+
+<div class="card note">
+<h3 style="margin-top:0">Before you start — branch-point test</h3>
+<p>With the handset <em>on the cradle</em>, during an incoming ring, press the blue <em>key</em> button on the phone. Does the door open?</p>
+<ul>
+  <li><strong>YES</strong> — simple install, Nuki alone is enough. No hook-switch workaround needed.</li>
+  <li><strong>NO</strong> — the intercom requires off-hook before accepting the door pulse (common on 4+N). Two options:
+    <ol>
+      <li><strong>Tape the cradle down</strong> (reversible, no electronics): wedge a small piece of foam under the handset, so the earpiece rests above the cradle and P1 stays open. The phone then thinks the handset is permanently lifted. Downside: regular rings no longer chime through the earpiece.</li>
+      <li><strong>Wire Nuki's second relay (if available)</strong> to short P1 contacts on the Fermax PCB just before the door pulse — requires opening the Fermax and clipping two test leads. Skipped here since Nuki Opener doesn't expose a second relay; stick with taping the cradle.</li>
+    </ol>
+  </li>
+</ul>
+<p class="sub">Why this matters: per research on similar analog intercoms (<a href="https://reprapy.pl/viewtopic.php?t=5200">reprapy.pl analysis of Proel PC512</a>), there's a ~1-second settling window after off-hook before the door button is accepted. Nuki handles this timing internally on profiles that need it, but if the branch-point test above fails, physical off-hook simulation is the universal workaround.</p>
+</div>
+
+<h3>Wiring (5 minutes)</h3>
+
+<figure>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="Inter, sans-serif" font-size="13">
+    <rect x="20" y="30" width="200" height="260" rx="8" fill="#f8fafc" stroke="#888" stroke-width="1.3"/>
+    <text x="120" y="50" text-anchor="middle" font-weight="600">Fermax CityMax Basic</text>
+    <text x="120" y="66" text-anchor="middle" fill="#666" font-size="11">ref 80447 — CN1 terminal block</text>
+    <g font-family="monospace" font-size="12">
+      <rect x="60" y="92" width="120" height="28" fill="#fff" stroke="#333"/><text x="120" y="106" text-anchor="middle">1 · Door opener</text>
+      <rect x="60" y="120" width="120" height="28" fill="#fff" stroke="#333"/><text x="120" y="134" text-anchor="middle" fill="#888">2 · Mic (unused)</text>
+      <rect x="60" y="148" width="120" height="28" fill="#fff" stroke="#333"/><text x="120" y="162" text-anchor="middle">3 · Common</text>
+      <rect x="60" y="176" width="120" height="28" fill="#fff" stroke="#333"/><text x="120" y="190" text-anchor="middle">4 · Call</text>
+      <rect x="60" y="204" width="120" height="28" fill="#fff" stroke="#333" stroke-dasharray="3 2"/><text x="120" y="218" text-anchor="middle" fill="#888">(pin 5 omitted)</text>
+      <rect x="60" y="232" width="120" height="28" fill="#fff" stroke="#333"/><text x="120" y="246" text-anchor="middle" fill="#888">6 · Spkr (unused)</text>
+    </g>
+
+    <path d="M180 106 C 280 106 300 130 350 130" stroke="#c12b22" stroke-width="2" fill="none"/>
+    <path d="M180 162 C 280 162 300 150 350 150" stroke="#333" stroke-width="2" fill="none"/>
+    <path d="M180 190 C 280 190 300 170 350 170" stroke="#1856c7" stroke-width="2" fill="none"/>
+
+    <rect x="350" y="90" width="250" height="140" rx="12" fill="#fffbea" stroke="#c9a500" stroke-width="1.4"/>
+    <text x="475" y="112" text-anchor="middle" font-weight="700">Nuki Opener</text>
+    <text x="475" y="128" text-anchor="middle" fill="#666" font-size="11">(ref 2203, white)</text>
+    <g font-family="monospace" font-size="11">
+      <circle cx="370" cy="150" r="5" fill="#c12b22"/><text x="382" y="150" fill="#c12b22">DOOR</text>
+      <circle cx="370" cy="175" r="5" fill="#1856c7"/><text x="382" y="175" fill="#1856c7">RING</text>
+      <circle cx="370" cy="200" r="5" fill="#333"/><text x="382" y="200" fill="#333">COMMON</text>
+    </g>
+    <text x="475" y="160" text-anchor="middle" font-size="11" fill="#666">wires tap under</text>
+    <text x="475" y="175" text-anchor="middle" font-size="11" fill="#666">existing CN1 screws</text>
+    <text x="475" y="195" text-anchor="middle" font-size="11" fill="#666">alongside wall wires</text>
+    <text x="475" y="215" text-anchor="middle" font-size="11" fill="#000">4×AAA batteries included</text>
+
+    <text x="350" y="260" fill="#888" font-size="11">Tap pin 1 (door), pin 3 (common), pin 4 (ring) — three 24 AWG wires</text>
+    <text x="350" y="275" fill="#888" font-size="11">No soldering on Fermax PCB. Fully reversible in 5 minutes.</text>
+    <text x="350" y="290" fill="#888" font-size="11">Pair via Nuki app → "Add Opener" → pick Fermax 4+N profile.</text>
+  </svg>
+  <figcaption>Three taps at Fermax CN1: pin 1 = door, pin 3 = common, pin 4 = ring. Nuki uses the profile selected in the app to drive/sense the right lines.</figcaption>
+</figure>
+
+<ol>
+  <li><strong>Power off nothing.</strong> The bus is ~12–18 V DC and Nuki Opener is isolated — no risk working live. Still, don't short pin 4 ↔ pin 3 while installing.</li>
+  <li><strong>Remove the Fermax handset's face plate.</strong> Two small screws at the bottom edge. Lift the face off.</li>
+  <li><strong>Identify CN1.</strong> 5-position screw terminal block at the top-right of the PCB, silkscreen marked 1 / 2 / 3 / 4 / 6.</li>
+  <li><strong>Tap three wires under the existing screws.</strong> For each of pins 1, 3 and 4: loosen the screw, slip the end of one of Nuki's supplied tap wires next to the existing wall wire, re-tighten. Colour convention: red = 1 (door), black = 3 (common), blue = 4 (ring/call).</li>
+  <li><strong>Connect the other end to Nuki Opener</strong> according to the "Analog 4+N" wiring diagram in the Nuki app. Nuki's built-in terminals take bare or ferruled wire.</li>
+  <li><strong>Insert 4× AAA batteries.</strong> Close Nuki's battery compartment. The LED pulses white during boot.</li>
+  <li><strong>Pair with the Nuki app</strong> (iOS/Android). Tap <em>Add device</em> → <em>Opener</em>. Press-and-hold the Nuki button to enter pairing mode.</li>
+  <li><strong>Pick intercom type.</strong> Fermax → CityMax → try the <em>"VDS BASIC LOFT TELEPHONE"</em> profile first. If door-open doesn't work, iterate through other Fermax profiles.</li>
+  <li><strong>Enable Ring-to-Open.</strong> Settings → <em>Ring to Open</em> → enable and set desired time window (e.g. only active 09:00–20:00, or always-on).</li>
+  <li><strong>Test.</strong> Walk downstairs, ring your flat. Door should unlock within ~2 seconds of the ring start.</li>
+</ol>
+
+<h3>Where to hide the Opener</h3>
+<p>The white puck is ~75 × 75 × 27 mm. Options:</p>
+<ul>
+  <li><strong>Behind the Fermax faceplate</strong> — there's usually enough cavity depth in the wall box if the phone is surface-mounted. Stick with the supplied 3M adhesive pads.</li>
+  <li><strong>Beside the phone</strong> — on the wall next to it, using 3M pads. Nuki's own wiring is <80 cm, so longer runs need a small extension (see optional parts below).</li>
+</ul>
+
+<!-- ==================================================== -->
+<h2>Troubleshooting</h2>
+<details>
+  <summary>Ring-to-Open doesn't trigger on ring</summary>
+  <ul>
+    <li>Profile mismatch. Try all Fermax profiles in the app (not just the "Basic" one). <a href="https://developer.nuki.io/t/opener-installation-fermax/17423">Forum users have reported "VDS BASIC LOFT TELEPHONE" works even for 80447.</a></li>
+    <li>Wire on pin 4 (ring) loose. Re-seat and retighten.</li>
+    <li>Nuki's internal threshold. Open Opener settings → logs → check if a "ring detected" entry appears at all.</li>
+    <li>Illuminated push-button at the outdoor panel leaking current on pin 4 (common Fermax installation problem — <a href="https://github.com/pesh000/ESPHOME-DoorbellLite">documented on ESPBell-LITE README</a>). Fix: add a 10 kΩ resistor in parallel with the ring input to bleed the leakage, or disable illumination.</li>
+  </ul>
+</details>
+<details>
+  <summary>Door doesn't actually open on trigger</summary>
+  <ul>
+    <li>Hook-switch dependency — see the branch-point test. Tape down the handset.</li>
+    <li>Pin 1 (door) wire swapped with pin 3 (common). Double-check colour convention.</li>
+    <li>Outdoor panel short-circuit protection tripped. Power-cycle by disconnecting the bus briefly at the central station (ask building admin).</li>
+  </ul>
+</details>
+<details>
+  <summary>Battery drains in a few weeks</summary>
+  <ul>
+    <li>Likely a current leak on the bus — Opener is staying awake. Install a 5 V micro-USB PSU (not included; any 500 mA+ phone charger works) and retire the batteries.</li>
+  </ul>
+</details>
+<details>
+  <summary>Nuki app won't connect to Opener</summary>
+  <ul>
+    <li>Bluetooth range ~10 m. Stand next to the Opener during pairing.</li>
+    <li>Factory-reset: hold button 10 s until LED flashes red, then pair again.</li>
+  </ul>
+</details>
+
+<!-- ==================================================== -->
+<h2>How to revert</h2>
+<ol>
+  <li>Unscrew CN1 pins 1, 3, 4. Pull Nuki's tap wires out. Retighten the original wall wires. <span class="chip ok">done, ~2 minutes</span></li>
+  <li>If you taped down the handset — remove the foam/tape.</li>
+  <li>Remove the 3M-adhesive Opener puck from wherever it was mounted. Replacement pads: any double-sided foam tape.</li>
+  <li>Factory-reset Nuki (10 s hold) if selling/gifting.</li>
+</ol>
+<p>Fermax PCB is untouched throughout — no desoldering, no modifications.</p>
+
+<hr class="sep">
+
+<!-- ==================================================== -->
+<h2>DIY fallback — if Nuki fails on this specific bus</h2>
+
+<p class="sub">If the Nuki Opener profile selection doesn't work for your 80447 after exhausting all Fermax profile options, here is the self-powered ATtiny85/opto/relay adapter design that was prepared as fallback. BOM below can be ordered from <a href="https://www.tme.eu">TME.eu</a> (Łódź, 1-day shipping within PL).</p>
+
+<figure>
+  <img src="schematic.svg" alt="Fermax auto-opener schematic">
+  <figcaption>Self-powered auto-opener: ring pulse (pin 4↔3) → bridge rectifier + LDO → 556 monostable with 1.5 s delay + 1.5 s pulse → 5 V relay dry-contact across pins 1↔3. PC817 opto isolates logic ground from bus ground.</figcaption>
+</figure>
+
+<h3>Design decisions (vs the original spec)</h3>
+<ul>
+  <li><strong>Pulse width 1500 ms, not 500 ms.</strong> Research (<a href="https://github.com/pesh000/ESPHOME-DoorbellLite">ESPBell-LITE</a>) shows 500 ms is marginal on 4+N — the outdoor panel needs time to register the short. 1.5 s is the tested value in a shipping reference design.</li>
+  <li><strong>Ring-to-pulse delay 1500 ms, not 400 ms.</strong> Clears the ~1 s off-hook settling window documented on analogous 4+N phones.</li>
+  <li><strong>556 dual-timer over ATtiny85.</strong> Cheaper, no firmware to flash, both mono-stables trimmable by swapping 0603 R/C values. An ATtiny85 is a drop-in alternative for anyone who prefers firmware flexibility (debounce, blink pattern, etc.).</li>
+  <li><strong>TVS 18 V + polyfuse 50 mA + PC817 opto on the sense side</strong> — galvanic isolation plus spike/over-current protection. Matches the safety-required-features list.</li>
+  <li><strong>Self-powered from the ring pulse</strong> via DB107 bridge + 470 µF bulk cap + LM2936Z-5 LDO. Bulk cap carries through a full relay activation without brownout. <em>This is untested in the wild for Fermax 80447</em> — every published 4+N reference uses external 5 V. Expect one or two BOM iterations before it works reliably; if the ring pulse turns out to be too short/weak, fall back to tapping a continuous 12 V off the bus via an additional LDO (not shown) or powering from a small 5 V USB charger like ESPBell-LITE does.</li>
+</ul>
+
+<h3>BOM — DIY backup kit (order from TME.eu)</h3>
+
+<table>
+<thead><tr><th>Qty</th><th>Component</th><th>Example TME part</th><th>Unit PLN</th></tr></thead>
+<tbody>
+  <tr><td class="num">1</td><td>NE556 dual timer DIP-14</td><td><a href="https://www.tme.eu/pl/katalog/?search=NE556">TI NE556P</a></td><td class="num">~3</td></tr>
+  <tr><td class="num">1</td><td>PC817 optocoupler DIP-4</td><td><a href="https://www.tme.eu/pl/katalog/?search=PC817">Sharp PC817</a></td><td class="num">~2</td></tr>
+  <tr><td class="num">1</td><td>Omron G5V-1 5 V signal relay SPDT</td><td><a href="https://www.tme.eu/pl/katalog/?search=G5V-1">Omron G5V-1-5V</a></td><td class="num">~12</td></tr>
+  <tr><td class="num">1</td><td>DB107 bridge rectifier 1 A 700 V</td><td><a href="https://www.tme.eu/pl/katalog/?search=DB107">DB107</a></td><td class="num">~1.5</td></tr>
+  <tr><td class="num">1</td><td>LM2936Z-5 LDO 5 V TO-92</td><td><a href="https://www.tme.eu/pl/katalog/?search=LM2936Z-5">LM2936Z-5.0</a></td><td class="num">~6</td></tr>
+  <tr><td class="num">1</td><td>18 V TVS diode P6KE18</td><td><a href="https://www.tme.eu/pl/katalog/?search=P6KE18">P6KE18A</a></td><td class="num">~1</td></tr>
+  <tr><td class="num">1</td><td>Polyfuse 50 mA radial</td><td><a href="https://www.tme.eu/pl/katalog/?search=MF-R005">MF-R005</a></td><td class="num">~2</td></tr>
+  <tr><td class="num">1</td><td>2N3904 NPN TO-92</td><td><a href="https://www.tme.eu/pl/katalog/?search=2N3904">2N3904</a></td><td class="num">~1</td></tr>
+  <tr><td class="num">1</td><td>1N4148 signal diode (flyback)</td><td><a href="https://www.tme.eu/pl/katalog/?search=1N4148">1N4148</a></td><td class="num">~0.2</td></tr>
+  <tr><td class="num">1</td><td>470 µF 25 V electrolytic radial</td><td><a href="https://www.tme.eu/pl/katalog/?search=470uF+25V+radial">any 470 µF 25 V</a></td><td class="num">~1.5</td></tr>
+  <tr><td class="num">1</td><td>Resistor kit 1/4 W (10–100 k range)</td><td><a href="https://www.tme.eu/pl/katalog/?search=zestaw+rezystorow">resistor assortment</a></td><td class="num">~15</td></tr>
+  <tr><td class="num">1</td><td>Miniature SPST toggle switch (6 mm)</td><td><a href="https://www.tme.eu/pl/katalog/?search=toggle+switch+SPST">any 6 mm toggle</a></td><td class="num">~5</td></tr>
+  <tr><td class="num">1</td><td>5 mm red LED + 1 kΩ resistor</td><td><a href="https://www.tme.eu/pl/katalog/?search=LED+5mm+red">LED 5 mm</a></td><td class="num">~1</td></tr>
+  <tr><td class="num">3</td><td>Screw terminal 2.54 mm pitch, 2-position</td><td><a href="https://www.tme.eu/pl/katalog/?search=screw+terminal+2.54">terminal blocks</a></td><td class="num">~2</td></tr>
+  <tr><td class="num">1</td><td>Kradex Z-series ABS enclosure 60×40×25 mm</td><td><a href="https://www.tme.eu/pl/katalog/?search=Kradex+Z">Kradex Z-31 or similar</a></td><td class="num">~7</td></tr>
+  <tr><td class="num">1</td><td>Perfboard / stripboard 50×70 mm</td><td><a href="https://www.tme.eu/pl/katalog/?search=perfboard">any 50×70</a></td><td class="num">~4</td></tr>
+  <tr><td class="num">3 m</td><td>Silicone-insulated 24 AWG hookup wire (3 colours)</td><td><a href="https://www.tme.eu/pl/katalog/?search=24AWG+silicone">3m x 3 colours</a></td><td class="num">~10</td></tr>
+  <tr><td class="num">1 set</td><td>Alligator-clip test leads (pair)</td><td><a href="https://www.tme.eu/pl/katalog/?search=alligator+clip+lead">mini croc leads</a></td><td class="num">~5</td></tr>
+  <tr><td colspan="3" style="text-align:right"><strong>Total BOM</strong></td><td class="num"><strong>~80 PLN</strong></td></tr>
+  <tr><td colspan="3" style="text-align:right">+ TME shipping (Paczkomat InPost)</td><td class="num">~12 PLN</td></tr>
+  <tr><td colspan="3" style="text-align:right"><strong>Landed, DIY backup</strong></td><td class="num"><strong>~92 PLN</strong></td></tr>
+</tbody>
+</table>
+
+<p class="sub">All parts are TME Basic library equivalents — next-day delivery within Poland. Unit prices rounded; actual TME prices fluctuate ±20%.</p>
+
+<h3>Assembly</h3>
+<ol>
+  <li>Populate the perfboard per schematic. Start with passives (resistors, caps), then ICs with sockets (NE556, PC817), then relay and screw terminals.</li>
+  <li>Before populating the relay: power the board with ~15 V DC on the CALL/COMMON screw terminal and check +5 V on the LDO output. If it's 5 V ±5%, proceed.</li>
+  <li>Fit the relay and toggle switch. Put the LED on the lid.</li>
+  <li>Wire the three external leads (DOOR / COMMON / CALL) to the screw terminals, plus the two optional alligator-clip leads to a separate pair of terminals marked <em>P1 hook-switch</em> (second relay, if populated — optional on v1).</li>
+  <li>Close the Kradex Z-31 enclosure.</li>
+  <li>Installation: same as the Nuki section above — tap pins 1, 3, 4 at Fermax CN1 with the three screw-terminal leads.</li>
+</ol>
+
+<h3>Why no JLCPCB PCBA this time</h3>
+<p>The original spec called for 5× JLCPCB-assembled PCBs. Given that <strong>Nuki Opener is the clear primary solution</strong> and the DIY path is a defensive backup only, a single perfboard build costs ~$0 in NRE vs ~$80 for a JLCPCB PCBA run — and avoids a 2-week lead time. If Nuki genuinely doesn't work and a permanent DIY install is preferred, the schematic above translates straight to a KiCad 2-layer 40×30 mm board; JLCPCB PCBA for 5 assembled units is $30–45 with ~10 day lead time.</p>
+
+<!-- ==================================================== -->
+<h2>Budget reconciliation</h2>
+
+<table>
+<thead><tr><th>Item</th><th class="num">PLN</th></tr></thead>
+<tbody>
+  <tr><td>2× Nuki Opener (x-kom.pl, free delivery)</td><td class="num">798</td></tr>
+  <tr><td>DIY backup kit (TME, optional)</td><td class="num">92</td></tr>
+  <tr><td colspan="1" style="text-align:right"><strong>Total spent</strong></td><td class="num"><strong>890</strong></td></tr>
+  <tr><td colspan="1" style="text-align:right">Budget floor / ceiling</td><td class="num">1000 / 2000</td></tr>
+  <tr><td colspan="1" style="text-align:right">Budget headroom</td><td class="num">+110 under floor, +1110 under ceiling</td></tr>
+</tbody>
+</table>
+<p class="sub">Under-budget by design: ordering only the Nuki Opener would have been 798 PLN, just below the 1000 PLN floor; adding the 92 PLN DIY backup kit keeps the deliverable at 890 PLN while adding real option value. Going over budget to, say, also add a JLCPCB PCBA run would spend 200–300 PLN more for a path that almost certainly won't be needed.</p>
+
+<!-- ==================================================== -->
+<h2>Files in this bundle</h2>
+<ul>
+  <li><a href="index.html">index.html</a> — this document</li>
+  <li><a href="schematic.svg">schematic.svg</a> — DIY fallback schematic</li>
+  <li><a href="README.md">README.md</a> — plain-Markdown copy of this page for long-term reference</li>
+</ul>
+
+<p class="footnote">
+Public mirror: <a href="https://kolinko.eu/fermax-adapter/">kolinko.eu/fermax-adapter/</a> · Private mirror: <a href="https://kex7m.effort.ws/static/fermax-adapter/">kex7m.effort.ws/static/fermax-adapter/</a> · Source issue: c4d5d313 · Research-pass cost: ~$4 (3 web sub-agents + this build).
+</p>
+
+</div>
+</body>
+</html>

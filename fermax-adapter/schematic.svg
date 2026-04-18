@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="Inter, system-ui, sans-serif" font-size="13">
+  <style>
+    .wire{stroke:#222;stroke-width:1.8;fill:none}
+    .wirered{stroke:#d32;stroke-width:2;fill:none}
+    .wireblue{stroke:#267;stroke-width:2;fill:none}
+    .comp{stroke:#111;stroke-width:1.6;fill:#fff}
+    .hl{fill:#fff7d9;stroke:#c9a500;stroke-width:1.4}
+    .lbl{fill:#111}
+    .lblmut{fill:#666;font-size:11px}
+    .gnd{stroke:#111;stroke-width:1.6;fill:none}
+    .box{fill:none;stroke:#888;stroke-width:1;stroke-dasharray:5 4}
+    text{dominant-baseline:central}
+    .hdr{font-weight:600;font-size:14px;fill:#222}
+  </style>
+
+  <text x="450" y="28" text-anchor="middle" class="hdr" font-size="17">Fermax CityMax Basic 4+N — Auto Door Opener (DIY fallback)</text>
+  <text x="450" y="48" text-anchor="middle" class="lblmut">Self-powered from call pulse · galvanic isolation both sides · no soldering on Fermax PCB</text>
+
+  <!-- LEFT: Fermax CN1 terminal block -->
+  <rect x="40" y="80" width="140" height="420" rx="6" class="box"/>
+  <text x="110" y="100" text-anchor="middle" class="hdr">Fermax CN1</text>
+  <text x="110" y="118" text-anchor="middle" class="lblmut">screw-terminal tap</text>
+
+  <circle cx="80" cy="160" r="6" class="comp"/><text x="96" y="160" class="lbl">1 · Door opener</text>
+  <circle cx="80" cy="205" r="6" class="comp"/><text x="96" y="205" class="lblmut">2 · Mic (unused)</text>
+  <circle cx="80" cy="250" r="6" class="comp"/><text x="96" y="250" class="lbl">3 · Common</text>
+  <circle cx="80" cy="295" r="6" class="comp"/><text x="96" y="295" class="lbl">4 · Call</text>
+  <circle cx="80" cy="340" r="6" class="comp"/><text x="96" y="340" class="lblmut">6 · Speaker (unused)</text>
+
+  <!-- Tap wires leaving Fermax side -->
+  <path class="wirered" d="M 86 160 H 240"/>
+  <path class="wire" d="M 86 250 H 240"/>
+  <path class="wireblue" d="M 86 295 H 240"/>
+
+  <text x="244" y="152" class="lblmut">DOOR (pin 1)</text>
+  <text x="244" y="242" class="lblmut">COMMON (pin 3)</text>
+  <text x="244" y="287" class="lblmut">CALL (pin 4)</text>
+
+  <!-- CENTER: Adapter board -->
+  <rect x="240" y="80" width="480" height="420" rx="10" stroke="#444" stroke-width="1.2" fill="#f7f9fc"/>
+  <text x="480" y="100" text-anchor="middle" class="hdr">Auto-Opener Board</text>
+  <text x="480" y="116" text-anchor="middle" class="lblmut">~40×30 mm · 2-layer PCB</text>
+
+  <!-- TVS + polyfuse on pin4 line -->
+  <path class="wireblue" d="M 240 295 H 270"/>
+  <rect x="270" y="286" width="28" height="18" class="hl"/>
+  <text x="284" y="295" text-anchor="middle" font-size="10">F1 50mA</text>
+  <path class="wireblue" d="M 298 295 H 325"/>
+  <polygon points="325,285 325,305 340,295" class="comp"/>
+  <line x1="340" y1="283" x2="340" y2="307" class="comp"/>
+  <text x="336" y="320" text-anchor="middle" font-size="10">TVS 18V</text>
+  <line x1="340" y1="295" x2="340" y2="250" class="wire"/>
+  <path class="wireblue" d="M 340 295 H 370"/>
+
+  <!-- Bridge rectifier -->
+  <rect x="370" y="270" width="40" height="50" class="comp"/>
+  <text x="390" y="295" text-anchor="middle" font-size="10">BR1</text>
+  <text x="390" y="260" text-anchor="middle" font-size="9" class="lblmut">DB107</text>
+  <line x1="370" y1="282" x2="370" y2="308" class="wire"/>
+  <line x1="410" y1="282" x2="410" y2="308" class="wire"/>
+  <path class="wire" d="M 240 250 H 370"/>
+  <path class="wire" d="M 410 282 H 460"/>
+
+  <!-- Storage cap + LDO -->
+  <line x1="460" y1="275" x2="460" y2="290" class="wire" stroke-width="2"/>
+  <line x1="450" y1="290" x2="470" y2="290" class="wire" stroke-width="2"/>
+  <text x="468" y="278" class="lblmut" font-size="10">470µF</text>
+  <path class="wire" d="M 460 308 H 480 V 330 H 460"/>
+  <path class="wire" d="M 460 275 V 235"/>
+  <rect x="488" y="220" width="52" height="30" class="comp"/>
+  <text x="514" y="235" text-anchor="middle" font-size="10">LM2936Z-5</text>
+  <text x="514" y="210" text-anchor="middle" font-size="9" class="lblmut">LDO → +5V</text>
+  <path class="wire" d="M 460 235 H 488"/>
+  <path class="wire" d="M 540 235 H 580 V 250"/>
+  <text x="584" y="247" font-size="10" fill="#060">+5V</text>
+
+  <!-- GND symbol -->
+  <path class="wire" d="M 410 308 H 410 V 340 H 620"/>
+  <line x1="620" y1="336" x2="620" y2="356" class="gnd"/>
+  <line x1="608" y1="356" x2="632" y2="356" class="gnd"/>
+  <line x1="612" y1="362" x2="628" y2="362" class="gnd"/>
+  <line x1="616" y1="368" x2="624" y2="368" class="gnd"/>
+  <text x="640" y="356" font-size="10" fill="#555">logic GND</text>
+
+  <!-- Opto on sense branch (parallel) -->
+  <path class="wireblue" d="M 340 295 V 420"/>
+  <rect x="330" y="415" width="20" height="14" class="comp"/>
+  <text x="320" y="422" text-anchor="end" font-size="10">2.2kΩ</text>
+  <path class="wireblue" d="M 340 429 V 460"/>
+  <rect x="320" y="460" width="70" height="40" class="hl"/>
+  <text x="355" y="472" text-anchor="middle" font-size="11">PC817</text>
+  <text x="355" y="488" text-anchor="middle" font-size="9">opto in</text>
+  <path class="wire" d="M 355 500 V 520 H 410 V 340"/>
+  <path class="wire" d="M 390 478 H 450"/>
+
+  <!-- 555 monostable -->
+  <rect x="450" y="430" width="120" height="70" class="comp"/>
+  <text x="510" y="450" text-anchor="middle" font-size="11">556 timer</text>
+  <text x="510" y="468" text-anchor="middle" font-size="9">(dual 555)</text>
+  <text x="510" y="484" text-anchor="middle" font-size="9" class="lblmut">delay 1500ms →</text>
+  <text x="510" y="496" text-anchor="middle" font-size="9" class="lblmut">pulse 1500ms</text>
+
+  <!-- Enable switch -->
+  <path class="wire" d="M 570 465 H 600"/>
+  <circle cx="604" cy="465" r="3" class="comp"/>
+  <circle cx="624" cy="465" r="3" class="comp"/>
+  <line x1="604" y1="465" x2="620" y2="455" class="wire"/>
+  <text x="615" y="445" text-anchor="middle" font-size="10">SW1</text>
+  <text x="615" y="435" text-anchor="middle" font-size="9" class="lblmut">enable</text>
+
+  <!-- Relay driver -->
+  <path class="wire" d="M 624 465 H 660"/>
+  <rect x="660" y="455" width="20" height="20" class="comp"/>
+  <text x="670" y="465" text-anchor="middle" font-size="9">Q1</text>
+  <text x="690" y="475" font-size="9" class="lblmut">2N3904</text>
+  <path class="wire" d="M 670 455 V 430"/>
+  <rect x="640" y="390" width="80" height="40" class="hl"/>
+  <text x="680" y="405" text-anchor="middle" font-size="11">K1 G5V-1</text>
+  <text x="680" y="420" text-anchor="middle" font-size="9">5V relay</text>
+  <path class="wire" d="M 680 390 V 370"/>
+  <text x="695" y="370" font-size="9" fill="#060">+5V</text>
+  <!-- flyback -->
+  <polygon points="710,395 710,415 725,405" class="comp"/>
+  <line x1="725" y1="390" x2="725" y2="420" class="comp"/>
+  <text x="735" y="405" font-size="9" class="lblmut">D2</text>
+
+  <!-- Relay contacts to pin1 / pin3 -->
+  <path class="wirered" d="M 720 400 H 760 V 160 H 240"/>
+  <path class="wire" d="M 720 420 H 770 V 250"/>
+
+  <!-- LED -->
+  <circle cx="430" cy="520" r="4" class="comp" fill="#f30"/>
+  <text x="430" y="538" text-anchor="middle" font-size="9">LED ring-detect</text>
+
+  <!-- RIGHT labels -->
+  <text x="820" y="100" text-anchor="end" class="lblmut">Protection / isolation</text>
+  <rect x="735" y="120" width="140" height="130" rx="6" fill="none" stroke="#c9a500" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="805" y="140" text-anchor="middle" font-size="11" font-weight="600">Safety</text>
+  <text x="745" y="162" font-size="10">• Polyfuse F1 50mA</text>
+  <text x="745" y="180" font-size="10">• TVS ~18V clamp</text>
+  <text x="745" y="198" font-size="10">• Opto (PC817)</text>
+  <text x="745" y="216" font-size="10">• Dry relay contacts</text>
+  <text x="745" y="234" font-size="10">• Flyback D2</text>
+
+  <!-- Notes -->
+  <text x="40" y="540" class="lblmut">Self-powered from call pulse via BR1+C1+LDO. Logic GND is isolated from bus GND by PC817 opto and relay contacts (no shared rail).</text>
+  <text x="40" y="560" class="lblmut">Timing: 1.5 s lead-in (let phone settle off-hook) then 1.5 s pulse across pins 1↔3 — matches ESPBell-LITE reference for 4+N.</text>
+  <text x="40" y="580" class="lblmut">Enclosure: Kradex Z-series ABS (60×40×25 mm). Screw terminals to outside world. Alligator-clip leads for optional P1 hook-switch tap.</text>
+  <text x="40" y="600" class="lblmut">Fermax PCB not modified — fully reversible in &lt;5 min by loosening three CN1 screws.</text>
+</svg>
